@@ -79,9 +79,9 @@
                         <template #title>
                           Pays
                         </template>
-                        'Ajouter ou creez un Pays'
+                        Ajouter ou creez un Pays
                       </vs-alert>
-                      <el-select v-model="new_ville.pays_id" :disabled="createNewPays" class="filter-item" placeholder="Pays" style="width: 80%;" prop="pays_id" @change="gotoNext()">
+                      <el-select v-model="new_ville.pays_id" :disabled="createNewPays" class="filter-item" placeholder="Pays" style="width: 80%; margin-right: 10px" prop="pays_id" @change="gotoNext()">
                         <el-option
                           v-for="(pay, idex) in pays"
                           :key="idex"
@@ -158,6 +158,9 @@
         paysVilles: [],
         VilleVillages: [],
       }
+    },
+    created() {
+      this.getPaysList();
     },
     methods: {
       async getPaysList(){
@@ -268,6 +271,11 @@
   right: 15px;
   top: 10px;
 }
+.user-create-form {
+  margin-top: 15px;
+  padding: 35px;
+  text-align: center;
+}
 .dialog-footer {
   text-align: left;
   padding-top: 0;
@@ -276,6 +284,9 @@
 .el-button.is-circle {
   border-radius: 50%;
   padding: 12px;
+}
+.mb-15 {
+  margin-bottom: 15px;
 }
 .app-container {
   flex: 1;

@@ -1,0 +1,154 @@
+<template>
+  <base-nav
+    container-classes="container-fluid"
+    class="navbar-top navbar-expand"
+    :class="{'navbar-dark': type === 'default'}"
+  >
+    <a href="#" aria-current="page" class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block active router-link-active"> {{$route.name}} </a>
+    <!-- Navbar links -->
+    <b-navbar-nav class="align-items-center ml-md-auto">
+      <!-- This item dont have <b-nav-item> because item have data-action/data-target on tag <a>, wich we cant add -->
+      <li class="nav-item d-sm-none">
+        <a class="nav-link" href="#" data-action="search-show" data-target="#navbar-search-main">
+          <i class="ni ni-zoom-split-in"></i>
+        </a>
+      </li>
+    </b-navbar-nav>
+    <b-navbar-nav class="align-items-center ml-auto ml-md-0">
+<!--      <base-button type="success" @click="showSwal('success')">Success alert</base-button>-->
+      <!-- b-form class="navbar-search form-inline mr-sm-3"
+          :class="{'navbar-search-dark': type === 'default', 'navbar-search-light': type === 'light'}"
+          id="navbar-search-main">
+      <b-form-group class="mb-0">
+        <b-input-group class="input-group-alternative input-group-merge">
+          <b-form-input placeholder="Search" type="text"> </b-form-input>
+
+          <div class="input-group-append">
+            <span class="input-group-text"><i class="fas fa-search"></i></span>
+          </div>
+        </b-input-group>
+      </b-form-group>
+    </b-form -->
+      <base-button icon type="primary" @click="ajoutOffre($event.target)" ref="btnShow" style="background-color: #35495e; border-color: #35495e; box-shadow: #111111">
+        <span class="btn-inner--icon"><i class="ni ni-bag-17"></i></span>
+        <span class="btn-inner--text" style="font-size: 12px">Ajouter une Offre</span>
+      </base-button>
+
+      <!-- base-button icon outline type="default">
+        <span class="btn-inner--icon"><i class="ni ni-basket"></i></span>
+        <span class="btn-inner--text" style="font-size: 12px">Ajouter une Commande</span>
+      </base-button -->
+      <base-dropdown menu-on-right
+                     class="nav-item"
+                     tag="li"
+                     title-tag="a"
+                     title-classes="nav-link pr-0">
+        <a href="#" class="nav-link pr-0" @click.prevent slot="title-container">
+          <b-media no-body class="align-items-center">
+                  <span class="avatar avatar-sm rounded-circle">
+                    <img alt="Image placeholder" src="img/theme/team-4.jpg">
+                  </span>
+            <b-media-body class="ml-2 d-none d-lg-block">
+              <span class="mb-0 text-sm  font-weight-bold">John Snow</span>
+            </b-media-body>
+          </b-media>
+        </a>
+
+        <template>
+
+          <b-dropdown-header class="noti-title">
+            <h6 class="text-overflow m-0">Welcome!</h6>
+          </b-dropdown-header>
+          <b-dropdown-item to="/profile">
+            <i class="ni ni-single-02"></i>
+            <span>My profile</span>
+          </b-dropdown-item>
+          <b-dropdown-item href="#!">
+            <i class="ni ni-settings-gear-65"></i>
+            <span>Settings</span>
+          </b-dropdown-item>
+          <div class="dropdown-divider"></div>
+          <b-dropdown-item href="#" @click="logout">
+            <i class="ni ni-user-run"></i>
+            <span>Logout</span>
+          </b-dropdown-item>
+
+        </template>
+      </base-dropdown>
+
+
+      <AddModal
+        id="modal-3"
+        title="Ajouter une Offre"
+      />
+
+    </b-navbar-nav>
+  </base-nav>
+</template>
+<script>
+import { CollapseTransition } from 'vue2-transitions';
+import { BaseNav, Modal } from '@/components';
+import swal from "sweetalert2";
+import {removeToken} from "../../utils/auth";
+
+import Cookies from 'js-cookie';
+export default {
+  components: {
+    CollapseTransition,
+    BaseNav,
+    Modal,
+    AddModal: () => import('../../components/Modals/addModal')
+  },
+  props: {
+    type: {
+      type: String,
+      default: 'default', // default|light
+      description: 'Look of the dashboard navbar. Default (Green) or light (gray)'
+    }
+  },
+  computed: {
+    routeName() {
+      const { name } = this.$route;
+      return this.capitalizeFirstLetter(name);
+    }
+  },
+  data() {
+    return {
+      activeNotifications: false,
+      showMenu: false,
+      searchModalVisible: false,
+      searchQuery: ''
+    };
+  },
+  methods: {
+    ajoutOffre(btn){
+      // this.$bvModal.show('ajouter-offre');
+      this.$root.$emit('bv::show::modal', "modal-3", btn)
+    },
+    showSwal(type){
+      swal.fire({
+        title: `Success`,
+        text: 'A few words about this sweet alert ...',
+        buttonsStyling: false,
+        confirmButtonClass: 'btn btn-success',
+        icon: 'success'
+      });
+    },
+    capitalizeFirstLetter(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
+    },
+    toggleNotificationDropDown() {
+      this.activeNotifications = !this.activeNotifications;
+    },
+    closeDropDown() {
+      this.activeNotifications = false;
+    },
+    async logout() {
+      Cookies.remove('token_key');
+      // await this.$store.dispatch('user/logout');
+      removeToken();
+      await this.$router.push(`/login?redirect=${this.$route.fullPath}`);
+    },
+  }
+};
+</script>

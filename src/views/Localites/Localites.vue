@@ -97,7 +97,7 @@
                     </div>
                     <div v-show="createNewPays" class="region-step-form step-form">
                       <el-form ref="paysForm" :rules="paysRules" :model="new_pays" label-position="left">
-                        <el-form-item label="Pays" prop="pays">
+                        <el-form-item label="Pays" prop="libelle">
                           <el-input v-model="new_pays.libelle" />
                         </el-form-item>
                         <el-form-item label="description" prop="description">
@@ -157,6 +157,10 @@
         new_pays: {},
         paysVilles: [],
         VilleVillages: [],
+        paysRules: {
+          libelle: [{ required: true, message: 'Renseignez le nom du pays', trigger: 'blur' }],
+          // description: [{ required: true, message: this.$t('region.DescriptionRequired'), trigger: 'blur' }],
+        },
       }
     },
     created() {

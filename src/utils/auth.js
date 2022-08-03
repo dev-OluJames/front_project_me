@@ -3,6 +3,7 @@ import Cookies from 'js-cookie';
 const TokenKey = 'isLogged';
 
 export function isLogged() {
+  console.log('Token KEY', Cookies.get('token_key'));
   return Cookies.get(TokenKey) === '1';
 }
 

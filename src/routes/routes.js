@@ -53,7 +53,7 @@ const constantRoutes = [
       {
         path: '/localites',
         name: 'localites',
-        component: () => import(/* webpackChunkName: "demo" */ '../views/Icons.vue')
+        component: () => import(/* webpackChunkName: "demo" */ '../views/Localites/Localites')
       },
       {
         path: '/profile',

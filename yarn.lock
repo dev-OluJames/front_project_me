@@ -3394,10 +3394,10 @@ electron-to-chromium@^1.3.295:
   resolved "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.3.306.tgz"
   integrity sha512-frDqXvrIROoYvikSKTIKbHbzO6M3/qC6kCIt/1FOa9kALe++c4VAJnwjSFvf1tYLEUsP2n9XZ4XSCyqc3l7A/A==
 
-element-ui@2.4.11:
-  version "2.4.11"
-  resolved "https://registry.npmjs.org/element-ui/-/element-ui-2.4.11.tgz"
-  integrity sha512-RtgK0t840NAFTajGMWvylzZRSX1EkZ7V4YgAoBxhv4TtkeMscLuk/IdYOzPdlQq6IN0byx1YVBxCX+u4yYkGvw==
+element-ui@^2.15.9:
+  version "2.15.9"
+  resolved "https://registry.yarnpkg.com/element-ui/-/element-ui-2.15.9.tgz#b03548e007b7ab7496c49a282db92a0fffd7efc7"
+  integrity sha512-dx45nQLt4Hn87/Z9eRr3ex6KFZbxlFAwEU3QoW3wA5EsYftvHTyL9Pq7VnXXD7hu1Eiaup2jcs6kp+/VSFmXuA==
   dependencies:
     async-validator "~1.8.1"
     babel-helper-vue-jsx-merge-props "^2.0.0"
@@ -8717,7 +8717,7 @@ vue-loader@^15.7.0:
     vue-hot-reload-api "^2.3.0"
     vue-style-loader "^4.1.0"
 
-vue-router@^3.4.3:
+vue-router@^3.3.4, vue-router@^3.4.3:
   version "3.5.4"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-3.5.4.tgz#c453c0b36bc75554de066fefc3f2a9c3212aca70"
   integrity sha512-x+/DLAJZv2mcQ7glH2oV9ze8uPwcI+H+GgTgTmb5I55bCgY3+vXWIsqbYUzbBSZnwFHEJku4eoaH/x98veyymQ==
@@ -8793,6 +8793,13 @@ vuejs-sui-confirmation@^0.0.4:
   integrity sha512-15Y6CrOo3g/TOJs0tHviPC8db8KeItkJcmlvyToBdyE5Gcc1+MjKgreFdUSqX9jj4ce3Sy4S+vhvdtc/INj4Ew==
   dependencies:
     postcss-loader "^3.0.0"
+
+vuesax@^4.0.1-alpha.25:
+  version "4.0.1-alpha.25"
+  resolved "https://registry.yarnpkg.com/vuesax/-/vuesax-4.0.1-alpha.25.tgz#2fb97ac8e4f3d479622d2dc6b498e5e57d44495d"
+  integrity sha512-cVLpKsem/YsMSbiy2s2M0O6rr8wrakOUFn0JYxtVQ1WgbVUD0/kU2/GMPVeRBNOh+30tRy2TKreFmjqc53vIBQ==
+  dependencies:
+    vue-router "^3.3.4"
 
 vuex@3.1.1:
   version "3.1.1"

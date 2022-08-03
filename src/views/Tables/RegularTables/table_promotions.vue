@@ -29,9 +29,25 @@
 
             <el-table-column label="Description"
                              prop="description"
-                             min-width="250px">
+                             min-width="200px">
               <template v-slot="{row}">
                   <span class="status">{{row.description}}</span>
+              </template>
+            </el-table-column>
+
+            <el-table-column label="Debut"
+                             prop="debut"
+                             min-width="100px">
+              <template v-slot="{row}">
+                  <span class="status">{{row.date_debut}}</span>
+              </template>
+            </el-table-column>
+
+            <el-table-column label="Fin"
+                             prop="fin"
+                             min-width="100px">
+              <template v-slot="{row}">
+                  <span class="status">{{row.date_fin}}</span>
               </template>
             </el-table-column>
 
@@ -66,7 +82,24 @@
               <b-form-input v-model="promotion.libelle" placeholder="Libelle" required></b-form-input>
             </b-input-group>
           </b-form-group>
-
+            <b-row>
+              <b-col>
+                <b-form-group label="Date Début">
+                  <b-input-group>
+                    <b-form-input type="date" v-model="promotion.date_debut" required></b-form-input>
+                    {{promotion.date_debut}}
+                  </b-input-group>
+                </b-form-group>
+              </b-col>
+              <b-col>
+                <b-form-group label="Date Fin">
+                  <b-input-group>
+                    <b-form-input type="date" v-model="promotion.date_fin" required></b-form-input>
+                    {{promotion.date_fin}}
+                  </b-input-group>
+                </b-form-group>
+              </b-col>
+            </b-row>
           <b-form-group label="Description">
             <b-input-group>
               <b-form-textarea v-model="promotion.description" required></b-form-textarea>

@@ -25,10 +25,12 @@ import store from './store';
 import '@/permission'; // permission control
 import 'vue-js-modal/dist/styles.css';
 import Vue2Editor from "vue2-editor";
-import Element from 'element-ui'
+import ElementUI from "element-ui";
+import Vuesax from 'vuesax';
+import 'vuesax/dist/vuesax.css'; // Vuesax styles
 
-
-Vue.use(Element)
+Vue.use(Vuesax);
+Vue.use(ElementUI);
 Vue.use(VueSweetalert2);
 Vue.use(DashboardPlugin);
 Vue.use(Vue2Editor);

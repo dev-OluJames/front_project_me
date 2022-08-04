@@ -58,9 +58,13 @@
             </b-col>
           </b-row>
           <b-row>
-            <b-col>
+            <b-col v-if="type === 'offres'">
               <h6>Date disponibilité</h6>
               <input type="date" class="form-control" id="date_dispo" placeholder="Date de disponibilité" rows="2" v-model="donnees.date_disponibilite">
+            </b-col>
+            <b-col v-else>
+              <h6>Date livraison</h6>
+              <input type="date" class="form-control" id="date_livraison" placeholder="Date de disponibilité" rows="2" v-model="donnees.date_livraison">
             </b-col>
             <b-col>
               <h6>Village</h6>

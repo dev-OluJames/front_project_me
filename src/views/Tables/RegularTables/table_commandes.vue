@@ -17,7 +17,7 @@
       <vue-element-loading :active="show" spinner="bar-fade-scale" color="#2dce94" />
         <el-table class="table-responsive table"
                   header-row-class-name="thead-light"
-                  :data="projects">
+                  :data="demandes">
             <el-table-column label="Produits"
                              min-width="150px"
                              prop="name">
@@ -39,16 +39,16 @@
             </el-table-column>
 
             <el-table-column label="Description"
-                             min-width="150px"
+                             min-width="300px"
                              prop="description">
                 <template v-slot="{row}">
-                      <span class="status">{{row.description}}</span>
+                      <span class="status" v-html="row.description"></span>
                 </template>
             </el-table-column>
 
             <el-table-column label="Quantite" min-width="150px">
               <template v-slot="{row}">
-                <span class="status">{{row.quantite}}</span>
+                <span class="status">{{row.quantite}} {{row.mesure}}</span>
               </template>
             </el-table-column>
 
@@ -57,14 +57,6 @@
                              min-width="150px">
               <template v-slot="{row}">
                 <span class="status">{{row.prix}}</span>
-              </template>
-            </el-table-column>
-
-            <el-table-column label="Mesure"
-                             prop="completion"
-                             min-width="150px">
-              <template v-slot="{row}">
-                <span class="status">{{row.mesure}}</span>
               </template>
             </el-table-column>
 
@@ -101,9 +93,11 @@
     </b-card>
 </template>
 <script>
-  import projects from './../projects';
   import { Table, TableColumn} from 'element-ui';
   import VueElementLoading from "vue-element-loading";
+  import Resource from "../../../api/resource";
+
+  const demandeResource = new Resource('demandes');
   export default {
     name: 'table-commande',
     components: {
@@ -114,16 +108,29 @@
     },
     data() {
       return {
-        projects,
+        demandes: [],
         currentPage: 1,
         show: false,
       };
+    },
+    created() {
+      this.getDemandes();
     },
     methods: {
       ajoutOffre(btn){
         // this.$bvModal.show('ajouter-offre');
         this.$root.$emit('bv::show::modal', "modal-4", btn)
       },
+      getDemandes(){
+        this.show = true;
+        demandeResource.list()
+        .then((response) => {
+          this.demandes = response.data;
+        })
+        .finally(() => {
+          this.show = false;
+        })
+      }
     }
   }
 </script>

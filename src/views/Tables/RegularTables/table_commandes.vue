@@ -6,9 +6,13 @@
               <h3 class="mb-0">Commandes</h3>
             </b-col>
             <b-col class="col-3 text-right">
-              <b-form-input size="sm" placeholder="recherche ..."></b-form-input>
+              <base-button type="primary" size="sm" data-toggle="tooltip" data-original-title="Edit product" @click="ajoutOffre($event.target)" >
+                <span class="btn-inner--icon"><i class="ni ni-bag-17"></i></span>
+                <span class="btn-inner--text">Ajouter</span>
+              </base-button>
             </b-col>
           </b-row>
+          <b-form-input size="sm" placeholder="recherche ..." style="width: 20%; margin-top: 10px"></b-form-input>
         </b-card-header>
       <vue-element-loading :active="show" spinner="bar-fade-scale" color="#2dce94" />
         <el-table class="table-responsive table"
@@ -87,6 +91,13 @@
         <b-card-footer class="py-4 d-flex justify-content-end">
             <base-pagination v-model="currentPage" :per-page="10" :total="50"></base-pagination>
         </b-card-footer>
+
+      <AddModal
+        id="modal-4"
+        title="Faire une Demande"
+        type="demandes"
+      />
+
     </b-card>
 </template>
 <script>
@@ -98,7 +109,8 @@
     components: {
       [Table.name]: Table,
       [TableColumn.name]: TableColumn,
-      VueElementLoading
+      VueElementLoading,
+      AddModal: () => import('../../../components/Modals/addModal')
     },
     data() {
       return {
@@ -106,6 +118,12 @@
         currentPage: 1,
         show: false,
       };
+    },
+    methods: {
+      ajoutOffre(btn){
+        // this.$bvModal.show('ajouter-offre');
+        this.$root.$emit('bv::show::modal', "modal-4", btn)
+      },
     }
   }
 </script>

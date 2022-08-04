@@ -79,7 +79,7 @@
                         <template #title>
                           Pays
                         </template>
-                        Ajouter ou creez un Pays
+                        Ajouter ou creez un Pays  (en utilisant le boutton +)
                       </vs-alert>
                       <el-select v-model="new_ville.pays_id" :disabled="createNewPays" class="filter-item" placeholder="Pays" style="width: 80%;margin-right: 10px" prop="pays_id" @change="gotoNext()">
                         <el-option
@@ -90,7 +90,7 @@
                           :disabled="!pay.is_active"
                         />
                       </el-select>
-                      <base-button type="primary" class="el-button is-circle" @click="createNewPays=!createNewPays">
+                      <base-button type="primary" class="lev-button is-circle" @click="createNewPays=!createNewPays">
                         <span v-if="createNewPays" class="btn-inner--icon"><i class="ni ni-fat-delete"></i></span>
                         <span v-else class="btn-inner--icon"><i class="ni ni-fat-add"></i></span>
                       </base-button>
@@ -122,18 +122,18 @@
                         <template #title>
                           Ville
                         </template>
-                        Selectionnez ou créez une Ville
+                        Selectionnez ou créez une Ville (en utilisant le boutton +)
                       </vs-alert>
                       <el-select v-model="new_village.ville_id" :disabled="createNewVille" class="filter-item" placeholder="Ville" style="width: 80%; margin-right: 10px" prop="ville_id" @change="gotoNext()">
                         <el-option
-                          v-for="(ville, idex) in villes"
+                          v-for="(ville, idex) in paysVilles"
                           :key="idex"
                           :label="ville.libelle | uppercaseFirst"
                           :value="ville.id"
                           :disabled="!ville.is_active"
                         />
                       </el-select>
-                      <base-button type="primary" class="el-button is-circle" @click="createNewVille=!createNewVille">
+                      <base-button type="primary" class="lev-button is-circle" @click="createNewVille=!createNewVille">
                         <span v-if="createNewVille" class="btn-inner--icon"><i class="ni ni-fat-delete"></i></span>
                         <span v-else class="btn-inner--icon"><i class="ni ni-fat-add"></i></span>
                       </base-button>
@@ -164,7 +164,7 @@
                     <div class="village-step-form step-form">
                       <el-form ref="villageForm" :rules="villageRules" :model="new_village" label-position="left">
                         <el-form-item label="Village" prop="libelle">
-                          <el-input v-model="new_village.nom" />
+                          <el-input v-model="new_village.libelle" />
                         </el-form-item>
                         <el-form-item label="Description" prop="description">
                           <el-input v-model="new_village.description" type="textarea" />
@@ -259,7 +259,7 @@
           // description: [{ required: true, message: this.$t('region.DescriptionRequired'), trigger: 'blur' }],
         },
         villageRules: {
-          libelle: [{ required: true, message: 'Renseignez le nom de la ville', trigger: 'blur' }],
+          libelle: [{ required: true, message: 'Renseignez le nom du village', trigger: 'blur' }],
           // description: [{ required: true, message: this.$t('region.DescriptionRequired'), trigger: 'blur' }],
         },
       }
@@ -317,6 +317,8 @@
         if (this.steps.current === 0){
           if (this.new_ville.pays_id){
             this.steps.hasError = false;
+            console.log('PAYS ID', this.new_ville.pays_id);
+            this.new_village.ville_id = null;
             this.getPaysVilles(this.new_ville.pays_id);
             this.steps.current = 1;
           } else {
@@ -347,7 +349,7 @@
       getPaysVilles(pays_id){
         this.paysVilles = [];
         this.villes.forEach(ville => {
-          if (ville.pays_id === pays_id && !this.paysVilles.includes(ville)){
+          if (ville.pays.id === pays_id && !this.paysVilles.includes(ville)){
             this.paysVilles.push(ville);
           }
         });
@@ -478,7 +480,7 @@
   padding-top: 0;
   margin-left: 150px;
 }
-.el-button.is-circle {
+.lev-button.is-circle {
   border-radius: 50%;
   padding: 12px;
 }

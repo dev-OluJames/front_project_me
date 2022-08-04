@@ -6,7 +6,7 @@
         <b-col align-self="stretch">
           <vue-dropzone
             @vdropzone-file-added="setOption()"
-            v-model="offres.media"
+            v-model="donnees.media"
             ref="myVueDropzone"
             id="dropzone"
             :options="dropzoneOptions"
@@ -14,14 +14,14 @@
         </b-col>
         <b-col>
           <b-row>
-            <b-col align-self="baseline" cols="5">
+            <b-col align-self="baseline" :cols="type === 'offres' ? 5 : 6">
               <h6>Produit</h6>
-              <input type="text" class="form-control" id="prdt" placeholder="Produit" v-model="offres.libelle">
+              <input type="text" class="form-control" id="prdt" placeholder="Produit" v-model="donnees.libelle">
             </b-col>
-            <b-col cols="5">
+            <b-col :cols="type === 'offres' ? 5 : 6">
               <h6>Variete</h6>
               <base-input>
-                <el-select v-model="offres.variete_produit_id" filterable
+                <el-select v-model="donnees.variete_produit_id" filterable
                            placeholder="Variete" style="width: 100%">
                   <el-option v-for="(option, index) in variete_list"
                              :key="index"
@@ -31,8 +31,8 @@
                 </el-select>
               </base-input>
             </b-col>
-            <b-col>
-              <base-button type="primary" class="el-button is-circle" @click="createVariety=!createVariety">
+            <b-col v-if="type === 'offres'">
+              <base-button type="primary" class="lev-button is-circle" @click="createVariety=!createVariety">
                 <span class="btn-inner--icon"><i class="ni ni-fat-add"></i></span>
               </base-button>
             </b-col>
@@ -40,33 +40,33 @@
           <b-row>
             <b-col align-self="baseline">
               <h6>Quantite</h6>
-              <input type="number" class="form-control" id="qte" placeholder="Quantite" rows="2" v-model="offres.quantite">
+              <input type="number" class="form-control" id="qte" placeholder="Quantite" rows="2" v-model="donnees.quantite">
             </b-col>
             <b-col align-self="baseline">
               <h6>Mesure</h6>
-              <input type="texte" class="form-control" id="mesure" placeholder="Mesure " rows="2" v-model="offres.mesure">
+              <input type="texte" class="form-control" id="mesure" placeholder="Mesure " rows="2" v-model="donnees.mesure">
             </b-col>
           </b-row>
-          <b-row>
+          <b-row v-if="type === 'offres'">
             <b-col>
               <h6>Prix Agriculteur</h6>
-              <input type="number" class="form-control" id="prix_agri" placeholder="Prix Agriculteur" rows="2" v-model="offres.prix_agriculteur">
+              <input type="number" class="form-control" id="prix_agri" placeholder="Prix Agriculteur" rows="2" v-model="donnees.prix_agriculteur">
             </b-col>
             <b-col>
               <h6>Prix Plateforme</h6>
-              <input type="number" class="form-control" id="prix_plat" placeholder="Prix Plateforme" rows="2" v-model="offres.prix_plateforme">
+              <input type="number" class="form-control" id="prix_plat" placeholder="Prix Plateforme" rows="2" v-model="donnees.prix_plateforme">
             </b-col>
           </b-row>
           <b-row>
             <b-col>
               <h6>Date disponibilité</h6>
-              <input type="date" class="form-control" id="date_dispo" placeholder="Date de disponibilité" rows="2" v-model="offres.date_disponibilite">
+              <input type="date" class="form-control" id="date_dispo" placeholder="Date de disponibilité" rows="2" v-model="donnees.date_disponibilite">
             </b-col>
             <b-col>
               <h6>Village</h6>
               <base-input>
-                <el-select v-model="offres.village_id" filterable
-                           placeholder="Village">
+                <el-select v-model="donnees.village_id" filterable
+                           placeholder="Village" style="width: 100%">
                   <el-option v-for="(option, index) in villages"
                              :key="index"
                              :label="option.libelle"
@@ -74,14 +74,14 @@
                   </el-option>
                 </el-select>
               </base-input>
-              <!--            <input type="text" class="form-control" id="village" placeholder="Village" rows="2" v-model="offres.village_id">-->
+              <!--            <input type="text" class="form-control" id="village" placeholder="Village" rows="2" v-model="donnees.village_id">-->
             </b-col>
           </b-row>
           <b-row>
             <b-col>
               <h6>Description</h6>
-              <vue-editor :editor-toolbar="customToolbar" v-model="offres.description" class="ql-toolbar" rowspan="3" />
-              <!--        <textarea type="number" class="form-control" id="desc" placeholder="Description" v-model="offres.description"></textarea>-->
+              <vue-editor :editor-toolbar="customToolbar" v-model="donnees.description" class="ql-toolbar" rowspan="3" />
+              <!--        <textarea type="number" class="form-control" id="desc" placeholder="Description" v-model="donnees.description"></textarea>-->
             </b-col>
           </b-row>
         </b-col>
@@ -132,6 +132,7 @@ import Resource from "../../api/resource";
 import {Message} from "element-ui";
 import VueElementLoading from "vue-element-loading";
 const offreResource = new Resource('offres');
+const demandeResource = new Resource('demandes');
 const produitResource = new Resource('produits');
 const varieteResource = new Resource('varieteProduits');
 const villageResource = new Resource('villages');
@@ -142,7 +143,7 @@ export default {
     vueDropzone,
     VueElementLoading
   },
-  props: ['id', 'title'],
+  props: ['id', 'title', 'type'],
   data() {
     return {
       dropzoneOptions: {
@@ -158,7 +159,7 @@ export default {
         [{ list: "ordered" }, { list: "bullet" }],
         ["image", "code-block"]
       ],
-      offres: {},
+      donnees: {},
       produits: [],
       show: false,
       showVariety: false,
@@ -185,34 +186,59 @@ export default {
     ...mapActions('comptes', ['addMemberCompte', 'updateMemberCompte']),
 
     handleOk(bvModalEvent) {
-      this.offres.user_id = this.$store.getters.userId;
-      this.offres.is_visible = true;
-      this.offres.is_active = true;
-      console.log('Ajouter ', this.offres);
+      this.donnees.user_id = this.$store.getters.userId;
+      console.log('Ajouter ', this.donnees);
       bvModalEvent.preventDefault();
       this.show = true;
-      offreResource.store(this.offres)
-      .then((response) => {
-        Message({
-          message: response.message,
-          type: 'success',
-          duration: 5 * 1000,
-        });
-      })
-      .catch((error) => {
-        Message({
-          message: error,
-          type: 'error',
-          duration: 5 * 1000,
-        });
-      })
-      .finally(() => {
-        this.show = false;
-        this.$nextTick(() => {
-          this.$bvModal.hide(this.id);
-        })
-        console.log('DONE');
-      })
+      if (this.type === 'offres'){
+        offreResource.store(this.donnees)
+          .then((response) => {
+            Message({
+              message: response.message,
+              type: 'success',
+              duration: 5 * 1000,
+            });
+          })
+          .catch((error) => {
+            Message({
+              message: error,
+              type: 'error',
+              duration: 5 * 1000,
+            });
+          })
+          .finally(() => {
+            this.show = false;
+            this.$nextTick(() => {
+              this.$bvModal.hide(this.id);
+            })
+            console.log('DONE');
+          });
+      } else if (this.type === 'demandes'){
+        demandeResource.store(this.donnees)
+          .then((response) => {
+            Message({
+              message: response.message,
+              type: 'success',
+              duration: 5 * 1000,
+            });
+          })
+          .catch((error) => {
+            Message({
+              message: error,
+              type: 'error',
+              duration: 5 * 1000,
+            });
+          })
+          .finally(() => {
+            this.show = false;
+            this.$nextTick(() => {
+              this.$bvModal.hide(this.id);
+            })
+            console.log('DONE');
+          });
+      } else {
+        console.log('NON SUPPORTED');
+      }
       console.log('MEDIAS ', this.$refs.myVueDropzone.dropzone.files);
     },
     async getproduits(){
@@ -256,6 +282,7 @@ export default {
       varieteResource.store(this.new_variety)
       .then((response) => {
         console.log('RESPONSE DATA', response.data);
+        this.getVarieteList();
         Message({
           message: 'Variete Rajouté avec Succès',
           type: 'success',
@@ -287,7 +314,7 @@ export default {
   border-radius: 0.25rem 0.25rem 0 0;
   background-color: #fff
 }
-.el-button.is-circle {
+.lev-button.is-circle {
   border-radius: 50%;
   margin-top: 18px;
   padding: 12px;

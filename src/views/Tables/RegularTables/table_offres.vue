@@ -13,7 +13,7 @@
       <vue-element-loading :active="show" spinner="bar-fade-scale" color="#2dce94" />
       <el-table class="table-responsive table"
                   header-row-class-name="thead-light"
-                  :data="projects">
+                  :data="offres">
             <el-table-column label="Produits"
                              min-width="150px"
                              prop="name">
@@ -38,7 +38,7 @@
                              min-width="150px"
                              prop="description">
                 <template v-slot="{row}">
-                      <span class="status">{{row.description}}</span>
+                      <span class="status" v-html="row.description"></span>
                 </template>
             </el-table-column>
 
@@ -48,19 +48,19 @@
               </template>
             </el-table-column>
 
-            <el-table-column label="Prix"
+            <el-table-column label="Prix Agriculteur"
                              prop="completion"
                              min-width="150px">
               <template v-slot="{row}">
-                <span class="status">{{row.prix}}</span>
+                <span class="status">{{row.prix_agriculteur}}</span>
               </template>
             </el-table-column>
 
-            <el-table-column label="Mesure"
+            <el-table-column label="Prix plateforme"
                              prop="completion"
                              min-width="150px">
               <template v-slot="{row}">
-                <span class="status">{{row.mesure}}</span>
+                <span class="status">{{row.prix_plateforme}}</span>
               </template>
             </el-table-column>
 
@@ -91,8 +91,10 @@
 </template>
 <script>
   import projects from './../projects';
-  import { Table, TableColumn} from 'element-ui';
+  import {Message, Table, TableColumn} from 'element-ui';
   import VueElementLoading from "vue-element-loading";
+  import Resource from "../../../api/resource";
+  const offreResource = new Resource('offres');
 
   export default {
     name: 'table-offres',
@@ -106,8 +108,25 @@
         projects,
         currentPage: 1,
         show: false,
+        offres: [],
 
       };
+    },
+    created() {
+      this.getOffresList();
+    },
+    methods: {
+      getOffresList(){
+        this.show = true;
+        offreResource.list()
+        .then((respone) => {
+          this.offres = respone.data;
+        })
+        .finally(() => {
+          this.show = false;
+        });
+        console.log('OFFRES ', data);
+      }
     }
   }
 </script>

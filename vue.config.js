@@ -5,7 +5,7 @@ function resolveSrc(_path) {
 }
 // vue.config.js
 module.exports = {
-  publicPath: '/GIAC_FRONT/',
+  // publicPath: '/GIAC_FRONT/',
   lintOnSave: true,
   configureWebpack: {
     // Set up all the aliases we use in our app.

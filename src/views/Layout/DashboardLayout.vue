@@ -24,45 +24,42 @@
         <sidebar-item
               :link="{
                 name: 'Localites',
-                path: '/localites',
+                path: '/dashboard/localites',
                 icon: 'ni ni-pin-3 text-orange'
               }">
         </sidebar-item>
-
         <sidebar-item
                 :link="{
                   name: 'Commandes',
-                  path: '/demandes',
+                  path: '/dashboard/demandes',
                   icon: 'ni ni-bag-17 text-red'
                 }">
         </sidebar-item>
-
         <sidebar-item
                 :link="{
                   name: 'Offres',
-                  path: '/offres',
+                  path: '/dashboard/offres',
                   icon: 'ni ni-basket text-blue'
                 }">
         </sidebar-item>
-
         <sidebar-item
                   :link="{
                     name: 'Packs',
-                    path: '/packs',
+                    path: '/dashboard/packs',
                     icon: 'ni ni-box-2 text-info'
                   }">
         </sidebar-item>
         <sidebar-item
                   :link="{
                     name: 'Promotions',
-                    path: '/promotions',
+                    path: '/dashboard/promotions',
                     icon: 'ni ni-notification-70 text-pink'
                   }">
         </sidebar-item>
         <sidebar-item
                   :link="{
                     name: 'Produits',
-                    path: '/produits',
+                    path: '/dashboard/produits',
                     icon: 'ni ni-shop text-green'
                   }">
         </sidebar-item>

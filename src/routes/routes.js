@@ -1,8 +1,43 @@
 import DashboardLayout from '@/views/Layout/DashboardLayout.vue';
+import Store from "../views/Store/Store";
+import StoreOffres from "../views/Store/StoreOffres";
 import AuthLayout from '@/views/Pages/AuthLayout.vue';
+import NotFoundPage from "../views/NotFoundPage";
 const constantRoutes = [
   {
     path: '/',
+    redirect: '/store/offres',
+    component: Store,
+    // alwaysShow: true,
+    children: [
+      {
+        path: '/store/offres',
+        component: () => import(/* webpackChunkName: "users" */ '../views/Store/StoreOffres'),
+        name: 'Store-offres',
+        meta: { title: 'store-offres', icon: 'el-icon-user-solid' },
+      },
+      {
+        path: '/store/offres/detail/:id(\\d+)',
+        component: () => import(/* webpackChunkName: "roles" */ '@/views/Store/OffresDetail'),
+        name: 'Detail',
+        meta: { title: 'detailOffre', icon: 'el-icon-key' },
+      },
+      {
+        path: '/store/favoris',
+        component: () => import(/* webpackChunkName: "roles" */ '@/views/Admin/Roles'),
+        name: 'Favoris',
+        meta: { title: 'favoris', icon: 'el-icon-key' },
+      },
+      {
+        path: '/store/acceuil',
+        component: () => import(/* webpackChunkName: "roles" */ '@/views/Admin/Roles'),
+        name: 'acceuil',
+        meta: { title: 'acceuil', icon: 'el-icon-key' },
+      },
+    ],
+  },
+  {
+    path: '/dashboard',
     redirect: 'dashboard',
     component: DashboardLayout,
     children: [
@@ -15,70 +50,71 @@ const constantRoutes = [
         component: () => import(/* webpackChunkName: "demo" */ '../views/Dashboard.vue')
       },
       {
-        path: '/promotions',
+        path: 'promotions',
         name: 'promotions',
         component: () => import(/* webpackChunkName: "demo" */ '../views/Promotions/Promotions')
       },
       {
-        path: '/promotions/:id(\\d+)',
+        path: 'promotions/:id(\\d+)',
         component: () => import(/* webpackChunkName: "Packsdetail" */ '@/views/Promotions/detail'),
         name: 'promotion',
         meta: { title: 'Promotion', noCache: true },
         hidden: true,
       },
       {
-        path: '/produits',
+        path: 'produits',
         name: 'produits',
         component: () => import(/* webpackChunkName: "demo" */ '../views/Produits/Produits')
       },
       {
-        path: '/promotions/:id(\\d+)',
+        path: 'produits/:id(\\d+)',
         component: () => import(/* webpackChunkName: "Packsdetail" */ '@/views/Promotions/detail'),
-        name: 'promotion',
-        meta: { title: 'Promotion', noCache: true },
+        name: 'produits-detail',
+        meta: { title: 'Produits', noCache: true },
         hidden: true,
       },
       {
-        path: '/packs',
-        name: 'pack',
+        path: 'packs',
+        name: 'packs',
         component: () => import(/* webpackChunkName: "demo" */ '../views/Packs/Packs.vue')
       },
       {
-        path: '/packs/:id(\\d+)',
+        path: 'packs/:id(\\d+)',
         component: () => import(/* webpackChunkName: "Packsdetail" */ '@/views/Packs/detail'),
         name: 'pack',
         meta: { title: 'Pack', noCache: true },
         hidden: true,
       },
       {
-        path: '/localites',
+        path: 'localites',
         name: 'localites',
         component: () => import(/* webpackChunkName: "demo" */ '../views/Localites/Localites')
       },
       {
-        path: '/profile',
+        path: 'profile',
         name: 'profile',
         component: () => import(/* webpackChunkName: "demo" */ '../views/Pages/UserProfile.vue')
       },
       {
-        path: '/maps',
+        path: 'maps',
         name: 'maps',
         component: () => import(/* webpackChunkName: "demo" */ '../views/GoogleMaps.vue')
       },
       {
-        path: '/demandes',
+        path: 'demandes',
         name: 'demandes',
         component: () => import(/* webpackChunkName: "demo" */ '../views/Commandes.vue')
       },
       {
-        path: '/offres',
+        path: 'offres',
         name: 'offres',
         component: () => import(/* webpackChunkName: "demo" */ '../views/Offres.vue')
       }
     ]
   },
+  { path: '*', redirect: '/404', hidden: true, component: NotFoundPage },
   {
-    path: '/',
+    path: '/login',
     redirect: 'login',
     component: AuthLayout,
     children: [

@@ -59,4 +59,4 @@ class Resource {
   }
 }
 
-export { Resource as default };
+export default Resource;

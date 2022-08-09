@@ -21,9 +21,12 @@ router.beforeEach(async(to, from, next) => {
   // determine whether the user has logged in
   console.log('IS LOGGED', isLogged());
   const isUserLogged = isLogged();
-
+  console.log('TP PATH', to.path.includes('store'));
+  // if(to.path === '/'){
+  //   next({path: 'store/offres'});
+  // }
   if (isUserLogged) {
-    if (to.path === '/login' || to.path === '/register') {
+    if (to.path === '/login') {
       // if is logged in, redirect to the home page
       next({ path: from.path });
       NProgress.done();
@@ -56,7 +59,7 @@ router.beforeEach(async(to, from, next) => {
         }
       }
     }
-  } else if(to.path === '/register'){
+  } else if(to.path === '/register' || to.path.includes('store') || to.path === '/'){
     next();
   } else {
     /* has no token*/

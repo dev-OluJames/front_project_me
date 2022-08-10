@@ -163,8 +163,9 @@
                         <a href="#">Hot</a>
                       </div>
                       <div class="product-meta d-flex">
-                        <a href="#" class="wishlist-btn" style="background-color: #70c745;" @click="addFavoris(offre.id)"><i class="icon_heart_alt"></i></a>
-                        <a href="cart.html" class="add-to-cart-btn">+ Panier</a>
+                        <a v-if="isFavoris(offre.id)" href="#" class="wishlist-btn" style="background-color: #70c745;" @click="addFavoris(offre.id)"><i class="icon_heart_alt"></i></a>
+                        <a v-else href="#" class="wishlist-btn" @click="addFavoris(offre.id)"><i class="icon_heart_alt"></i></a>
+                        <a href="#" class="add-to-cart-btn">Demander</a>
                         <a href="#" class="compare-btn"><i class="arrow_left-right_alt"></i></a>
                       </div>
                     </div>
@@ -215,10 +216,14 @@ export default {
       offreFavoris: {},
       userFavoris: [],
       loaded: true,
+      authenticated : isLogged(),
     }
   },
   created() {
     this.offresList();
+    if (this.authenticated){
+      this.getUserOffresFavoris(this.$store.getters.userId);
+    }
   },
   methods: {
     offresList(){
@@ -245,7 +250,7 @@ export default {
         request({
           url: 'users/'+this.$store.getters.userId+'/offre_favoris',
           method: 'post',
-          query: this.offreFavoris,
+          data: this.offreFavoris,
         })
         .then((response) => {
           console.log(response);
@@ -272,8 +277,17 @@ export default {
         url: 'users/'+id+'/offre_favoris',
         method: 'get'
       });
-      this.userFavoris = data;
+      this.userFavoris = [];
+      const favoris_ids = [];
+      data.forEach((favoris)=> {
+        favoris_ids.push(favoris.id);
+      })
+      this.userFavoris = favoris_ids;
       console.log('USERS FAVORIS ', this.userFavoris);
+    },
+    isFavoris(id){
+      console.log('FAVORIS ', this.userFavoris);
+      return this.userFavoris.includes(id);
     }
   }
 }

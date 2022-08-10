@@ -34,6 +34,12 @@ const constantRoutes = [
         name: 'presentation',
         meta: { title: 'Presentation', icon: 'el-icon-key' },
       },
+      {
+        path: '/store/dashboard',
+        component: () => import(/* webpackChunkName: "roles" */ '@/views/Store/Dashboard/UserDetail'),
+        name: 'presentation',
+        meta: { title: 'Presentation', icon: 'el-icon-key' },
+      },
     ],
   },
   {

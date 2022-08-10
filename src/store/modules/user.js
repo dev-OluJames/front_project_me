@@ -21,6 +21,9 @@ const mutations = {
   SET_ID: (state, id) => {
     state.id = id;
   },
+  SET_USER: (state, user) => {
+    state.user = user;
+  },
   SET_TOKEN: (state, token) => {
     state.token = token;
   },
@@ -82,10 +85,10 @@ const actions = {
             reject('Verification failed, please Login again.');
           }
 
-          console.log('DATATAGETEER', data);
-
-          const { roles, username, avatar, introduction, permissions, id, email } = data;
-          console.log('information we get', { roles, username, avatar, introduction, permissions, id, email });
+          console.log('DATATAGETEER', data)
+          commit('SET_USER', data);
+          const { roles, nom, prenom, avatar, introduction, permissions, id, email } = data;
+          console.log('information we get', { roles, nom, prenom, avatar, introduction, permissions, id, email });
           // roles must be a non-empty array
           if (!roles || roles.length <= 0) {
             reject('getInfo: roles must be a non-null array!');
@@ -93,7 +96,7 @@ const actions = {
 
           commit('SET_ROLES', roles);
           commit('SET_PERMISSIONS', permissions);
-          commit('SET_NAME', username);
+          commit('SET_NAME', nom+ ' ' +prenom);
           commit('SET_EMAIL', email);
           commit('SET_AVATAR', avatar);
           commit('SET_INTRODUCTION', introduction);

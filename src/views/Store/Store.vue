@@ -18,8 +18,13 @@
                     <i style="font-size: 12px;" class="fa fa-phone" aria-hidden="true"></i> <span style="font-size: 12px;">Contact: +(228)91-19-44-77/96-32-32-23</span></a>
                 </div>
                 <div v-if="authenticated" class="top-header-meta d-flex">
+                  <div class="language-dropdown">
+                    <div class="dropdown">
+                      <router-link to="/store/dashboard"><i class="fa fa-user" aria-hidden="true"></i><span>compte</span></router-link>
+                    </div>
+                  </div>
                     <div class="login">
-                      <a href="#" @click="logout"><i class="fa fa-user" aria-hidden="true"></i> <span>Logout</span></a>
+                      <a href="#" @click="logout"><span>Logout</span></a>
                     </div>
                     <!-- Cart -->
                     <div class="cart">
@@ -117,7 +122,7 @@
                 <div class="footer-logo mb-30">
                   <a href="index"><img width="98" height="22" src="store/img/core-img/green.png" alt=""></a>
                 </div>
-                <p>GIAC, quand le bonheur vient à vous !!!</p>
+                <p>GIAC, quand le bonheur vient à vous!!!</p>
                 <div class="social-info">
                   <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
                   <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>

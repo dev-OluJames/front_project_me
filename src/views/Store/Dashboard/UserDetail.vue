@@ -9,6 +9,9 @@
     <div class="card-profile-image">
       <img src="store/img/bg-img/14.jpg" class="rounded-circle">
     </div>
+<!--    <button type="submit" class="btn alazea-btn mt-15">-->
+<!--      Modifier <input type="file" hidden>-->
+<!--    </button>-->
 
     <div class="container">
       <div class="row">
@@ -161,5 +164,8 @@ export default {
   border: 8px solid #fff;
   border-radius: 0.375rem;
   z-index: 100;
+}
+[hidden] {
+  display: none !important;
 }
 </style>

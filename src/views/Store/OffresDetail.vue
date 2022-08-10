@@ -1,6 +1,6 @@
 <template>
-  <div class="hello">
-
+  <div>
+    <Load :loaded="loading"/>
     <!-- ##### Breadcrumb Area Start ##### -->
     <div class="breadcrumb-area">
       <!-- Top Breadcrumb Area -->
@@ -13,8 +13,8 @@
           <div class="col-12">
             <nav aria-label="breadcrumb">
               <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#"><i class="fa fa-home"></i>Home</a></li>
-                <li class="breadcrumb-item"><a href="#">Shop</a></li>
+                <li class="breadcrumb-item"><router-link to="/"><i class="fa fa-home"></i>Home</router-link></li>
+                <li class="breadcrumb-item"><router-link to="/">Shop</router-link></li>
                 <li class="breadcrumb-item active" aria-current="page">Details</li>
               </ol>
             </nav>
@@ -72,14 +72,14 @@
 
                 <div class="cart--area d-flex flex-wrap align-items-center">
                   <!-- Add to Cart Form -->
-                  <form class="cart clearfix d-flex align-items-center" method="post">
+                  <div class="cart clearfix d-flex align-items-center">
                     <div class="quantity">
-                      <span class="qty-minus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty ) &amp;&amp; qty &gt; 1 ) effect.value--;return false;"><i class="fa fa-minus" aria-hidden="true"></i></span>
-                      <input type="number" class="qty-text" id="qty" step="1" min="1" :max="offre.quantite" name="quantity" value="1">
-                      <span class="qty-plus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty )) effect.value++;return false;"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                      <span class="qty-minus"><i class="fa fa-minus" aria-hidden="true"></i></span>
+                      <input type="number" class="qty-text" step="1" min="1" :max="offre.quantite" value="1">
+                      <span class="qty-plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
                     </div>
-                    <button type="submit" name="addtocart" value="5" class="btn alazea-btn ml-15">Add to cart</button>
-                  </form>
+                    <button class="btn alazea-btn ml-15" @click="envoyerDemande">Demander</button>
+                  </div>
                   <!-- Wishlist & Compare -->
                   <div class="wishlist-compare d-flex flex-wrap align-items-center">
                     <a href="#" class="wishlist-btn ml-15"><i class="icon_heart_alt"></i></a>
@@ -88,8 +88,8 @@
                 </div>
 
                 <div class="products--meta">
-                  <p><span>VARIETE:</span> <span>{{ offre.variete_produit.nom }}</span></p>
-                  <p><span>VILLAGE:</span> <span>{{ offre.village.libelle }}</span></p>
+                  <p><span>VARIETE:</span> <span>{{ offre.variete_produit ? offre.variete_produit.nom : '' }}</span></p>
+                  <p><span>VILLAGE:</span> <span>{{ offre.village ? offre.village.libelle : ''}}</span></p>
                   <p><span>QTTE:</span> <span>{{ offre.quantite }} {{ offre.mesure }}</span></p>
                   <p><span>DATE DISPONIBLE:</span> <span>{{ offre.date_disponibilite }}</span></p>
                   <!-- p><span>SKU:</span> <span>CT201807</span></p>
@@ -374,48 +374,64 @@
 
 <script>
 import Resource from "../../api/resource";
-const offreResource = new Resource('offres')
+import Load from "../../components/Loading/Load";
+import {Message} from "element-ui";
+
+const offreResource = new Resource('offres');
 export default {
   name: 'OffresDetail',
   props: {
     msg: String
   },
+  components: {
+    Load,
+  },
   data () {
     return {
+      loading: true,
       offre: {},
     };
-  },
-  mounted() {
-    let jqueryScript = document.createElement('script')
-    jqueryScript.setAttribute('src', 'store/js/jquery/jquery-2.2.4.min.js')
-    document.head.appendChild(jqueryScript)
-
-    let popperScript = document.createElement('script')
-    popperScript.setAttribute('src', 'store/js/bootstrap/popper.min.js')
-    document.head.appendChild(popperScript)
-
-    let bootstrapScript = document.createElement('script')
-    bootstrapScript.setAttribute('src', 'store/js/bootstrap/bootstrap.min.js')
-    document.head.appendChild(bootstrapScript)
-
-    let pluginsScript = document.createElement('script')
-    pluginsScript.setAttribute('src', 'store/js/plugins/plugins.js')
-    document.head.appendChild(pluginsScript)
-
-    let activeScript = document.createElement('script')
-    activeScript.setAttribute('src', 'store/js/active.js')
-    document.head.appendChild(activeScript)
   },
   created() {
     this.getOffresDetail();
   },
   methods: {
-    async getOffresDetail(){
-      const { data } = await offreResource.get(this.$route.params.id);
-      this.offre = data;
-      console.log('THIS OFFER', this.offre);
+    getOffresDetail(){
+      offreResource.get(this.$route.params.id)
+      .then((response) => {
+        this.offre = response.data;
+        console.log('THIS OFFER', this.offre);
+        this.loading = false;
+      });
+    },
+    envoyerDemande(){
+      Message({
+        message: 'Demande envoyé',
+        type: 'success',
+        duration: 5 * 1000,
+      })
     }
   }
 }
 </script>
+<style lang="scss" scoped>
+.alazea-btn {
+  -webkit-transition-duration: 400ms;
+  transition-duration: 400ms;
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  min-width: 150px;
+  height: 46px;
+  color: #ffffff;
+  background-color: #70c745;
+  border: 2px solid #70c745;
+  border-radius: 2px;
+  padding: 0 20px;
+  font-size: 16px;
+  line-height: 42px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+</style>
 

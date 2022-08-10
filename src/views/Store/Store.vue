@@ -13,11 +13,24 @@
                 <!-- Top Header Content -->
                 <div class="top-header-meta">
                   <a href="#" data-toggle="tooltip" data-placement="bottom" title="giacagri@gmail.com">
-                    <i style="font-size: 18px;" class="fa fa-envelope-o" aria-hidden="true"></i> <span style="font-size: 18px;">Email: giacagri@gmail.com</span></a>
+                    <i style="font-size: 12px;" class="fa fa-envelope-o" aria-hidden="true"></i> <span style="font-size: 12px;">Email: giacagri@gmail.com</span></a>
                   <a href="#" data-toggle="tooltip" data-placement="bottom" title="+(228)91-19-44-77/96-32-32-23">
-                    <i style="font-size: 18px;" class="fa fa-phone" aria-hidden="true"></i> <span style="font-size: 18px;">Contact: +(228)91-19-44-77/96-32-32-23</span></a>
+                    <i style="font-size: 12px;" class="fa fa-phone" aria-hidden="true"></i> <span style="font-size: 12px;">Contact: +(228)91-19-44-77/96-32-32-23</span></a>
                 </div>
-
+                <div v-if="authenticated" class="top-header-meta d-flex">
+                    <div class="login">
+                      <a href="#" @click="logout"><i class="fa fa-user" aria-hidden="true"></i> <span>Logout</span></a>
+                    </div>
+                    <!-- Cart -->
+                    <div class="cart">
+                      <a href="#"><i class="fa fa-shopping-cart" aria-hidden="true"></i> <span>Cart <span class="cart-quantity">(0)</span></span></a>
+                    </div>
+                </div>
+                <div v-else class="top-header-meta d-flex">
+                  <div class="login">
+                    <router-link to="/login"><i class="fa fa-user" aria-hidden="true"></i> <span>Login</span></router-link>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -32,7 +45,7 @@
             <nav class="classy-navbar justify-content-between" id="alazeaNav">
 
               <!-- Nav Brand -->
-              <a href="index.html" class="nav-brand">
+              <a href="#" class="nav-brand">
                 <img width="98" height="22" src="store/img/core-img/green.png" alt="">
               </a>
 
@@ -52,11 +65,19 @@
                 <!-- Navbar Start -->
                 <div class="classynav">
                   <ul>
-                    <li><a style="font-size: 22px;" href="index.html">Accueil</a></li>
-                    <li><a style="font-size: 22px;" href="presentation.html">Présentation</a></li>
-                    <li><a style="font-size: 22px;" href="partenaire.html">Nos Partenaires</a></li>
-                    <li><a style="font-size: 22px;" href="equipes.html">Equipes</a></li>
-                    <li><a style="font-size: 22px;" href="contact.html">Contact</a></li>
+                    <li>
+                      <router-link to="/" style="font-size: 22px;">
+                        Accueil
+                      </router-link>
+                    </li>
+                    <li>
+                      <router-link to="/store/presentation" style="font-size: 22px;">
+                        Présentation
+                      </router-link>
+                    </li>
+                    <li><a style="font-size: 22px;" href="#">Nos Partenaires</a></li>
+                    <li><a style="font-size: 22px;" href="#">Equipes</a></li>
+                    <li><a style="font-size: 22px;" href="#">Contact</a></li>
                   </ul>
 
                   <!-- Search Icon -->
@@ -94,7 +115,7 @@
             <div class="col-12 col-sm-6 col-lg-4">
               <div class="single-footer-widget">
                 <div class="footer-logo mb-30">
-                  <a href="index.html"><img width="98" height="22" src="store/img/core-img/green.png" alt=""></a>
+                  <a href="index"><img width="98" height="22" src="store/img/core-img/green.png" alt=""></a>
                 </div>
                 <p>GIAC, quand le bonheur vient à vous !!!</p>
                 <div class="social-info">
@@ -110,23 +131,23 @@
             <!-- Single Footer Widget -->
             <div class="col-12 col-sm-6 col-lg-4">
               <div class="single-footer-widget">
-                <div class="widget-title">
-                  <h5>LIEN RAPIDE</h5>
-                </div>
-                <nav class="widget-nav">
-                  <ul>
-                    <li><a href="#">Purchase</a></li>
-                    <li><a href="#">FAQs</a></li>
-                    <li><a href="#">Payment</a></li>
-                    <li><a href="#">News</a></li>
-                    <li><a href="#">Return</a></li>
-                    <li><a href="#">Advertise</a></li>
-                    <li><a href="#">Shipping</a></li>
-                    <li><a href="#">Career</a></li>
-                    <li><a href="#">Orders</a></li>
-                    <li><a href="#">Policities</a></li>
-                  </ul>
-                </nav>
+<!--                <div class="widget-title">-->
+<!--                  <h5>LIEN RAPIDE</h5>-->
+<!--                </div>-->
+<!--                <nav class="widget-nav">-->
+<!--                  <ul>-->
+<!--                    <li><a href="#">Purchase</a></li>-->
+<!--                    <li><a href="#">FAQs</a></li>-->
+<!--                    <li><a href="#">Payment</a></li>-->
+<!--                    <li><a href="#">News</a></li>-->
+<!--                    <li><a href="#">Return</a></li>-->
+<!--                    <li><a href="#">Advertise</a></li>-->
+<!--                    <li><a href="#">Shipping</a></li>-->
+<!--                    <li><a href="#">Career</a></li>-->
+<!--                    <li><a href="#">Orders</a></li>-->
+<!--                    <li><a href="#">Policities</a></li>-->
+<!--                  </ul>-->
+<!--                </nav>-->
               </div>
             </div>
 
@@ -166,11 +187,11 @@
               <div class="footer-nav">
                 <nav>
                   <ul>
-                    <li><a href="index.html">Accueil</a></li>
-                    <li><a href="presentation.html">Présentation</a></li>
-                    <li><a href="partenaire.html">Nos Partenaires</a></li>
-                    <li><a href="equipes.html">Equipes</a></li>
-                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="#">Accueil</a></li>
+                    <li><a href="#">Présentation</a></li>
+                    <li><a href="#">Nos Partenaires</a></li>
+                    <li><a href="#">Equipes</a></li>
+                    <li><a href="#">Contact</a></li>
                   </ul>
                 </nav>
               </div>
@@ -183,8 +204,46 @@
 </template>
 
 <script>
+import Cookies from "js-cookie";
+import {removeToken} from "../../utils/auth";
+import {isLogged} from "../../utils/auth";
+
 export default {
-  name: "Store"
+  name: "Store",
+  created() {
+    let jqueryScript = document.createElement('script')
+    jqueryScript.setAttribute('src', 'store/js/jquery/jquery-2.2.4.min.js')
+    document.head.appendChild(jqueryScript)
+
+    let popperScript = document.createElement('script')
+    popperScript.setAttribute('src', 'store/js/bootstrap/popper.min.js')
+    document.head.appendChild(popperScript)
+
+    let bootstrapScript = document.createElement('script')
+    bootstrapScript.setAttribute('src', 'store/js/bootstrap/bootstrap.min.js')
+    document.head.appendChild(bootstrapScript)
+
+    let pluginsScript = document.createElement('script')
+    pluginsScript.setAttribute('src', 'store/js/plugins/plugins.js')
+    document.head.appendChild(pluginsScript)
+
+    let activeScript = document.createElement('script')
+    activeScript.setAttribute('src', 'store/js/active.js')
+    document.head.appendChild(activeScript)
+  },
+  data () {
+    return {
+      authenticated : isLogged(),
+    }
+  },
+  methods: {
+    async logout() {
+      Cookies.remove('token_key');
+      // await this.$store.dispatch('user/logout');
+      removeToken();
+      this.authenticated = false;
+    },
+  }
 }
 </script>
 

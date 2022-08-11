@@ -35,6 +35,24 @@ const constantRoutes = [
         meta: { title: 'Presentation', icon: 'el-icon-key' },
       },
       {
+        path: '/store/partenaire',
+        component: () => import(/* webpackChunkName: "roles" */ '@/views/Store/Partenaires'),
+        name: 'partenaire',
+        meta: { title: 'Partenaire', icon: 'el-icon-key' },
+      },
+      {
+        path: '/store/equipe',
+        component: () => import(/* webpackChunkName: "roles" */ '@/views/Store/Equipe'),
+        name: 'equipe',
+        meta: { title: 'Equipe', icon: 'el-icon-key' },
+      },
+      {
+        path: '/store/contact',
+        component: () => import(/* webpackChunkName: "roles" */ '@/views/Store/Contact'),
+        name: 'contact',
+        meta: { title: 'Contact', icon: 'el-icon-key' },
+      },
+      {
         path: '/store/dashboard',
         component: () => import(/* webpackChunkName: "roles" */ '@/views/Store/Dashboard/UserDetail'),
         name: 'presentation',

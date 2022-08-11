@@ -115,10 +115,175 @@
                   </div>
                 </div>
                 <!-- ========== FIN PROFILE =========== -->
-                <div class="tab-pane fade" id="commande" role="tabpanel" aria-labelledby="profile-tab">...</div>
-                <div class="tab-pane fade" id="demande" role="tabpanel" aria-labelledby="contact-tab">...</div>
-                <div class="tab-pane fade" id="offre" role="tabpanel" aria-labelledby="contact-tab">...</div>
-                <div class="tab-pane fade" id="favoris" role="tabpanel" aria-labelledby="contact-tab">...</div>
+
+                <!-- ========== COMMANDES =========== -->
+                <div class="tab-pane fade" id="commande" role="tabpanel" aria-labelledby="profile-tab">
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="cart-table clearfix">
+                          <table class="table table-responsive">
+                            <thead>
+                            <tr>
+                              <th>Produits</th>
+                              <th>Quantité</th>
+                              <th>Prix</th>
+                              <th>TOTAL</th>
+                              <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                              <td class="cart_product_img">
+                                <a href="#"><img src="store/img/bg-img/34.jpg" alt="Product"></a>
+                                <h5>Recuerdos Plant</h5>
+                              </td>
+                              <td class="qty">
+                                <div class="quantity">
+                                  <span class="qty-minus" ><i class="fa fa-minus" aria-hidden="true"></i></span>
+                                  <input type="number" class="qty-text" step="1" min="1" max="99" name="quantity" value="1">
+                                  <span class="qty-plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                                </div>
+                              </td>
+                              <td class="price"><span>$9.99</span></td>
+                              <td class="total_price"><span>$9.99</span></td>
+                              <td class="action"><a href="#"><i class="icon_close"></i></a></td>
+                            </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- ========== FIN COMMANDES =========== -->
+
+                <!-- ========== DEMANDE =========== -->
+                <div class="tab-pane fade" id="demande" role="tabpanel" aria-labelledby="contact-tab">
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="cart-table clearfix">
+                          <table class="table table-responsive">
+                            <thead>
+                            <tr>
+                              <th>Produits</th>
+                              <th>Quantité</th>
+                              <th>Prix</th>
+                              <th>TOTAL</th>
+                              <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                              <td class="cart_product_img">
+                                <a href="#"><img src="store/img/bg-img/34.jpg" alt="Product"></a>
+                                <h5>Recuerdos Plant</h5>
+                              </td>
+                              <td class="qty">
+                                <div class="quantity">
+                                  <span class="qty-minus" ><i class="fa fa-minus" aria-hidden="true"></i></span>
+                                  <input type="number" class="qty-text" step="1" min="1" max="99" name="quantity" value="1">
+                                  <span class="qty-plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                                </div>
+                              </td>
+                              <td class="price"><span>$9.99</span></td>
+                              <td class="total_price"><span>$9.99</span></td>
+                              <td class="action"><a href="#"><i class="icon_close"></i></a></td>
+                            </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- ========== FIN DEMANDES =========== -->
+
+                <!-- ========== OFFRES =========== -->
+                <div class="tab-pane fade" id="offre" role="tabpanel" aria-labelledby="contact-tab">
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="cart-table clearfix">
+                          <table class="table table-responsive">
+                            <thead>
+                            <tr>
+                              <th>Produits</th>
+                              <th>Quantité</th>
+                              <th>Prix</th>
+                              <th>TOTAL</th>
+                              <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                              <td class="cart_product_img">
+                                <a href="#"><img src="store/img/bg-img/34.jpg" alt="Product"></a>
+                                <h5>Recuerdos Plant</h5>
+                              </td>
+                              <td class="qty">
+                                <div class="quantity">
+                                  <span class="qty-minus" ><i class="fa fa-minus" aria-hidden="true"></i></span>
+                                  <input type="number" class="qty-text" step="1" min="1" max="99" name="quantity" value="1">
+                                  <span class="qty-plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                                </div>
+                              </td>
+                              <td class="price"><span>$9.99</span></td>
+                              <td class="total_price"><span>$9.99</span></td>
+                              <td class="action"><a href="#"><i class="icon_close"></i></a></td>
+                            </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- ========== FIN OFFRES =========== -->
+
+                <!-- ========== FAVORIS =========== -->
+                <div class="tab-pane fade" id="favoris" role="tabpanel" aria-labelledby="contact-tab">
+                  <div class="container">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="cart-table clearfix">
+                        <table class="table table-responsive">
+                          <thead>
+                          <tr>
+                            <th>Produits</th>
+                            <th>Quantité</th>
+                            <th>Prix</th>
+                            <th>TOTAL</th>
+                            <th></th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          <tr>
+                            <td class="cart_product_img">
+                              <a href="#"><img src="store/img/bg-img/34.jpg" alt="Product"></a>
+                              <h5>Recuerdos Plant</h5>
+                            </td>
+                            <td class="qty">
+                              <div class="quantity">
+                                <span class="qty-minus" ><i class="fa fa-minus" aria-hidden="true"></i></span>
+                                <input type="number" class="qty-text" step="1" min="1" max="99" name="quantity" value="1">
+                                <span class="qty-plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                              </div>
+                            </td>
+                            <td class="price"><span>$9.99</span></td>
+                            <td class="total_price"><span>$9.99</span></td>
+                            <td class="action"><a href="#"><i class="icon_close"></i></a></td>
+                          </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                </div>
+                <!-- ========== FIN FAVORIS =========== -->
+
               </div>
             </div>
           </div>
@@ -167,5 +332,14 @@ export default {
 }
 [hidden] {
   display: none !important;
+}
+.cart-table thead th {
+  border: none;
+  border-bottom: none;
+  font-size: 18px;
+  color: #303030;
+  font-weight: 500;
+  text-transform: uppercase;
+  text-align: left;
 }
 </style>

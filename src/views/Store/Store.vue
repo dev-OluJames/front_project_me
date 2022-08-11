@@ -80,9 +80,21 @@
                         Présentation
                       </router-link>
                     </li>
-                    <li><a style="font-size: 22px;" href="#">Nos Partenaires</a></li>
-                    <li><a style="font-size: 22px;" href="#">Equipes</a></li>
-                    <li><a style="font-size: 22px;" href="#">Contact</a></li>
+                    <li>
+                      <router-link to="/store/partenaire" style="font-size: 22px;">
+                        Nos Partenaires
+                      </router-link>
+                    </li>
+                    <li>
+                      <router-link to="/store/equipe" style="font-size: 22px;">
+                        Equipes
+                      </router-link>
+                    </li>
+                    <li>
+                      <router-link to="/store/contact" style="font-size: 22px;">
+                        Contact
+                      </router-link>
+                    </li>
                   </ul>
 
                   <!-- Search Icon -->

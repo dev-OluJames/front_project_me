@@ -24,7 +24,7 @@
                 <template v-slot="{row}">
                     <b-media no-body class="align-items-center">
                         <a href="#" class="avatar rounded-circle mr-3">
-                            <img alt="Image placeholder" :src="row.img">
+                            <img alt="Image placeholder" src="img/theme/team-1.jpg">
                         </a>
                     </b-media>
                 </template>
@@ -38,13 +38,13 @@
               </template>
             </el-table-column>
 
-            <el-table-column label="Description"
-                             min-width="300px"
-                             prop="description">
-                <template v-slot="{row}">
-                      <span class="status" v-html="row.description"></span>
-                </template>
-            </el-table-column>
+<!--            <el-table-column label="Description"-->
+<!--                             min-width="400px"-->
+<!--                             prop="description">-->
+<!--                <template v-slot="{row}">-->
+<!--                      <span class="status" v-html="row.description"></span>-->
+<!--                </template>-->
+<!--            </el-table-column>-->
 
             <el-table-column label="Quantite" min-width="150px">
               <template v-slot="{row}">
@@ -64,7 +64,7 @@
                            prop="completion"
                            min-width="150px">
             <template v-slot="{row}">
-                <span class="text-sm">
+                <span class="table-action">
                   <a href="javascript:;" data-bs-toggle="tooltip" data-bs-original-title="Preview product">
                     <i class="fas fa-eye text-secondary" aria-hidden="true"></i>
                   </a>
@@ -137,4 +137,18 @@
 <style>
 .text-secondary {
   color: #8392ab!important;
-}</style>
+}
+.table-action {
+  font-size: .875rem;
+  color: #adb5bd;
+  margin: 0 0.25rem;
+}
+
+a, a:hover {
+  text-decoration: none;
+}
+a {
+  color: #5e72e4;
+  background-color: transparent;
+}
+</style>

@@ -74,3 +74,37 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.scrollbar-inner .scroll-element.scroll-y {
+  right: 0;
+  width: 3px;
+}
+.scrollbar-inner:not(:hover) .scroll-element {
+  opacity: 0;
+}
+
+.scrollbar-inner > .scroll-element.scroll-y {
+  top: 0;
+  right: 2px;
+  width: 8px;
+  height: 100%;
+}
+.scroll-element.scroll-x.scroll-scrollx_visible, .scroll-element.scroll-y.scroll-scrolly_visible {
+  display: block;
+}
+.scrollbar-inner .scroll-element {
+  margin-right: 2px;
+  transition: opacity 300ms;
+}
+.scrollbar-inner > .scroll-element, .scrollbar-inner > .scroll-element div {
+  position: absolute;
+  z-index: 10;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+.scroll-element {
+  display: none;
+  box-sizing: content-box;
+}
+</style>

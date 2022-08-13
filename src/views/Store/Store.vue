@@ -20,7 +20,7 @@
                 <div v-if="authenticated" class="top-header-meta d-flex">
                   <div class="language-dropdown">
                     <div class="dropdown">
-                      <router-link to="/store/dashboard"><i class="fa fa-user" aria-hidden="true"></i><span>compte</span></router-link>
+                      <router-link to="/store/compte"><i class="fa fa-user" aria-hidden="true"></i><span>compte</span></router-link>
                     </div>
                   </div>
                     <div class="login">

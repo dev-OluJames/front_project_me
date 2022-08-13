@@ -1,5 +1,6 @@
 <template>
   <b-navbar toggleable :class="classes">
+
     <div :class="containerClasses">
       <slot name="brand"></slot>
 

@@ -91,8 +91,6 @@
                   <li>
                     <hr class="my-3" style="margin-left: 2rem; margin-right: 2rem;">
                   </li>
-                  <!--Heading-->
-                  <!--                <h6 class="navbar-heading text-muted">ADMINISTRATION</h6>-->
                   <sidebar-item
                     :link="{
                       name: 'Administration',

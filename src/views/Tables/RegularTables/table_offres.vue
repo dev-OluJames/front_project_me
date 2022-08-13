@@ -20,7 +20,7 @@
                 <template v-slot="{row}">
                     <b-media no-body class="align-items-center">
                         <a href="#" class="avatar rounded-circle mr-3">
-                            <img alt="Image placeholder" :src="row.img">
+                            <img alt="Image placeholder" src="img/theme/team-1.jpg">
                         </a>
                     </b-media>
                 </template>
@@ -34,13 +34,13 @@
               </template>
             </el-table-column>
 
-            <el-table-column label="Description"
-                             min-width="150px"
-                             prop="description">
-                <template v-slot="{row}">
-                      <span class="status" v-html="row.description"></span>
-                </template>
-            </el-table-column>
+<!--            <el-table-column label="Description"-->
+<!--                             min-width="350px"-->
+<!--                             prop="description">-->
+<!--                <template v-slot="{row}">-->
+<!--                      <span class="status" v-html="row.description"></span>-->
+<!--                </template>-->
+<!--            </el-table-column>-->
 
             <el-table-column label="Quantite" min-width="150px">
               <template v-slot="{row}">

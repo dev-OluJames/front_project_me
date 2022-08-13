@@ -53,10 +53,10 @@ const constantRoutes = [
         meta: { title: 'Contact', icon: 'el-icon-key' },
       },
       {
-        path: '/store/dashboard',
+        path: '/store/compte',
         component: () => import(/* webpackChunkName: "roles" */ '@/views/Store/Dashboard/UserDetail'),
-        name: 'presentation',
-        meta: { title: 'Presentation', icon: 'el-icon-key' },
+        name: 'compte',
+        meta: { title: 'Compte', icon: 'el-icon-key' },
       },
     ],
   },
@@ -84,6 +84,16 @@ const constantRoutes = [
         name: 'promotion',
         meta: { title: 'Promotion', noCache: true },
         hidden: true,
+      },
+      {
+        path: 'typedemande',
+        name: 'typedemande',
+        component: () => import(/* webpackChunkName: "demo" */ '../views/Menu/TypeDemande.vue')
+      },
+      {
+        path: 'typeoffre',
+        name: 'typeoffre',
+        component: () => import(/* webpackChunkName: "demo" */ '../views/Menu/TypeOffre.vue')
       },
       {
         path: 'produits',
@@ -190,6 +200,12 @@ const constantRoutes = [
       },
     ],
   },
+  {
+    path: '/forbiden',
+    component: () => import(/* webpackChunkName: "roles" */ '@/views/Forbiden'),
+    name: 'Forbiden',
+    meta: { title: 'rolePermission', icon: 'el-icon-key' },
+  }
 ];
 
 export default constantRoutes;

@@ -26,6 +26,12 @@ router.beforeEach(async(to, from, next) => {
   //   next({path: 'store/offres'});
   // }
   if (isUserLogged) {
+    const { roles, permissions } = await store.dispatch('user/getInfo');
+    if (to.path.includes('dashboard') || to.path.includes('administration')){
+      if (roles[0] === 'utilisateur'){
+        next({path: '/forbiden'});
+      }
+    }
     if (to.path === '/login') {
       // if is logged in, redirect to the home page
       next({ path: from.path });
@@ -34,9 +40,8 @@ router.beforeEach(async(to, from, next) => {
       console.log('LES PERMISSIONS de : ', to.meta.title);
       console.log(' SONT : ', to.meta.permissions);
       // determine whether the user has obtained his permission roles through getInfo
-      const { roles, permissions } = await store.dispatch('user/getInfo');
       const hasRoles = roles && roles.length > 0;
-      console.log(' PERMISSIONS UTILISATEURS : ', permissions);
+      console.log(' PERMISSIONS UTILISATEURS : ', permissions, roles);
       if (hasRoles) {
         next();
       } else {

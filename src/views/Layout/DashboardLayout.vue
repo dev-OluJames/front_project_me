@@ -57,11 +57,32 @@
                   }">
         </sidebar-item>
         <sidebar-item
-                  :link="{
-                    name: 'Produits',
-                    path: '/dashboard/produits',
-                    icon: 'ni ni-shop text-green'
-                  }">
+          :link="{
+                      name: 'Menu',
+                      path: '/menu',
+                      icon: 'ni ni-shop text-green',
+                      children: [
+                        { link : {
+                          name: 'Produits',
+                          path: '/dashboard/produits',
+                          icon: 'ni ni-shop text-green'
+                          },
+                        },
+                        { link : {
+                          name: 'Type Demande',
+                          path: '/dashboard/typedemande',
+                          icon: 'ni ni-circle-08 text-blue',
+                          },
+                        },
+                        {
+                          link : {
+                          name: 'Type Offre',
+                          path: '/dashboard/typeoffre',
+                          icon: 'ni ni-key-25 text-warning',
+                          },
+                        },
+                      ]
+                      }">
         </sidebar-item>
       </template>
 

@@ -100,7 +100,7 @@
 
   Vue.use(VueClipboard)
   export default {
-    name: 'icons',
+    name: 'produits',
     components: {
       BaseHeader,
       VueElementLoading,

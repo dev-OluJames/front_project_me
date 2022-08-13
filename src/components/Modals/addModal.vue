@@ -14,15 +14,20 @@
         </b-col>
         <b-col>
           <b-row>
-            <b-col align-self="baseline" :cols="type === 'offres' ? 5 : 6">
+            <b-col :cols="6">
               <h6>Produit</h6>
               <input type="text" class="form-control" id="prdt" placeholder="Produit" v-model="donnees.libelle">
             </b-col>
-            <b-col :cols="type === 'offres' ? 5 : 6">
+            <b-col :cols="6">
               <h6>Variete</h6>
               <base-input>
-                <el-select v-model="donnees.variete_produit_id" filterable
+                <el-select v-model="donnees.variete_produit_id" @click="getVarieteList" filterable
                            placeholder="Variete" style="width: 100%">
+                  <el-option v-if="type === 'offres'">
+                    <base-button type="primary" style="width: 100%;border-radius: 0px" @click="createVariety=!createVariety">
+                      <span class="btn-inner--icon"><i class="ni ni-fat-add"></i></span>
+                    </base-button>
+                  </el-option>
                   <el-option v-for="(option, index) in variete_list"
                              :key="index"
                              :label="option.nom"
@@ -31,42 +36,78 @@
                 </el-select>
               </base-input>
             </b-col>
-            <b-col v-if="type === 'offres'">
+            <!-- b-col v-if="type === 'offres'">
               <base-button type="primary" class="lev-button is-circle" @click="createVariety=!createVariety">
                 <span class="btn-inner--icon"><i class="ni ni-fat-add"></i></span>
               </base-button>
-            </b-col>
+            </b-col-->
           </b-row>
           <b-row>
-            <b-col align-self="baseline">
+            <b-col v-if="type === 'offres'">
+              <h6>Type d'offre</h6>
+              <base-input>
+                <el-select v-model="donnees.type_offre_id" @click="getTypeOffres" filterable
+                           placeholder="Type Offre" style="width: 100%">
+                  <el-option v-if="type === 'offres'">
+                    <base-button type="primary" style="width: 100%;border-radius: 0px" @click="createToffre=!createToffre">
+                      <span class="btn-inner--icon"><i class="ni ni-fat-add"></i></span>
+                    </base-button>
+                  </el-option>
+                  <el-option v-for="(option, index) in type_offres"
+                             :key="index"
+                             :label="option.libelle"
+                             :value="option.id">
+                  </el-option>
+                </el-select>
+              </base-input>
+            </b-col>
+            <b-col v-else>
+              <h6>Type demande</h6>
+              <base-input>
+                <el-select v-model="donnees.type_demande_id" @click="getTypedemandes" filterable
+                           placeholder="Type demande" style="width: 100%">
+                  <el-option>
+                    <base-button type="primary" style="width: 100%;border-radius: 0px" @click="createTdemande=!createTdemande">
+                      <span class="btn-inner--icon"><i class="ni ni-fat-add"></i></span>
+                    </base-button>
+                  </el-option>
+                  <el-option v-for="(option, index) in type_demandes"
+                             :key="index"
+                             :label="option.libelle"
+                             :value="option.id">
+                  </el-option>
+                </el-select>
+              </base-input>
+            </b-col>
+            <b-col style="margin-bottom: 12px">
               <h6>Quantite</h6>
               <input type="number" class="form-control" id="qte" placeholder="Quantite" rows="2" v-model="donnees.quantite">
             </b-col>
-            <b-col align-self="baseline">
+            <b-col style="margin-bottom: 12px">
               <h6>Mesure</h6>
               <input type="texte" class="form-control" id="mesure" placeholder="Mesure " rows="2" v-model="donnees.mesure">
             </b-col>
           </b-row>
           <b-row v-if="type === 'offres'">
-            <b-col>
+            <b-col style="margin-bottom: 12px">
               <h6>Prix Agriculteur</h6>
               <input type="number" class="form-control" id="prix_agri" placeholder="Prix Agriculteur" rows="2" v-model="donnees.prix_agriculteur">
             </b-col>
-            <b-col>
+            <b-col style="margin-bottom: 12px">
               <h6>Prix Plateforme</h6>
               <input type="number" class="form-control" id="prix_plat" placeholder="Prix Plateforme" rows="2" v-model="donnees.prix_plateforme">
             </b-col>
           </b-row>
           <b-row>
-            <b-col v-if="type === 'offres'">
+            <b-col v-if="type === 'offres'"  style="margin-bottom: 12px">
               <h6>Date disponibilité</h6>
               <input type="date" class="form-control" id="date_dispo" placeholder="Date de disponibilité" rows="2" v-model="donnees.date_disponibilite">
             </b-col>
-            <b-col v-else>
+            <b-col v-else style="margin-bottom: 12px">
               <h6>Date livraison</h6>
               <input type="date" class="form-control" id="date_livraison" placeholder="Date de disponibilité" rows="2" v-model="donnees.date_livraison">
             </b-col>
-            <b-col>
+            <b-col style="margin-bottom: 12px">
               <h6>Village</h6>
               <base-input>
                 <el-select v-model="donnees.village_id" filterable
@@ -82,7 +123,7 @@
             </b-col>
           </b-row>
           <b-row>
-            <b-col>
+            <b-col style="margin-bottom: 12px">
               <h6>Description</h6>
               <vue-editor :editor-toolbar="customToolbar" v-model="donnees.description" class="ql-toolbar" rowspan="3" />
               <!--        <textarea type="number" class="form-control" id="desc" placeholder="Description" v-model="donnees.description"></textarea>-->
@@ -96,10 +137,10 @@
       <h6 slot="header" class="modal-title">Ajout de variete</h6>
 
       <el-form ref="varieteForm" :rules="varietyRules" :model="new_variety" label-position="left">
-        <el-form-item label="Variete" prop="libelle">
+        <el-form-item label="Variete" prop="nom">
           <el-input v-model="new_variety.nom" />
         </el-form-item>
-        <el-select v-model="new_variety.produit_id" class="filter-item" placeholder="Produit" style="width: 80%; margin-right: 10px" prop="ville_id">
+        <el-select v-model="new_variety.produit_id" @click="getproduits" class="filter-item" placeholder="Produit" style="width: 80%; margin-right: 10px" prop="ville_id">
           <el-option
             v-for="(produit, idex) in produits"
             :key="idex"
@@ -126,6 +167,58 @@
       </template>
 
     </modal>
+    <modal :show.sync="createToffre">
+      <vue-element-loading :active="showToffre" spinner="bar-fade-scale" color="#2dce94" />
+      <h6 slot="header" class="modal-title">Ajout de type d'Offre</h6>
+
+      <el-form ref="toffreForm" :rules="toffreRules" :model="new_toffre" label-position="left">
+        <el-form-item label="Type Offre" prop="libelle">
+          <el-input v-model="new_toffre.libelle" />
+        </el-form-item>
+        <el-form-item label="Description" prop="description">
+          <el-input v-model="new_toffre.description" type="textarea" />
+        </el-form-item>
+      </el-form>
+      <template slot="footer">
+        <div style="text-align:right;padding-top:12px">
+          <base-button plain type="danger" @click="createToffre=!createToffre">
+            Annuler
+          </base-button>
+          <base-button type="primary" :loading="toffreCreating" @click="createTypeOffre()">
+            {{ toffreCreating ? "En cours" : "Ajouter" }}
+          </base-button>
+        </div>
+<!--        <base-button type="primary">Ajouter</base-button>-->
+<!--        <base-button type="link" class="ml-auto" @click="createVariety = false">Annuler</base-button>-->
+      </template>
+
+    </modal>
+    <modal :show.sync="createTdemande">
+      <vue-element-loading :active="showTdemande" spinner="bar-fade-scale" color="#2dce94" />
+      <h6 slot="header" class="modal-title">Ajout de type de demande</h6>
+
+      <el-form ref="tdemandeForm" :rules="tdemandeRules" :model="new_tdemande" label-position="left">
+        <el-form-item label="Type demande" prop="libelle">
+          <el-input v-model="new_tdemande.libelle" />
+        </el-form-item>
+        <el-form-item label="Description" prop="description">
+          <el-input v-model="new_tdemande.description" type="textarea" />
+        </el-form-item>
+      </el-form>
+      <template slot="footer">
+        <div style="text-align:right;padding-top:12px">
+          <base-button plain type="danger" @click="createTdemande=!createTdemande">
+            Annuler
+          </base-button>
+          <base-button type="primary" :loading="tdemandeCreating" @click="createTypeDemande()">
+            {{ tdemandeCreating ? "En cours" : "Ajouter" }}
+          </base-button>
+        </div>
+<!--        <base-button type="primary">Ajouter</base-button>-->
+<!--        <base-button type="link" class="ml-auto" @click="createVariety = false">Annuler</base-button>-->
+      </template>
+
+    </modal>
   </div>
 </template>
 
@@ -139,6 +232,8 @@ const offreResource = new Resource('offres');
 const demandeResource = new Resource('demandes');
 const produitResource = new Resource('produits');
 const varieteResource = new Resource('varieteProduits');
+const typeOffreResource = new Resource('typeOffres');
+const typeDemandeResource = new Resource('typeDemandes');
 const villageResource = new Resource('villages');
 
 export default {
@@ -167,13 +262,31 @@ export default {
       produits: [],
       show: false,
       showVariety: false,
+      showToffre: false,
+      showTdemande: false,
       createVariety: false,
+      createToffre: false,
+      createTdemande: false,
       varietyCreating: false,
+      toffreCreating: false,
+      tdemandeCreating: false,
       variete_list: [],
+      type_offres: [],
+      type_demandes: [],
       villages: [],
       new_variety: {},
+      new_toffre: {},
+      new_tdemande: {},
       varietyRules: {
-        libelle: [{ required: true, message: 'Renseignez le nom de la Variete', trigger: 'blur' }],
+        nom: [{ required: true, message: 'Renseignez le nom de la Variete', trigger: 'blur' }],
+        // description: [{ required: true, message: this.$t('region.DescriptionRequired'), trigger: 'blur' }],
+      },
+      toffreRules: {
+        libelle: [{ required: true, message: 'Renseignez le nom du type d offre', trigger: 'blur' }],
+        // description: [{ required: true, message: this.$t('region.DescriptionRequired'), trigger: 'blur' }],
+      },
+      tdemandeRules: {
+        libelle: [{ required: true, message: 'Renseignez le nom du type de demande', trigger: 'blur' }],
         // description: [{ required: true, message: this.$t('region.DescriptionRequired'), trigger: 'blur' }],
       },
     }
@@ -181,10 +294,12 @@ export default {
   computed: {
     ...mapState('auth', ['user']),
   },
-  created() {
+  beforeMount() {
     this.getproduits();
     this.getvillages();
     this.getVarieteList();
+    this.getTypeOffres();
+    this.getTypeDemandes();
   },
   methods: {
     ...mapActions('comptes', ['addMemberCompte', 'updateMemberCompte']),
@@ -280,6 +395,14 @@ export default {
       const {data} = await varieteResource.list();
       this.variete_list = data;
     },
+    async getTypeDemandes(){
+      const {data} = await typeDemandeResource.list();
+      this.type_demandes = data;
+    },
+    async getTypeOffres(){
+      const {data} = await typeOffreResource.list();
+      this.type_offres = data;
+    },
     createNewVariety(){
       this.showVariety = true;
       console.log('VARIETE TO SEND', this.new_variety);
@@ -300,10 +423,49 @@ export default {
         this.showVariety = false;
         this.createVariety = false;
       });
-    }
-  },
-  beforeMount(){
-    console.log('Mounting');
+    },
+    createTypeOffre(){
+      this.showToffre = true;
+      console.log('VARIETE TO SEND', this.new_toffre);
+      typeOffreResource.store(this.new_toffre)
+      .then((response) => {
+        console.log('RESPONSE DATA', response.data);
+        this.getTypeOffres();
+        Message({
+          message: 'Type offre Rajouté avec Succès',
+          type: 'success',
+          duration: 5 * 1000,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => {
+        this.showToffre = false;
+        this.createToffre = false;
+      });
+    },
+    createTypeDemande(){
+      this.showTdemande = true;
+      console.log('VARIETE TO SEND', this.new_tdemande);
+      typeDemandeResource.store(this.new_tdemande)
+      .then((response) => {
+        console.log('RESPONSE DATA', response.data);
+        this.getTypeDemandes();
+        Message({
+          message: 'Type demande Rajouté avec Succès',
+          type: 'success',
+          duration: 5 * 1000,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => {
+        this.showTdemande = false;
+        this.createTdemande = false;
+      });
+    },
   }
 }
 </script>

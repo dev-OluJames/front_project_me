@@ -128,4 +128,21 @@ export default {
   -webkit-box-shadow: 0 4px 6px rgb(50 50 93 / 11%), 0 1px 3px rgb(0 0 0 / 8%);
   box-shadow: 0 4px 6px rgb(50 50 93 / 11%), 0 1px 3px rgb(0 0 0 / 8%);
 }
+.table-action {
+  font-size: .875rem;
+  color: #adb5bd;
+  margin: 0 -0.55rem;
+}
+
+a, a:hover {
+  text-decoration: none;
+}
+a {
+  color: #5e72e4;
+  background-color: transparent;
+}
+.fa, .fas {
+  font-weight: 900;
+  font-size: 14px;
+}
 </style>

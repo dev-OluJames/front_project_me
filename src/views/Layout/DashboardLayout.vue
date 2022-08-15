@@ -30,7 +30,7 @@
         </sidebar-item>
         <sidebar-item
                 :link="{
-                  name: 'Commandes',
+                  name: 'Demandes',
                   path: '/dashboard/demandes',
                   icon: 'ni ni-bag-17 text-red'
                 }">
@@ -58,35 +58,34 @@
         </sidebar-item>
         <sidebar-item
           :link="{
-                      name: 'Menu',
-                      path: '/menu',
-                      icon: 'ni ni-shop text-green',
-                      children: [
-                        { link : {
-                          name: 'Produits',
-                          path: '/dashboard/produits',
-                          icon: 'ni ni-shop text-green'
-                          },
-                        },
-                        { link : {
-                          name: 'Type Demande',
-                          path: '/dashboard/typedemande',
-                          icon: 'ni ni-circle-08 text-blue',
-                          },
-                        },
-                        {
-                          link : {
-                          name: 'Type Offre',
-                          path: '/dashboard/typeoffre',
-                          icon: 'ni ni-key-25 text-warning',
-                          },
-                        },
-                      ]
-                      }">
+                name: 'Menu',
+                path: '/menu',
+                icon: 'ni ni-shop text-green',
+                children: [
+                  { link : {
+                    name: 'Produits',
+                    path: '/menu/produits',
+                    icon: 'ni ni-shop text-green'
+                    },
+                  },
+                  { link : {
+                    name: 'Type Demande',
+                    path: '/menu/typedemande',
+                    icon: 'ni ni-circle-08 text-blue',
+                    },
+                  },
+                  {
+                    link : {
+                    name: 'Type Offre',
+                    path: '/menu/typeoffre',
+                    icon: 'ni ni-key-25 text-warning',
+                    },
+                  },
+                  ]
+                  }">
         </sidebar-item>
       </template>
-
-      <template slot="links-after">
+      <!-- template slot="links-after">
         <hr class="my-3">
         <h6 class="navbar-heading p-0 text-muted">ADMINISTRATION</h6>
         <template slot="link">
@@ -111,15 +110,15 @@
           </b-collapse>
         </template>
 
-        <!-- b-nav class="navbar-nav mb-md-3">
+        <b-nav class="navbar-nav mb-md-3">
           <b-nav-item
                href="#"
                >
               <i class="ni ni-spaceship"></i>
               <b-nav-text class="p-0">Getting started</b-nav-text>
           </b-nav-item>
-        </b-nav-->
-      </template>
+        </b-nav>
+      </template -->
     </side-bar>
     <div class="main-content">
       <dashboard-navbar :type="$route.meta.navbarType"></dashboard-navbar>
@@ -187,17 +186,24 @@
   transform: rotate(180deg);
 }
 
-.navbar-vertical .navbar-nav .nav-link[data-bs-toggle=collapse]:after {
-  display: inline-block;
-  font-style: normal;
-  font-variant: normal;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  font-family: Font Awesome\ 5 Free;
-  font-weight: 700;
-  content: "";
-  margin-left: auto;
-  color: rgba(33,37,41,.5);
-  transition: all .2s ease-in-out;
+/* width */
+::-webkit-scrollbar {
+  width: 6px;
+  border-radius: 18px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgba(241, 241, 241, 0.22);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #c2c2c2;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #c2c2c2;
 }
 </style>

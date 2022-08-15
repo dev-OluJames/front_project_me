@@ -6,9 +6,14 @@
               <h3 class="mb-0">Offres</h3>
             </b-col>
             <b-col class="col-3 text-right">
-              <b-form-input size="sm" placeholder="recherche ..."></b-form-input>
+              <!-- b-form-input size="sm" placeholder="recherche ..."></b-form-input-->
+              <base-button icon size="sm" type="primary" @click="ajoutOffre($event.target)" ref="btnShow">
+                <span class="btn-inner--icon"><i class="ni ni-basket"></i></span>
+                <span class="btn-inner--text" style="font-size: 12px">Ajouter</span>
+              </base-button>
             </b-col>
           </b-row>
+          <b-form-input size="sm" placeholder="recherche ..." style="width: 20%; margin-top: 10px"></b-form-input>
         </b-card-header>
       <vue-element-loading :active="show" spinner="bar-fade-scale" color="#2dce94" />
       <el-table class="table-responsive table"
@@ -87,6 +92,11 @@
         <b-card-footer class="py-4 d-flex justify-content-end">
             <base-pagination v-model="currentPage" :per-page="10" :total="50"></base-pagination>
         </b-card-footer>
+      <AddModal
+        id="modal-3"
+        title="Ajouter une Offre"
+        type="offres"
+      />
     </b-card>
 </template>
 <script>
@@ -95,13 +105,13 @@
   import VueElementLoading from "vue-element-loading";
   import Resource from "../../../api/resource";
   const offreResource = new Resource('offres');
-
   export default {
     name: 'table-offres',
     components: {
       [Table.name]: Table,
       [TableColumn.name]: TableColumn,
-      VueElementLoading
+      VueElementLoading,
+      AddModal: () => import('../../../components/Modals/addModal'),
     },
     data() {
       return {
@@ -116,6 +126,10 @@
       this.getOffresList();
     },
     methods: {
+      ajoutOffre(btn){
+        // this.$bvModal.show('ajouter-offre');
+        this.$root.$emit('bv::show::modal', "modal-3", btn)
+      },
       getOffresList(){
         this.show = true;
         offreResource.list()
@@ -130,8 +144,26 @@
     }
   }
 </script>
-<style>
+
+<style lang="scss">
 .text-secondary {
   color: #8392ab!important;
+}
+.table-action {
+  font-size: .875rem;
+  color: #adb5bd;
+  margin: 0 -0.55rem;
+}
+
+a, a:hover {
+  text-decoration: none;
+}
+a {
+  color: #5e72e4;
+  background-color: transparent;
+}
+.fa, .fas {
+  font-weight: 900;
+  font-size: 14px;
 }
 </style>

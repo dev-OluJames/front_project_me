@@ -6,7 +6,7 @@
               <h3 class="mb-0">Commandes</h3>
             </b-col>
             <b-col class="col-3 text-right">
-              <base-button type="primary" size="sm" data-toggle="tooltip" data-original-title="Edit product" @click="ajoutOffre($event.target)" >
+              <base-button type="primary" size="sm" data-toggle="tooltip" data-original-title="Edit product" @click="ajoutDemande($event.target)" >
                 <span class="btn-inner--icon"><i class="ni ni-bag-17"></i></span>
                 <span class="btn-inner--text">Ajouter</span>
               </base-button>
@@ -52,17 +52,17 @@
               </template>
             </el-table-column>
 
-            <el-table-column label="Prix"
+            <el-table-column label="Date Livraison"
                              prop="completion"
                              min-width="150px">
               <template v-slot="{row}">
-                <span class="status">{{row.prix}}</span>
+                <span class="status">{{row.date_livraison}}</span>
               </template>
             </el-table-column>
 
           <el-table-column label="Action"
                            prop="completion"
-                           min-width="150px">
+                           min-width="200px">
             <template v-slot="{row}">
                 <span class="table-action">
                   <a href="javascript:;" data-bs-toggle="tooltip" data-bs-original-title="Preview product">
@@ -117,7 +117,7 @@
       this.getDemandes();
     },
     methods: {
-      ajoutOffre(btn){
+      ajoutDemande(btn){
         // this.$bvModal.show('ajouter-offre');
         this.$root.$emit('bv::show::modal', "modal-4", btn)
       },
@@ -134,14 +134,14 @@
     }
   }
 </script>
-<style>
+<style lang="scss">
 .text-secondary {
   color: #8392ab!important;
 }
 .table-action {
   font-size: .875rem;
   color: #adb5bd;
-  margin: 0 0.25rem;
+  margin: 0 -0.55rem;
 }
 
 a, a:hover {
@@ -150,5 +150,9 @@ a, a:hover {
 a {
   color: #5e72e4;
   background-color: transparent;
+}
+.fa, .fas {
+  font-weight: 900;
+  font-size: 14px;
 }
 </style>

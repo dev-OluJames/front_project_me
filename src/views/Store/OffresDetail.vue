@@ -73,19 +73,68 @@
                 <div class="cart--area d-flex flex-wrap align-items-center">
                   <!-- Add to Cart Form -->
                   <div class="cart clearfix d-flex align-items-center">
-                    <div class="quantity">
+                    <!-- div class="quantity">
                       <span class="qty-minus"><i class="fa fa-minus" aria-hidden="true"></i></span>
-                      <input type="number" class="qty-text" step="1" min="1" :max="offre.quantite" value="1">
+                      <input type="number" class="qty-text" step="1" min="0" :max="offre.quantite" v-model="new_demande.quantite" value="0">
                       <span class="qty-plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
-                    </div>
-                    <button class="btn alazea-btn ml-15" @click="envoyerDemande">Demander</button>
+                    </div-->
+                    <base-button  v-b-toggle="'collapse-2'" id="collapse" class="btn alazea-btn ml-15" @click="handleDemande">Demander</base-button>
                   </div>
                   <!-- Wishlist & Compare -->
                   <div class="wishlist-compare d-flex flex-wrap align-items-center">
-                    <a href="#" class="wishlist-btn ml-15"><i class="icon_heart_alt"></i></a>
-                    <a href="#" class="compare-btn ml-15"><i class="arrow_left-right_alt"></i></a>
+                    <a href="#" class="wishlist-btn ml-15"><i class="icon_heart_alt" ></i></a>
+<!--                    <a href="#" class="compare-btn ml-15"><i class="arrow_left-right_alt"></i></a>-->
                   </div>
                 </div>
+
+                <b-collapse :id="collapse_id">
+                  <b-card>
+                    <div class="contact-form-area">
+                      <vue-element-loading :active="show" spinner="bar-fade-scale" color="#2dce94" />
+                      <form action="#">
+                        <div class="row">
+                          <div class="col-12 col-md-6">
+                            <div class="form-group">
+                              <input type="text" class="form-control" id="libelle" placeholder="Libelle" v-model="new_demande.libelle">
+                            </div>
+                          </div>
+                          <div class="col-12 col-md-6">
+                            <div class="form-group">
+                              <select v-model="new_demande.type_demande_id" class="form-control" style="padding: 0px 0px;" id="exampleFormControlSelect1">
+                                <option v-for="demande in type_demandes" :key="demande.id" :value="demande.id">
+                                  {{demande.libelle}}
+                                </option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col-12 col-md-6">
+                            <div class="form-group">
+                              <input type="number" class="form-control" id="quantite" placeholder="Quantite" v-model="new_demande.quantite">
+                            </div>
+                          </div>
+                          <div class="col-12 col-md-6">
+                            <div class="form-group">
+                              <input type="text" class="form-control" id="mesure" placeholder="Mesure" v-model="new_demande.mesure">
+                            </div>
+                          </div>
+                          <div class="col-12">
+                            <div class="form-group">
+                              <input type="date" class="form-control" id="contact-subject" placeholder="Date livraison" v-model="new_demande.date_livraison">
+                            </div>
+                          </div>
+                          <div class="col-12">
+                            <div class="form-group">
+                              <textarea class="form-control" id="demande_description" cols="30" rows="10" placeholder="description" v-model="new_demande.description"></textarea>
+                            </div>
+                          </div>
+                          <div class="col-12">
+                            <base-button class="btn alazea-btn mt-15"  @click="envoyerDemande">Soumettre</base-button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </b-card>
+                </b-collapse>
 
                 <div class="products--meta">
                   <p><span>VARIETE:</span> <span>{{ offre.variete_produit ? offre.variete_produit.nom : '' }}</span></p>
@@ -98,11 +147,11 @@
                   <p>
                     <span>Partager:</span>
                     <span>
-                                    <a href="#"><i class="fa fa-facebook"></i></a>
-                                    <a href="#"><i class="fa fa-twitter"></i></a>
-                                    <a href="#"><i class="fa fa-pinterest"></i></a>
-                                    <a href="#"><i class="fa fa-google-plus"></i></a>
-                                </span>
+                        <a href="#"><i class="fa fa-facebook"></i></a>
+                        <a href="#"><i class="fa fa-twitter"></i></a>
+                        <a href="#"><i class="fa fa-pinterest"></i></a>
+                        <a href="#"><i class="fa fa-google-plus"></i></a>
+                    </span>
                   </p>
                 </div>
 
@@ -376,8 +425,13 @@
 import Resource from "../../api/resource";
 import Load from "../../components/Loading/Load";
 import {Message} from "element-ui";
+import {isLogged} from "../../utils/auth";
+import request from "../../utils/request";
+import VueElementLoading from "vue-element-loading";
 
 const offreResource = new Resource('offres');
+const tdemandeResource = new Resource('typeDemandes');
+const demandeResource = new Resource('demandes');
 export default {
   name: 'OffresDetail',
   props: {
@@ -385,15 +439,24 @@ export default {
   },
   components: {
     Load,
+    VueElementLoading,
   },
   data () {
     return {
       loading: true,
       offre: {},
+      show: false,
+      new_demande: {},
+      type_demandes: [],
+      collapse_id: null,
+      authenticated : isLogged(),
     };
   },
   created() {
     this.getOffresDetail();
+    if (this.authenticated){
+      this.getTypeDemandes();
+    }
   },
   methods: {
     getOffresDetail(){
@@ -404,12 +467,56 @@ export default {
         this.loading = false;
       });
     },
+    async getTypeDemandes() {
+      const { data } = await tdemandeResource.list();
+      this.type_demandes = data;
+    },
+    handleDemande(){
+      console.log('AUTHENTICATED ', this.authenticated);
+      if (!this.authenticated){
+        Message({
+          message: 'Veuillez vous connecter avant d\' effectuer cette action ',
+          type: 'info',
+          duration: 5 * 1000,
+        });
+        this.$router.push(`/login?redirect=${this.$route.fullPath}`);
+      } else {
+        this.collapse_id = 'collapse-2';
+      }
+    },
     envoyerDemande(){
-      Message({
-        message: 'Demande envoyé',
-        type: 'success',
-        duration: 5 * 1000,
-      })
+      this.new_demande.village_id = this.offre.village.id;
+      this.new_demande.user_id = this.$store.getters.userId;
+      this.new_demande.variete_produit_id = this.offre.variete_produit.id;
+
+      const isUserLogged = isLogged();
+      console.log('DEMANDE A ENVOYER', this.new_demande);
+      if (isUserLogged){
+        console.log('USER CONNECTED', this.$store.getters.userId);
+        this.show = true;
+        demandeResource.store(this.new_demande)
+          .then((response) => {
+            console.log(response);
+            Message({
+              message: response.message,
+              type: response.success ? "success" : "error",
+              duration: 5 * 1000,
+            })
+          })
+          .finally(() => {
+            this.show = false;
+            let button = document.getElementById('collapse');
+            button.click();
+            this.collapse_id = '';
+          });
+      } else {
+        Message({
+          message: 'Veuillez vous connecter avant d\' effectuer cette action ',
+          type: 'info',
+          duration: 5 * 1000,
+        });
+        this.$router.push(`/login?redirect=${this.$route.fullPath}`);
+      }
     }
   }
 }

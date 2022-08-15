@@ -27,7 +27,7 @@ router.beforeEach(async(to, from, next) => {
   // }
   if (isUserLogged) {
     const { roles, permissions } = await store.dispatch('user/getInfo');
-    if (to.path.includes('dashboard') || to.path.includes('administration')){
+    if (to.path.includes('dashboard') || to.path.includes('administration') || to.path.includes('menu')){
       if (roles[0] === 'utilisateur'){
         next({path: '/forbiden'});
       }

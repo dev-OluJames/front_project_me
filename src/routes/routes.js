@@ -61,6 +61,35 @@ const constantRoutes = [
     ],
   },
   {
+    path: '/menu',
+    redirect: 'menu',
+    component: DashboardLayout,
+    children: [
+      {
+        path: 'typedemande',
+        name: 'typedemande',
+        component: () => import(/* webpackChunkName: "demo" */ '../views/Menu/TypeDemande.vue')
+      },
+      {
+        path: 'typeoffre',
+        name: 'typeoffre',
+        component: () => import(/* webpackChunkName: "demo" */ '../views/Menu/TypeOffre.vue')
+      },
+      {
+        path: 'produits',
+        name: 'produits',
+        component: () => import(/* webpackChunkName: "demo" */ '../views/Produits/Produits')
+      },
+      {
+        path: 'produits/:id(\\d+)',
+        component: () => import(/* webpackChunkName: "Packsdetail" */ '@/views/Promotions/detail'),
+        name: 'produits-detail',
+        meta: { title: 'Produits', noCache: true },
+        hidden: true,
+      },
+    ]
+  },
+  {
     path: '/dashboard',
     redirect: 'dashboard',
     component: DashboardLayout,
@@ -83,28 +112,6 @@ const constantRoutes = [
         component: () => import(/* webpackChunkName: "Packsdetail" */ '@/views/Promotions/detail'),
         name: 'promotion',
         meta: { title: 'Promotion', noCache: true },
-        hidden: true,
-      },
-      {
-        path: 'typedemande',
-        name: 'typedemande',
-        component: () => import(/* webpackChunkName: "demo" */ '../views/Menu/TypeDemande.vue')
-      },
-      {
-        path: 'typeoffre',
-        name: 'typeoffre',
-        component: () => import(/* webpackChunkName: "demo" */ '../views/Menu/TypeOffre.vue')
-      },
-      {
-        path: 'produits',
-        name: 'produits',
-        component: () => import(/* webpackChunkName: "demo" */ '../views/Produits/Produits')
-      },
-      {
-        path: 'produits/:id(\\d+)',
-        component: () => import(/* webpackChunkName: "Packsdetail" */ '@/views/Promotions/detail'),
-        name: 'produits-detail',
-        meta: { title: 'Produits', noCache: true },
         hidden: true,
       },
       {
@@ -202,7 +209,7 @@ const constantRoutes = [
   },
   {
     path: '/forbiden',
-    component: () => import(/* webpackChunkName: "roles" */ '@/views/Forbiden'),
+    component: () => import(/* webpackChunkName: "roles" */ '@/views/NotFoundPage'),
     name: 'Forbiden',
     meta: { title: 'rolePermission', icon: 'el-icon-key' },
   }

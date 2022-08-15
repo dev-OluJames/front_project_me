@@ -12,15 +12,6 @@
 
             <slot name="mobile-right">
                 <ul class="nav align-items-center d-md-none">
-                    <base-button size="sm" icon type="primary" @click="ajoutOffre" style="background-color: #2dcea2; border-color: #2dcea2">
-                      <span class="btn-inner--icon"><i class="ni ni-bag-17"></i></span>
-                      <span class="btn-inner--text" style="font-size: 12px">Ajouter une Offre</span>
-                    </base-button>
-
-                    <add-modal
-                      id="ajouter-offre"
-                      title="Ajouter une Offre"
-                    />
                     <base-dropdown class="nav-item" menu-on-right tag="li" title-tag="a">
                         <a slot="title-container" class="nav-link nav-link-icon" href="#" role="button"
                            aria-haspopup="true" aria-expanded="false">
@@ -146,15 +137,13 @@
     </nav>
 </template>
 <script>
-  import NavbarToggleButton from '@/components/NavbarToggleButton'
-  import addModal from "../../components/Modals/addModal";
+  import NavbarToggleButton from '@/components/NavbarToggleButton';
   import Cookies from 'js-cookie';
   import {removeToken} from "../../utils/auth";
   export default {
     name: 'sidebar',
     components: {
-      NavbarToggleButton,
-      addModal
+      NavbarToggleButton
     },
     props: {
       logo: {
@@ -174,9 +163,6 @@
       };
     },
     methods: {
-      ajoutOffre(){
-        this.$bvModal.show('ajouter-offre');
-      },
       closeSidebar() {
         this.$sidebar.displaySidebar(false);
       },

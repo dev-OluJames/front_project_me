@@ -165,7 +165,7 @@
                       <div class="product-meta d-flex">
                         <a v-if="isFavoris(offre.id)" href="#" class="wishlist-btn" style="background-color: #70c745;" @click="addFavoris(offre.id)"><i class="icon_heart_alt"></i></a>
                         <a v-else href="#" class="wishlist-btn" @click="addFavoris(offre.id)"><i class="icon_heart_alt"></i></a>
-                        <a href="#" class="add-to-cart-btn">Demander</a>
+                        <a href="#" class="add-to-cart-btn" data-toggle="tooltip" data-original-title="Edit product" @click="ajoutDemande($event.target)">Demander</a>
                         <a href="#" class="compare-btn"><i class="arrow_left-right_alt"></i></a>
                       </div>
                     </div>
@@ -194,6 +194,11 @@
         </div>
       </div>
     </section>
+    <AddModal
+      id="modal-4"
+      title="Faire une Demande"
+      type="demandes"
+    />
   </div>
 </template>
 
@@ -204,11 +209,11 @@ import {isLogged} from "../../utils/auth";
 import Load from "../../components/Loading/Load";
 import request from "../../utils/request";
 import {Message} from "element-ui";
-
 export default {
   name: 'store-offres',
   components: {
     Load,
+    AddModal: () => import('../../components/Modals/addModal')
   },
   data () {
     return {
@@ -226,6 +231,20 @@ export default {
     }
   },
   methods: {
+    ajoutDemande(btn){
+      if (!this.authenticated){
+        Message({
+          message: 'Veuillez vous connecter avant d\' effectuer cette action ',
+          type: 'info',
+          duration: 5 * 1000,
+        });
+        this.$router.push(`/login?redirect=${this.$route.fullPath}`);
+      } else {
+        console.log('Button', btn);
+        this.$root.$emit('bv::show::modal', "modal-4", btn)
+      }
+      // this.$bvModal.show('ajouter-offre');
+    },
     offresList(){
       // const { data } = await offreResource.list();
       // this.offres = data;

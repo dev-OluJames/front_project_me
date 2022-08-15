@@ -133,9 +133,13 @@ export default {
     },
     isActive() {
       if (this.$route && this.$route.path) {
-        console.log('CHILDREEN', this.children);
-        let matchingRoute = this.children.find(c => this.$route.path.startsWith('/'+c.link.path.split('/')[1]));
-        console.log('matchingRoute', matchingRoute);
+        // console.log('CHILDREEN', this.children);
+        var matchingRoute;
+        if (this.children.length === 0){
+          matchingRoute = this.children.find(c => this.$route.path.startsWith(c.link.path));
+        } else {
+          matchingRoute = this.children.find(c => this.$route.path.startsWith('/'+c.link.path.split('/')[1]));
+        }
         if (matchingRoute !== undefined) {
           return true;
         }

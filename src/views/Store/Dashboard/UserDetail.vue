@@ -258,22 +258,25 @@
                             <th></th>
                           </tr>
                           </thead>
-                          <tbody>
+                          <tbody v-for="favoris in userFavoris" :key="favoris.id">
                           <tr>
                             <td class="cart_product_img">
                               <a href="#"><img src="store/img/bg-img/34.jpg" alt="Product"></a>
-                              <h5>Recuerdos Plant</h5>
+                              <h5>{{ favoris.libelle }}</h5>
                             </td>
                             <td class="qty">
                               <div class="quantity">
                                 <span class="qty-minus" ><i class="fa fa-minus" aria-hidden="true"></i></span>
-                                <input type="number" class="qty-text" step="1" min="1" max="99" name="quantity" value="1">
+                                <input type="number" class="qty-text" step="1" min="1" max="99" name="quantity" :value="favoris.quantite">
                                 <span class="qty-plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
                               </div>
                             </td>
-                            <td class="price"><span>$9.99</span></td>
-                            <td class="total_price"><span>$9.99</span></td>
-                            <td class="action"><a href="#"><i class="icon_close"></i></a></td>
+                            <td class="price"><span>{{ favoris.mesure }}</span></td>
+                            <td class="price"><span>{{ favoris.prix_plateforme }} CFA</span></td>
+<!--                            <td class="total_price"><span>CFA {{ prixTotal(favoris.quantite, favoris.prix_plateforme) }}</span></td>-->
+                            <td class="action">
+                              <button type="submit" class="btn alazea-btn mt-15">Demander</button>
+                            </td>
                           </tr>
                           </tbody>
                         </table>
@@ -296,8 +299,36 @@
 </template>
 
 <script>
+import request from "../../../utils/request";
+
 export default {
-  name: "UserDetail"
+  name: "UserDetail",
+  data(){
+    return {
+      userFavoris: [],
+    }
+  },
+  created() {
+    this.getUserOffresFavoris(this.$store.getters.userId);
+  },
+  methods: {
+    async getUserOffresFavoris(id){
+      const { data } = await request({
+        url: 'users/'+id+'/offre_favoris',
+        method: 'get'
+      });
+      // this.userFavoris = [];
+      // const favoris_ids = [];
+      // data.forEach((favoris)=> {
+      //   favoris_ids.push(favoris.id);
+      // })
+      this.userFavoris = data;
+      console.log('USERS FAVORIS ', this.userFavoris);
+    },
+    prixTotal(qtte, prix){
+      return qtte * prix;
+    }
+  }
 }
 </script>
 

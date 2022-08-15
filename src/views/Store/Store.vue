@@ -71,27 +71,27 @@
                 <div class="classynav">
                   <ul>
                     <li>
-                      <router-link to="/" style="font-size: 22px;">
+                      <router-link to="/">
                         Accueil
                       </router-link>
                     </li>
                     <li>
-                      <router-link to="/store/presentation" style="font-size: 22px;">
+                      <router-link to="/store/presentation">
                         Présentation
                       </router-link>
                     </li>
                     <li>
-                      <router-link to="/store/partenaire" style="font-size: 22px;">
+                      <router-link to="/store/partenaire">
                         Nos Partenaires
                       </router-link>
                     </li>
                     <li>
-                      <router-link to="/store/equipe" style="font-size: 22px;">
+                      <router-link to="/store/equipe">
                         Equipes
                       </router-link>
                     </li>
                     <li>
-                      <router-link to="/store/contact" style="font-size: 22px;">
+                      <router-link to="/store/contact">
                         Contact
                       </router-link>
                     </li>
@@ -227,25 +227,25 @@ import {isLogged} from "../../utils/auth";
 
 export default {
   name: "Store",
-  created() {
+  mounted() {
     let jqueryScript = document.createElement('script')
-    jqueryScript.setAttribute('src', 'store/js/jquery/jquery-2.2.4.min.js')
+    jqueryScript.setAttribute('src', '/store/js/jquery/jquery-2.2.4.min.js')
     document.head.appendChild(jqueryScript)
 
     let popperScript = document.createElement('script')
-    popperScript.setAttribute('src', 'store/js/bootstrap/popper.min.js')
+    popperScript.setAttribute('src', '/store/js/bootstrap/popper.min.js')
     document.head.appendChild(popperScript)
 
     let bootstrapScript = document.createElement('script')
-    bootstrapScript.setAttribute('src', 'store/js/bootstrap/bootstrap.min.js')
+    bootstrapScript.setAttribute('src', '/store/js/bootstrap/bootstrap.min.js')
     document.head.appendChild(bootstrapScript)
 
     let pluginsScript = document.createElement('script')
-    pluginsScript.setAttribute('src', 'store/js/plugins/plugins.js')
+    pluginsScript.setAttribute('src', '/store/js/plugins/plugins.js')
     document.head.appendChild(pluginsScript)
 
     let activeScript = document.createElement('script')
-    activeScript.setAttribute('src', 'store/js/active.js')
+    activeScript.setAttribute('src', '/store/js/active.js')
     document.head.appendChild(activeScript)
   },
   data () {
@@ -259,10 +259,40 @@ export default {
       // await this.$store.dispatch('user/logout');
       removeToken();
       this.authenticated = false;
+      window.location.reload();
     },
   }
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.header-area .alazea-main-menu .classynav ul li a {
+  font-size: 18px;
+  padding: 0 20px;
+}
+
+.header-area .alazea-main-menu .classynav ul li a {
+  padding: 0 30px;
+  font-weight: 500;
+  text-transform: capitalize;
+  font-size: 20px;
+  color: #ffffff;
+}
+.classynav ul li a {
+  padding: 0 12px;
+  display: block;
+  height: 35px;
+  font-size: 14px;
+  line-height: 34px;
+}
+body {
+  margin: 0;
+  /* font-family: Open Sans, sans-serif; */
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #525f7f;
+  text-align: left;
+  background-color: #f8f9fe;
+}
 </style>

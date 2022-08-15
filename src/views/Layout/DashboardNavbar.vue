@@ -29,10 +29,6 @@
         </b-input-group>
       </b-form-group>
     </b-form -->
-      <base-button icon type="primary" @click="ajoutOffre($event.target)" ref="btnShow" style="background-color: #35495e; border-color: #35495e; box-shadow: #111111">
-        <span class="btn-inner--icon"><i class="ni ni-basket"></i></span>
-        <span class="btn-inner--text" style="font-size: 12px">Ajouter une Offre</span>
-      </base-button>
 
       <!-- base-button icon outline type="default">
         <span class="btn-inner--icon"><i class="ni ni-basket"></i></span>
@@ -76,13 +72,6 @@
         </template>
       </base-dropdown>
 
-
-      <AddModal
-        id="modal-3"
-        title="Ajouter une Offre"
-        type="offres"
-      />
-
     </b-navbar-nav>
   </base-nav>
 </template>
@@ -98,7 +87,6 @@ export default {
     CollapseTransition,
     BaseNav,
     Modal,
-    AddModal: () => import('../../components/Modals/addModal')
   },
   props: {
     type: {
@@ -122,10 +110,6 @@ export default {
     };
   },
   methods: {
-    ajoutOffre(btn){
-      // this.$bvModal.show('ajouter-offre');
-      this.$root.$emit('bv::show::modal', "modal-3", btn)
-    },
     showSwal(type){
       swal.fire({
         title: `Success`,

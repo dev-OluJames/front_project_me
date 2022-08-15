@@ -229,8 +229,26 @@
     }
   }
 </script>
-<style lang="scss" scoped>
+
+<style lang="scss">
 .text-secondary {
   color: #8392ab!important;
+}
+.table-action {
+  font-size: .875rem;
+  color: #adb5bd;
+  margin: 0 -0.55rem;
+}
+
+a, a:hover {
+  text-decoration: none;
+}
+a {
+  color: #5e72e4;
+  background-color: transparent;
+}
+.fa, .fas {
+  font-weight: 900;
+  font-size: 14px;
 }
 </style>

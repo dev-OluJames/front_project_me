@@ -23,9 +23,9 @@
               <base-input>
                 <el-select v-model="donnees.variete_produit_id" @click="getVarieteList" filterable
                            placeholder="Variete" style="width: 100%">
-                  <el-option v-if="type === 'offres'">
-                    <base-button type="primary" style="width: 100%;border-radius: 0px" @click="createVariety=!createVariety">
-                      <span class="btn-inner--icon"><i class="ni ni-fat-add"></i></span>
+                  <el-option v-if="type === 'offres'" value>
+                    <base-button type="primary" icon style="width: 100%;border-radius: 0px" @click="createVariety=!createVariety">
+                      Ajouter
                     </base-button>
                   </el-option>
                   <el-option v-for="(option, index) in variete_list"
@@ -48,9 +48,9 @@
               <base-input>
                 <el-select v-model="donnees.type_offre_id" @click="getTypeOffres" filterable
                            placeholder="Type Offre" style="width: 100%">
-                  <el-option v-if="type === 'offres'">
+                  <el-option v-if="type === 'offres'" value>
                     <base-button type="primary" style="width: 100%;border-radius: 0px" @click="createToffre=!createToffre">
-                      <span class="btn-inner--icon"><i class="ni ni-fat-add"></i></span>
+                      Ajouter
                     </base-button>
                   </el-option>
                   <el-option v-for="(option, index) in type_offres"
@@ -66,9 +66,9 @@
               <base-input>
                 <el-select v-model="donnees.type_demande_id" @click="getTypedemandes" filterable
                            placeholder="Type demande" style="width: 100%">
-                  <el-option>
+                  <el-option value>
                     <base-button type="primary" style="width: 100%;border-radius: 0px" @click="createTdemande=!createTdemande">
-                      <span class="btn-inner--icon"><i class="ni ni-fat-add"></i></span>
+                      Ajouter
                     </base-button>
                   </el-option>
                   <el-option v-for="(option, index) in type_demandes"
@@ -228,6 +228,7 @@ import vueDropzone from 'vue2-dropzone-vue3';
 import Resource from "../../api/resource";
 import {Message} from "element-ui";
 import VueElementLoading from "vue-element-loading";
+import {isLogged} from "../../utils/auth";
 const offreResource = new Resource('offres');
 const demandeResource = new Resource('demandes');
 const produitResource = new Resource('produits');
@@ -289,17 +290,20 @@ export default {
         libelle: [{ required: true, message: 'Renseignez le nom du type de demande', trigger: 'blur' }],
         // description: [{ required: true, message: this.$t('region.DescriptionRequired'), trigger: 'blur' }],
       },
+      authenticated: isLogged(),
     }
   },
   computed: {
     ...mapState('auth', ['user']),
   },
   beforeMount() {
-    this.getproduits();
-    this.getvillages();
-    this.getVarieteList();
-    this.getTypeOffres();
-    this.getTypeDemandes();
+    if (this.authenticated){
+      this.getproduits();
+      this.getvillages();
+      this.getVarieteList();
+      this.getTypeOffres();
+      this.getTypeDemandes();
+    }
   },
   methods: {
     ...mapActions('comptes', ['addMemberCompte', 'updateMemberCompte']),

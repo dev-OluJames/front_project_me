@@ -5,7 +5,7 @@
     <div class="breadcrumb-area">
       <!-- Top Breadcrumb Area -->
       <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(store/img/bg-img/24.jpg);">
-        <h2>Offres</h2>
+        <h2>Demandes</h2>
       </div>
 
       <div class="container">
@@ -31,12 +31,12 @@
             <div class="shop-sorting-data d-flex flex-wrap align-items-center justify-content-between" style="padding-bottom: 0px">
               <!-- Shop Page Count -->
               <div class="shop-page-count">
-                <h1 class="display-4">Offres</h1>
+                <h1 class="display-4">Demandes</h1>
               </div>
               <div class="search_by_terms">
-                <base-button type="success" data-toggle="tooltip" data-original-title="Edit product" @click="ajoutoffre($event.target)">
+                <base-button type="success" data-toggle="tooltip" data-original-title="Edit product" @click="ajoutDemande($event.target)">
                   <span class="btn-inner--icon"><i class="ni ni-bag-17"></i></span>
-                  <span class="btn-inner--text">Faire une offre</span>
+                  <span class="btn-inner--text">Faire une Demande</span>
                 </base-button>
               </div>
               <!-- Search by Terms -->
@@ -139,7 +139,7 @@
               <div class="row">
 
                 <!-- Single Product Area -->
-                <div class="col-12 col-sm-6 col-lg-4" v-for="(offre, index) in offres" :key="index">
+                <div class="col-12 col-sm-6 col-lg-4" v-for="(demande, index) in demandes" :key="index">
                   <div class="single-product-area mb-50">
                     <!-- Product Image -->
                     <div class="product-img">
@@ -149,17 +149,17 @@
                         <a href="#">Hot</a>
                       </div>
                       <div class="product-meta d-flex">
-                        <a v-if="isFavoris(offre.id)" href="javascript:undefined;" class="wishlist-btn" style="background-color: #70c745;" @click="addFavoris(offre.id)"><i class="icon_heart_alt"></i></a>
-                        <a v-else href="javascript:undefined;" class="wishlist-btn" @click="addFavoris(offre.id)"><i class="icon_heart_alt"></i></a>
-                        <!--                        <a href="#" class="compare-btn"><i class="arrow_left-right_alt"></i></a>-->
+                        <a v-if="isFavoris(demande.id)" href="javascript:undefined;" class="wishlist-btn" style="background-color: #70c745;" @click="addFavoris(demande.id)"><i class="icon_heart_alt"></i></a>
+                        <a v-else href="javascript:undefined;" class="wishlist-btn" @click="addFavoris(demande.id)"><i class="icon_heart_alt"></i></a>
+<!--                        <a href="#" class="compare-btn"><i class="arrow_left-right_alt"></i></a>-->
                       </div>
                     </div>
                     <!-- Product Info -->
                     <div class="product-info mt-15 text-center">
-                      <router-link :to="'/store/offres/detail/'+offre.id">
-                        <p>{{ offre.libelle }}</p>
+                      <router-link :to="'/store/demandes/detail/'+demande.id">
+                        <p>{{ demande.libelle }}</p>
                       </router-link>
-                      <!--                      <h6>{{ offre.prix_plateforme }} FCFA</h6>-->
+<!--                      <h6>{{ demande.prix_plateforme }} FCFA</h6>-->
                     </div>
                   </div>
                 </div>
@@ -181,8 +181,8 @@
     </section>
     <AddModal
       id="modal-4"
-      title="Faire une offre"
-      type="offres"
+      title="Faire une Demande"
+      type="demandes"
     />
   </div>
 </template>
@@ -195,7 +195,7 @@ import Load from "../../components/Loading/Load";
 import Resource from "../../api/resource";
 import {Message} from "element-ui";
 
-const offreResource = new Resource('offres');
+const demandeResource = new Resource('demandes');
 export default {
   name: 'store-offres',
   components: {
@@ -204,21 +204,21 @@ export default {
   },
   data () {
     return {
-      offres: [],
-      offreFavoris: {},
+      demandes: [],
+      demandeFavoris: {},
       userFavoris: [],
       loaded: true,
       authenticated : isLogged(),
     }
   },
   created() {
-    this.offresList();
+    this.demandesList();
     if (this.authenticated){
       this.getUserOffresFavoris(this.$store.getters.userId);
     }
   },
   methods: {
-    ajoutoffre(btn){
+    ajoutDemande(btn){
       if (!this.authenticated){
         Message({
           message: 'Veuillez vous connecter avant d\' effectuer cette action ',
@@ -232,18 +232,18 @@ export default {
       }
       // this.$bvModal.show('ajouter-offre');
     },
-    offresList(){
+    demandesList(){
       // const { data } = await offreResource.list();
       // this.offres = data;
-      offreResource.list()
+      demandeResource.list()
         .then((response) => {
-          this.offres = response.data;
-          console.log('DATA offreS', response.data);
-          this.loaded = false;
-        });
+        this.demandes = response.data;
+        console.log('DATA DEMANDES', response.data);
+        this.loaded = false;
+      });
     },
-    offreDetail(id){
-      this.$router.push({ path: '/store/offres/detail/'+id });
+    demandeDetail(id){
+      this.$router.push({ path: '/store/demandes/detail/'+id });
     },
     addFavoris(id){
       this.offreFavoris.offre_id = id;
@@ -252,17 +252,17 @@ export default {
       if (isUserLogged){
         console.log('USER CONNECTED', this.$store.getters.userId);
         new Resource('users/'+this.$store.getters.userId+'/offre_favoris').store(this.offreFavoris)
-          .then((response) => {
-            console.log(response);
-            Message({
-              message: response.message,
-              type: response.success ? "success" : "error",
-              duration: 5 * 1000,
-            })
+        .then((response) => {
+          console.log(response);
+          Message({
+            message: response.message,
+            type: response.success ? "success" : "error",
+            duration: 5 * 1000,
           })
-          .finally(() => {
-            this.getUserOffresFavoris(this.$store.getters.userId);
-          });
+        })
+        .finally(() => {
+          this.getUserOffresFavoris(this.$store.getters.userId);
+        });
       } else {
         Message({
           message: 'Veuillez vous connecter avant d\' effectuer cette action ',

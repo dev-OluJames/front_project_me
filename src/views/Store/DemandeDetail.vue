@@ -64,10 +64,10 @@
 
             <div class="col-12 col-md-6">
               <div class="single_product_desc">
-                <h4 class="title">{{ offre.libelle }}</h4>
-                <h4 class="price">{{ offre.prix_plateforme }} CFA</h4>
+                <h4 class="title">{{ demande.libelle }}</h4>
+<!--                <h4 class="price">{{ demande.prix_plateforme }} CFA</h4>-->
                 <div class="short_overview">
-                  <p v-html="offre.description"></p>
+<!--                  <p v-html="demande.description"></p>-->
                 </div>
 
                 <div class="cart--area d-flex flex-wrap align-items-center">
@@ -75,10 +75,10 @@
                   <div class="cart clearfix d-flex align-items-center">
                     <!-- div class="quantity">
                       <span class="qty-minus"><i class="fa fa-minus" aria-hidden="true"></i></span>
-                      <input type="number" class="qty-text" step="1" min="0" :max="offre.quantite" v-model="new_demande.quantite" value="0">
+                      <input type="number" class="qty-text" step="1" min="0" :max="demande.quantite" v-model="new_demande.quantite" value="0">
                       <span class="qty-plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
                     </div-->
-                    <base-button  v-b-toggle="'collapse-2'" id="collapse" class="btn alazea-btn ml-15" @click="handleDemande">Demander</base-button>
+                    <base-button  v-b-toggle="'collapse-2'" id="collapse" class="btn alazea-btn ml-15" @click="handleDemande">Repondre</base-button>
                   </div>
                   <!-- Wishlist & Compare -->
                   <div class="wishlist-compare d-flex flex-wrap align-items-center">
@@ -102,7 +102,7 @@
                           <div class="col-12 col-md-6">
                             <div class="form-group">
                               <label for="exampleFormControlSelect1">Type Demande</label>
-                              <select v-model="new_demande.type_demande_id" class="form-control" style="padding: 0px 0px;" id="exampleFormControlSelect1">
+                              <select v-model="new_demande.type_demande_id" class="form-control dropdown" style="padding: 0px 0px;" id="exampleFormControlSelect1">
                                 <option v-for="demande in type_demandes" :key="demande.id" :value="demande.id">
                                   {{demande.libelle}}
                                 </option>
@@ -147,10 +147,10 @@
                 </b-collapse>
 
                 <div class="products--meta">
-                  <p><span>VARIETE:</span> <span>{{ offre.variete_produit ? offre.variete_produit.nom : '' }}</span></p>
-                  <p><span>VILLAGE:</span> <span>{{ offre.village ? offre.village.libelle : ''}}</span></p>
-                  <p><span>QTTE:</span> <span>{{ offre.quantite }} {{ offre.mesure }}</span></p>
-                  <p><span>DATE DISPONIBLE:</span> <span>{{ offre.date_disponibilite }}</span></p>
+                  <p><span>VARIETE:</span> <span>{{ demande.variete_produit ? demande.variete_produit.nom : '' }}</span></p>
+                  <p><span>VILLAGE:</span> <span>{{ demande.village ? demande.village.libelle : ''}}</span></p>
+                  <p><span>QTTE:</span> <span>{{ demande.quantite }} {{ demande.mesure }}</span></p>
+                  <p><span>DATE DISPONIBLE:</span> <span>{{ demande.date_disponibilite }}</span></p>
                   <!-- p><span>SKU:</span> <span>CT201807</span></p>
                   <p><span>Category:</span> <span>En cour..</span></p>
                   <p><span>Tags:</span> <span>En cour..</span></p-->
@@ -191,7 +191,7 @@
               <div class="tab-content">
                 <div role="tabpanel" class="tab-pane fade show active" id="description">
                   <div class="description_area">
-                    <p v-html="offre.description"></p>
+                    <p v-html="demande.description"></p>
                   </div>
                 </div>
                 <div role="tabpanel" class="tab-pane fade" id="addi-info">
@@ -440,11 +440,10 @@ import request from "../../utils/request";
 import VueElementLoading from "vue-element-loading";
 
 import vueDropzone from 'vue2-dropzone-vue3';
-const offreResource = new Resource('offres');
-const tdemandeResource = new Resource('typeDemandes');
 const demandeResource = new Resource('demandes');
+const tdemandeResource = new Resource('typeDemandes');
 export default {
-  name: 'OffresDetail',
+  name: 'demandesDetail',
   props: {
     msg: String
   },
@@ -465,7 +464,7 @@ export default {
       },
       media: {},
       loading: true,
-      offre: {},
+      demande: {},
       show: false,
       new_demande: {},
       type_demandes: [],
@@ -474,17 +473,17 @@ export default {
     };
   },
   created() {
-    this.getOffresDetail();
+    this.getdemandesDetail();
     if (this.authenticated){
       this.getTypeDemandes();
     }
   },
   methods: {
-    getOffresDetail(){
-      offreResource.get(this.$route.params.id)
+    getdemandesDetail(){
+      demandeResource.get(this.$route.params.id)
       .then((response) => {
-        this.offre = response.data;
-        console.log('THIS OFFER', this.offre);
+        this.demande = response.data;
+        console.log('THIS OFFER', this.demande);
         this.loading = false;
       });
     },
@@ -513,10 +512,10 @@ export default {
       }
     },
     envoyerDemande(){
-      this.new_demande.description = this.offre.id;
-      this.new_demande.village_id = this.offre.village.id;
+      this.new_demande.description = this.demande.id;
+      this.new_demande.village_id = this.demande.village.id;
       this.new_demande.user_id = this.$store.getters.userId;
-      this.new_demande.variete_produit_id = this.offre.variete_produit.id;
+      this.new_demande.variete_produit_id = this.demande.variete_produit.id;
 
       const isUserLogged = isLogged();
       console.log('DEMANDE A ENVOYER', this.new_demande);

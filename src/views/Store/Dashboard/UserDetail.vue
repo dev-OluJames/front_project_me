@@ -9,7 +9,7 @@
     <div class="card-profile-image">
       <img src="store/img/bg-img/14.jpg" class="rounded-circle">
     </div>
-<!--    <button type="submit" class="btn alazea-btn mt-15">-->
+<!--    <button type="submit" class="alazea-btn mt-15">-->
 <!--      Modifier <input type="file" hidden>-->
 <!--    </button>-->
 
@@ -50,9 +50,9 @@
                 <li class="nav-item">
                   <a class="nav-link active" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="true">Profiles</a>
                 </li>
-                <li class="nav-item">
+                <!-- li class="nav-item">
                   <a class="nav-link" id="commande-tab" data-toggle="tab" href="#commande" role="tab" aria-controls="commande" aria-selected="false">Commandes</a>
-                </li>
+                </li -->
                 <li class="nav-item">
                   <a class="nav-link" id="demande-tab" data-toggle="tab" href="#demande" role="tab" aria-controls="demande" aria-selected="false">Demandes</a>
                 </li>
@@ -108,7 +108,7 @@
                           </div>
                         </div>
                         <div class="col-12">
-                          <button type="submit" class="btn alazea-btn mt-15">Modifier</button>
+                          <button type="submit" class="alazea-btn mt-15">Modifier</button>
                         </div>
                       </div>
                     </form>
@@ -117,7 +117,7 @@
                 <!-- ========== FIN PROFILE =========== -->
 
                 <!-- ========== COMMANDES =========== -->
-                <div class="tab-pane fade" id="commande" role="tabpanel" aria-labelledby="profile-tab">
+                <!-- div class="tab-pane fade" id="commande" role="tabpanel" aria-labelledby="profile-tab">
                   <div class="container">
                     <div class="row">
                       <div class="col-12">
@@ -155,41 +155,82 @@
                       </div>
                     </div>
                   </div>
-                </div>
+                </div-->
                 <!-- ========== FIN COMMANDES =========== -->
 
                 <!-- ========== DEMANDE =========== -->
                 <div class="tab-pane fade" id="demande" role="tabpanel" aria-labelledby="contact-tab">
                   <div class="container">
-                    <div class="row">
+                    <div class="section-heading">
+                      <h2 class="text-left" style="margin-top: 12px">
+                        List des Demandes
+                      </h2>
+                    </div>
+                    <div v-if="userDemandes.length === 0" class="">
+                      <p>
+                        Vous n'avez effectué aucune Demande
+                      </p>
+                    </div>
+                    <div v-else class="row">
                       <div class="col-12">
                         <div class="cart-table clearfix">
-                          <table class="table table-responsive">
+                          <table class="table table-responsive" style="padding: 0px 0px">
                             <thead>
                             <tr>
                               <th>Produits</th>
                               <th>Quantité</th>
-                              <th>Prix</th>
-                              <th>TOTAL</th>
                               <th></th>
                             </tr>
                             </thead>
-                            <tbody>
-                            <tr>
+                            <tbody v-for="demande in userDemandes" :key="demande.id" style="border-bottom: none">
+                            <tr  style="border-top: none; border-bottom: none">
                               <td class="cart_product_img">
                                 <a href="#"><img src="store/img/bg-img/34.jpg" alt="Product"></a>
-                                <h5>Recuerdos Plant</h5>
+                                <h5>{{ demande.libelle }}</h5>
                               </td>
                               <td class="qty">
                                 <div class="quantity">
                                   <span class="qty-minus" ><i class="fa fa-minus" aria-hidden="true"></i></span>
-                                  <input type="number" class="qty-text" step="1" min="1" max="99" name="quantity" value="1">
+                                  <input type="number" class="qty-text" step="1" min="1" :max="demande.quantite" name="quantity" :value="demande.quantite">
                                   <span class="qty-plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
                                 </div>
                               </td>
-                              <td class="price"><span>$9.99</span></td>
-                              <td class="total_price"><span>$9.99</span></td>
-                              <td class="action"><a href="#"><i class="icon_close"></i></a></td>
+                              <td class="price"><span>{{ demande.mesure }}</span></td>
+                              <!--                            <td class="total_price"><span>CFA {{ prixTotal(demande.quantite, demande.prix_plateforme) }}</span></td>-->
+                              <td class="action">
+                                <button v-b-toggle="'collapse-'+demande.id" class="alazea-btn btn-sm">Reponses</button>
+                              </td>
+                            </tr>
+                            <tr style="border-top: none; border-bottom: none">
+                              <td colspan="4" style="border-top: none; margin-top: 0px; margin-bottom: 0px">
+                                <b-collapse :id="'collapse-'+demande.id">
+                                  <b-card>
+                                    <table class="table table-responsive">
+                                      <thead>
+                                      <tr>
+                                        <th>Date</th>
+                                        <th>Utilisateur</th>
+                                        <th>Reponse</th>
+                                        <th>Actions</th>
+                                        <th></th>
+                                      </tr>
+                                      </thead>
+                                      <tbody v-for="response in demande.reponses" :key="response.id" style="border-bottom: none">
+                                      <tr  style="border-top: none; border-bottom: none">
+                                        <td class="price">
+                                          <span>{{ response.created_at }}</span>
+                                        </td>
+                                        <td class="price"><span>{{ response.user.nom_utilisateur }}</span></td>
+                                        <td class="price"><span>{{ response.libelle }}</span></td>
+                                        <td class="action">
+                                          <button class="alazea-btn btn-sm">voir</button>
+                                        </td>
+                                      </tr>
+                                      </tbody>
+                                    </table>
+                                  </b-card>
+                                </b-collapse>
+                              </td>
                             </tr>
                             </tbody>
                           </table>
@@ -203,10 +244,21 @@
                 <!-- ========== OFFRES =========== -->
                 <div class="tab-pane fade" id="offre" role="tabpanel" aria-labelledby="contact-tab">
                   <div class="container">
-                    <div class="row">
+                    <div class="section-heading">
+                      <h2 class="text-left" style="margin-top: 12px">
+                        List des Offres
+                      </h2>
+                    </div>
+                    <div v-if="userOffres.length === 0" class="">
+                      <p>
+                        Vous n'avez publié aucune Offre
+                      </p>
+                      <button class="alazea-btn mt-15 btn-sm">Ajouter</button>
+                    </div>
+                    <div v-else class="row">
                       <div class="col-12">
                         <div class="cart-table clearfix">
-                          <table class="table table-responsive">
+                          <table class="table table-responsive" style="padding: 0px 0px">
                             <thead>
                             <tr>
                               <th>Produits</th>
@@ -216,22 +268,56 @@
                               <th></th>
                             </tr>
                             </thead>
-                            <tbody>
-                            <tr>
+                            <tbody v-for="offre in userOffres" :key="offre.id" style="border-bottom: none">
+                            <tr  style="border-top: none; border-bottom: none">
                               <td class="cart_product_img">
                                 <a href="#"><img src="store/img/bg-img/34.jpg" alt="Product"></a>
-                                <h5>Recuerdos Plant</h5>
+                                <h5>{{ offre.libelle }}</h5>
                               </td>
                               <td class="qty">
                                 <div class="quantity">
                                   <span class="qty-minus" ><i class="fa fa-minus" aria-hidden="true"></i></span>
-                                  <input type="number" class="qty-text" step="1" min="1" max="99" name="quantity" value="1">
+                                  <input type="number" class="qty-text" step="1" min="1" :max="offre.quantite" name="quantity" :value="offre.quantite">
                                   <span class="qty-plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
                                 </div>
                               </td>
-                              <td class="price"><span>$9.99</span></td>
-                              <td class="total_price"><span>$9.99</span></td>
-                              <td class="action"><a href="#"><i class="icon_close"></i></a></td>
+                              <td class="price"><span>{{ offre.mesure }}</span></td>
+                              <td class="price"><span>{{ offre.prix_plateforme }} CFA</span></td>
+                              <!--                            <td class="total_price"><span>CFA {{ prixTotal(offre.quantite, offre.prix_plateforme) }}</span></td>-->
+                              <td class="action">
+                                <button v-b-toggle="'collapse-'+offre.id" class="alazea-btn btn-sm">Reponses</button>
+                              </td>
+                            </tr>
+                            <tr style="border-top: none; border-bottom: none">
+                              <td colspan="4" style="border-top: none; margin-top: 0px; margin-bottom: 0px">
+                                <b-collapse :id="'collapse-'+offre.id">
+                                  <b-card>
+                                    <table class="table table-responsive">
+                                      <thead>
+                                      <tr>
+                                        <th>Date</th>
+                                        <th>Utilisateur</th>
+                                        <th>Reponse</th>
+                                        <th>Actions</th>
+                                        <th></th>
+                                      </tr>
+                                      </thead>
+                                      <tbody v-for="response in offre.reponses" :key="response.id" style="border-bottom: none">
+                                      <tr  style="border-top: none; border-bottom: none">
+                                        <td class="price">
+                                          <span>{{ response.created_at }}</span>
+                                        </td>
+                                        <td class="price"><span>{{ response.user.nom_utilisateur }}</span></td>
+                                        <td class="price"><span>{{ response.libelle }}</span></td>
+                                        <td class="action">
+                                          <button class="alazea-btn btn-sm">voir</button>
+                                        </td>
+                                      </tr>
+                                      </tbody>
+                                    </table>
+                                  </b-card>
+                                </b-collapse>
+                              </td>
                             </tr>
                             </tbody>
                           </table>
@@ -245,7 +331,17 @@
                 <!-- ========== FAVORIS =========== -->
                 <div class="tab-pane fade" id="favoris" role="tabpanel" aria-labelledby="contact-tab">
                   <div class="container">
-                  <div class="row">
+                    <div class="section-heading">
+                      <h2 class="text-left" style="margin-top: 12px">
+                        List des Favoris
+                      </h2>
+                    </div>
+                    <div v-if="userFavoris.length === 0" class="">
+                      <p>
+                        Vous n'avez aucune favoris enregistré
+                      </p>
+                    </div>
+                    <div v-else class="row">
                     <div class="col-12">
                       <div class="cart-table clearfix">
                         <table class="table table-responsive">
@@ -253,8 +349,8 @@
                           <tr>
                             <th>Produits</th>
                             <th>Quantité</th>
+                            <th>Mesure</th>
                             <th>Prix</th>
-                            <th>TOTAL</th>
                             <th></th>
                           </tr>
                           </thead>
@@ -267,7 +363,7 @@
                             <td class="qty">
                               <div class="quantity">
                                 <span class="qty-minus" ><i class="fa fa-minus" aria-hidden="true"></i></span>
-                                <input type="number" class="qty-text" step="1" min="1" max="99" name="quantity" :value="favoris.quantite">
+                                <input type="number" class="qty-text" step="1" min="1" :max="favoris.quantite" name="quantity" :value="favoris.quantite">
                                 <span class="qty-plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
                               </div>
                             </td>
@@ -275,7 +371,7 @@
                             <td class="price"><span>{{ favoris.prix_plateforme }} CFA</span></td>
 <!--                            <td class="total_price"><span>CFA {{ prixTotal(favoris.quantite, favoris.prix_plateforme) }}</span></td>-->
                             <td class="action">
-                              <button type="submit" class="btn alazea-btn mt-15">Demander</button>
+                              <button type="submit" class="alazea-btn mt-15">Demander</button>
                             </td>
                           </tr>
                           </tbody>
@@ -300,16 +396,26 @@
 
 <script>
 import request from "../../../utils/request";
+import Resource from "../../../api/resource";
+const demandeResource = new Resource('demandes');
+const offreResource = new Resource('offres');
 
 export default {
   name: "UserDetail",
   data(){
     return {
       userFavoris: [],
+      userDemandes: [],
+      userOffres: [],
+      query: {
+        user_id: this.$store.getters.userId,
+      }
     }
   },
   created() {
     this.getUserOffresFavoris(this.$store.getters.userId);
+    this.getUserDemandes();
+    this.getUserOffres();
   },
   methods: {
     async getUserOffresFavoris(id){
@@ -325,6 +431,16 @@ export default {
       this.userFavoris = data;
       console.log('USERS FAVORIS ', this.userFavoris);
     },
+    async getUserOffres(){
+      const { data } = await offreResource.list(this.query);
+      this.userOffres = data;
+      console.log('USER OFFRES', this.userOffres);
+    },
+    async getUserDemandes(){
+      const { data } = await demandeResource.list(this.query);
+      this.userDemandes = data;
+      console.log('USER Demandes', this.userDemandes);
+    },
     prixTotal(qtte, prix){
       return qtte * prix;
     }
@@ -339,7 +455,7 @@ export default {
   position: relative;
   z-index: 1;
   display: inline-block;
-  min-width: 150px;
+  min-width: 80px;
   height: 46px;
   color: #ffffff;
   background-color: #70c745;
@@ -350,6 +466,9 @@ export default {
   line-height: 42px;
   text-transform: uppercase;
   font-weight: 600;
+}
+.collapsed{
+  border-color: rgba(112, 199, 69, 0.4);
 }
 .card-profile-image img {
   position: absolute;

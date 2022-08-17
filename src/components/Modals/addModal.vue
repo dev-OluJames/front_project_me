@@ -64,7 +64,7 @@
             <b-col v-else>
               <h6>Type demande</h6>
               <base-input>
-                <el-select v-model="donnees.type_demande_id" @click="getTypedemandes" filterable
+                <el-select v-model="donnees.type_demande_id" @click="getTypeDemandes" filterable
                            placeholder="Type demande" style="width: 100%">
                   <el-option value>
                     <base-button type="primary" style="width: 100%;border-radius: 0px" @click="createTdemande=!createTdemande">
@@ -126,7 +126,7 @@
             <b-col style="margin-bottom: 12px">
               <h6>Description</h6>
               <vue-editor :editor-toolbar="customToolbar" v-model="donnees.description" class="ql-toolbar" rowspan="3" />
-              <!--        <textarea type="number" class="form-control" id="desc" placeholder="Description" v-model="donnees.description"></textarea>-->
+<!--              <textarea type="number" class="form-control" id="desc" placeholder="Description" v-model="donnees.description"></textarea>-->
             </b-col>
           </b-row>
         </b-col>

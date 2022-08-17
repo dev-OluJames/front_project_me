@@ -7,9 +7,9 @@
           <b-row class="justify-content-center">
             <b-col xl="5" lg="6" md="6" class="px-5">
               <h1 class="text-light">Ooops!</h1>
-              <p class="text-lead text-white">Page not found. Don't worry though, we have plenty of other pages to explore</p>
+              <p class="text-lead text-white">Cette page n'existe pas ou il se peut que vous n'ayez pas accès</p>
 
-              <router-link to="/dashboard" class="font-weight-bold text-white mt-5">Back to dashboard</router-link>
+              <router-link to="/" class="font-weight-bold text-white mt-5">Revenir  à la Page d'accueil</router-link>
             </b-col>
           </b-row>
         </div>
@@ -21,11 +21,11 @@
       </div>
     </div>
     <!-- Page content -->
-    <section class="py-6">
+    <!-- section class="py-6">
       <b-container >
         <b-row align-v="center" class="row-grid">
           <b-col md="6">
-            <b-img src="img/theme/landing-2.png" fluid />
+            <b-img src="https://victorlogos.com/wp-content/uploads/2018/06/403-error.png" fluid />
           </b-col>
           <b-col md="6">
             <div class="pr-md-5">
@@ -36,7 +36,7 @@
           </b-col>
         </b-row>
       </b-container>
-    </section>
+    </section-->
   </div>
 </template>
 

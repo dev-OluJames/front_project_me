@@ -1,15 +1,21 @@
 import DashboardLayout from '@/views/Layout/DashboardLayout.vue';
 import Store from "../views/Store/Store";
-import StoreOffres from "../views/Store/StoreOffres";
+import StoreOffres from "../views/Store/StoreItems";
 import AuthLayout from '@/views/Pages/AuthLayout.vue';
 import NotFoundPage from "../views/NotFoundPage";
 const constantRoutes = [
   {
     path: '/',
-    redirect: '/store/offres',
+    redirect: '/',
     component: Store,
     // alwaysShow: true,
     children: [
+      {
+        path: '/',
+        component: () => import(/* webpackChunkName: "users" */ '../views/Store/StoreItems'),
+        name: 'Store-items',
+        meta: { title: 'store-items', icon: 'el-icon-user-solid' },
+      },
       {
         path: '/store/offres',
         component: () => import(/* webpackChunkName: "users" */ '../views/Store/StoreOffres'),
@@ -17,10 +23,22 @@ const constantRoutes = [
         meta: { title: 'store-offres', icon: 'el-icon-user-solid' },
       },
       {
+        path: '/store/demandes',
+        component: () => import(/* webpackChunkName: "users" */ '../views/Store/StoreDemandes'),
+        name: 'Store-demandes',
+        meta: { title: 'store-demandes', icon: 'el-icon-user-solid' },
+      },
+      {
         path: '/store/offres/detail/:id(\\d+)',
         component: () => import(/* webpackChunkName: "roles" */ '@/views/Store/OffresDetail'),
-        name: 'Detail',
+        name: 'DetailOffre',
         meta: { title: 'detailOffre', icon: 'el-icon-key' },
+      },
+      {
+        path: '/store/demandes/detail/:id(\\d+)',
+        component: () => import(/* webpackChunkName: "roles" */ '@/views/Store/DemandeDetail'),
+        name: 'DetailDemande',
+        meta: { title: 'detailDemande', icon: 'el-icon-key' },
       },
       {
         path: '/store/favoris',

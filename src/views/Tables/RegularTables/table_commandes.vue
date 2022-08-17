@@ -62,7 +62,7 @@
 
           <el-table-column label="Action"
                            prop="completion"
-                           min-width="200px">
+                           min-width="250px">
             <template v-slot="{row}">
                 <span class="table-action">
                   <a href="javascript:;" data-bs-toggle="tooltip" data-bs-original-title="Preview product">
@@ -141,7 +141,7 @@
 .table-action {
   font-size: .875rem;
   color: #adb5bd;
-  margin: 0 -0.55rem;
+  margin: 0 0.4499999999999993rem;
 }
 
 a, a:hover {

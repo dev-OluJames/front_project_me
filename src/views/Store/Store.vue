@@ -1,6 +1,6 @@
 <template>
 
-  <div class="hello">
+  <div class="hello" style="font-family: Dosis, serif;">
     <!-- Preloader -->
     <header class="header-area">
 
@@ -259,7 +259,11 @@ export default {
       // await this.$store.dispatch('user/logout');
       removeToken();
       this.authenticated = false;
-      window.location.reload();
+      if (this.$route.path.includes('compte')){
+        await this.$router.push({path: '/'});
+      } else {
+        window.location.reload();
+      }
     },
   }
 }
@@ -288,6 +292,7 @@ export default {
 body {
   margin: 0;
   /* font-family: Open Sans, sans-serif; */
+  font-family: Dosis, serif;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;

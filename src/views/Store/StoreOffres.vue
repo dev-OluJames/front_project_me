@@ -5,7 +5,7 @@
     <div class="breadcrumb-area">
       <!-- Top Breadcrumb Area -->
       <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(store/img/bg-img/24.jpg);">
-        <h2>Offres</h2>
+        <h4>Offres</h4>
       </div>
 
       <div class="container">
@@ -49,24 +49,18 @@
             <div class="shop-sidebar-area">
 
               <!-- Shop Widget -->
-              <div class="shop-widget price mb-50">
-                <h4 class="widget-title">Prices</h4>
+              <div class="shop-widget catagory mb-50 contact-form-area">
+                <h4 class="widget-title">Varietes</h4>
                 <div class="widget-desc">
-                  <div class="slider-range">
-                    <div data-min="8" data-max="30" data-unit="$" class="slider-range-price ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" data-value-min="8" data-value-max="30" data-label-result="Price:">
-                      <div class="ui-slider-range ui-widget-header ui-corner-all"></div>
-                      <span class="ui-slider-handle ui-state-default ui-corner-all first-handle" tabindex="0"></span>
-                      <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"></span>
-                    </div>
-                    <div class="range-price">Price: $8 - $30</div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Shop Widget -->
-              <div class="shop-widget catagory mb-50">
-                <h4 class="widget-title">Categories</h4>
-                <div class="widget-desc">
+                  <el-select v-model="query.variete_produit_id"  filterable placeholder="Choisir" style="margin-bottom: 10px">
+                    <el-option
+                      v-for="variete in varietes"
+                      :key="variete.id"
+                      :label="variete.nom"
+                      :value="variete.id"
+                    >
+                    </el-option>
+                  </el-select>
                   <!-- Single Checkbox -->
                   <div class="custom-control custom-checkbox d-flex align-items-center mb-2">
                     <input type="checkbox" class="custom-control-input" id="customCheck1">
@@ -77,33 +71,22 @@
                     <input type="checkbox" class="custom-control-input" id="customCheck2">
                     <label class="custom-control-label" for="customCheck2">Outdoor plants <span class="text-muted">(20)</span></label>
                   </div>
-                  <!-- Single Checkbox -->
-                  <div class="custom-control custom-checkbox d-flex align-items-center mb-2">
-                    <input type="checkbox" class="custom-control-input" id="customCheck3">
-                    <label class="custom-control-label" for="customCheck3">Indoor plants <span class="text-muted">(15)</span></label>
-                  </div>
-                  <!-- Single Checkbox -->
-                  <div class="custom-control custom-checkbox d-flex align-items-center mb-2">
-                    <input type="checkbox" class="custom-control-input" id="customCheck4">
-                    <label class="custom-control-label" for="customCheck4">Office Plants <span class="text-muted">(20)</span></label>
-                  </div>
-                  <!-- Single Checkbox -->
-                  <div class="custom-control custom-checkbox d-flex align-items-center mb-2">
-                    <input type="checkbox" class="custom-control-input" id="customCheck5">
-                    <label class="custom-control-label" for="customCheck5">Potted <span class="text-muted">(15)</span></label>
-                  </div>
-                  <!-- Single Checkbox -->
-                  <div class="custom-control custom-checkbox d-flex align-items-center mb-2">
-                    <input type="checkbox" class="custom-control-input" id="customCheck6">
-                    <label class="custom-control-label" for="customCheck6">Others <span class="text-muted">(2)</span></label>
-                  </div>
                 </div>
               </div>
 
               <!-- Shop Widget -->
-              <div class="shop-widget sort-by mb-50">
-                <h4 class="widget-title">Sort by</h4>
+              <div class="shop-widget sort-by mb-50 contact-form-area">
+                <h4 class="widget-title">Village</h4>
                 <div class="widget-desc">
+                  <el-select v-model="query.village_id"  filterable placeholder="Choisir"  style="margin-bottom: 10px">
+                    <el-option
+                      v-for="village in villages"
+                      :key="village.id"
+                      :label="village.libelle"
+                      :value="village.id"
+                    >
+                    </el-option>
+                  </el-select>
                   <!-- Single Checkbox -->
                   <div class="custom-control custom-checkbox d-flex align-items-center mb-2">
                     <input type="checkbox" class="custom-control-input" id="customCheck7">
@@ -114,21 +97,23 @@
                     <input type="checkbox" class="custom-control-input" id="customCheck8">
                     <label class="custom-control-label" for="customCheck8">Alphabetically, A-Z</label>
                   </div>
+                </div>
+              </div>
+
+              <div class="shop-widget sort-by mb-50">
+                <h4 class="widget-title">Type Offre</h4>
+                <div class="widget-desc">
                   <!-- Single Checkbox -->
                   <div class="custom-control custom-checkbox d-flex align-items-center mb-2">
-                    <input type="checkbox" class="custom-control-input" id="customCheck9">
-                    <label class="custom-control-label" for="customCheck9">Alphabetically, Z-A</label>
+                    <input type="checkbox" class="custom-control-input" id="customCheck18">
+                    <label class="custom-control-label" for="customCheck7">Spontanée</label>
                   </div>
                   <!-- Single Checkbox -->
                   <div class="custom-control custom-checkbox d-flex align-items-center mb-2">
-                    <input type="checkbox" class="custom-control-input" id="customCheck10">
-                    <label class="custom-control-label" for="customCheck10">Price: low to high</label>
+                    <input type="checkbox" class="custom-control-input" id="customCheck28">
+                    <label class="custom-control-label" for="customCheck8">Prévisionnel</label>
                   </div>
-                  <!-- Single Checkbox -->
-                  <div class="custom-control custom-checkbox d-flex align-items-center">
-                    <input type="checkbox" class="custom-control-input" id="customCheck11">
-                    <label class="custom-control-label" for="customCheck11">Price: high to low</label>
-                  </div>
+
                 </div>
               </div>
             </div>
@@ -207,17 +192,33 @@ export default {
       offres: [],
       offreFavoris: {},
       userFavoris: [],
+      villages: [],
+      varietes: [],
+      query: {
+        village_id: null,
+        variete_produit_id: null,
+      },
       loaded: true,
       authenticated : isLogged(),
     }
   },
   created() {
-    this.offresList();
+    this.offresList(this.query);
     if (this.authenticated){
       this.getUserOffresFavoris(this.$store.getters.userId);
+      this.getvillages();
+      this.getVarieteList();
     }
   },
   methods: {
+    async getVarieteList(){
+      const {data} = await new Resource('varieteProduits').list();
+      this.varietes = data;
+    },
+    async getvillages(){
+      const { data } = await new Resource('villages').list();
+      this.villages = data;
+    },
     ajoutoffre(btn){
       if (!this.authenticated){
         Message({
@@ -235,7 +236,7 @@ export default {
     offresList(){
       // const { data } = await offreResource.list();
       // this.offres = data;
-      offreResource.list()
+      offreResource.list(this.query)
         .then((response) => {
           this.offres = response.data;
           console.log('DATA offreS', response.data);
@@ -299,5 +300,8 @@ export default {
   color: #fff;
   background-color: #384a12;
   border-color: #384a12;
+}
+.h4, h4 {
+  font-size: 1.5rem;
 }
 </style>

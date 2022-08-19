@@ -70,15 +70,10 @@
 </template>
 <template v-else>
   <div>
-    <base-header class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center profile-header"
-                 style="min-height: 400px; background-image: url(https://img.freepik.com/free-photo/brown-paper-package-tied-with-string_1101-2068.jpg?w=2000); background-size: cover; background-position: center top;">
-      <!-- Card stats -->
-      <b-container fluid>
-        <!-- Mask -->
-        <span class="mask bg-gradient-success opacity-6"></span>
-      </b-container>
+    <base-header class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center profile-header" style="background-image: url(store/img/bg-img/24.jpg); background-position: top">
+    <!-- Card stats -->
     </base-header>
-    <b-container fluid class="mt--7">
+    <b-container fluid class="mt--5">
       <b-row>
         <b-col>
           <table_packs/>

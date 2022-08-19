@@ -1,7 +1,7 @@
 <template>
   <div>
 
-    <base-header class="pb-6 pb-8 pt-5 pt-md-8 bg-gradient-success">
+    <base-header class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center profile-header" style="background-image: url(store/img/bg-img/24.jpg);">
       <!-- Card stats -->
       <b-row>
         <b-col xl="3" md="6">

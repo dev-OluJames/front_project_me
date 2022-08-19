@@ -5,7 +5,7 @@
     <div class="breadcrumb-area">
       <!-- Top Breadcrumb Area -->
       <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(store/img/bg-img/24.jpg);">
-        <h2>DETAILS DU PRODUIT</h2>
+        <h2>DETAILS DE LA DEMANDE</h2>
       </div>
 
       <div class="container">
@@ -78,7 +78,7 @@
                       <input type="number" class="qty-text" step="1" min="0" :max="demande.quantite" v-model="new_demande.quantite" value="0">
                       <span class="qty-plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
                     </div-->
-                    <base-button  v-b-toggle="'collapse-2'" id="collapse" class="btn alazea-btn ml-15" @click="handleDemande">Repondre</base-button>
+                    <base-button  v-b-toggle="'collapse-2'" id="collapse" class="btn alazea-btn ml-15" @click="handleOffre">Repondre</base-button>
                   </div>
                   <!-- Wishlist & Compare -->
                   <div class="wishlist-compare d-flex flex-wrap align-items-center">
@@ -96,38 +96,46 @@
                           <div class="col-12 col-md-6">
                             <div class="form-group">
                               <label for="libelle">Libelle</label>
-                              <input type="text" class="form-control" id="libelle" placeholder="Libelle" v-model="new_demande.libelle">
+                              <input type="text" class="form-control" id="libelle" placeholder="Libelle" v-model="new_offre.libelle">
                             </div>
                           </div>
                           <div class="col-12 col-md-6">
                             <div class="form-group">
-                              <label for="exampleFormControlSelect1">Type Demande</label>
-                              <select v-model="new_demande.type_demande_id" class="form-control dropdown" style="padding: 0px 0px;" id="exampleFormControlSelect1">
-                                <option v-for="demande in type_demandes" :key="demande.id" :value="demande.id">
-                                  {{demande.libelle}}
+                              <label for="exampleFormControlSelect1">Village</label>
+                              <select v-model="new_offre.village_id" class="form-control dropdown" style="padding: 0px 0px;" id="exampleFormControlSelect1">
+                                <option v-for="village in villages" :key="village.id" :value="village.id">
+                                  {{village.libelle}}
                                 </option>
                               </select>
                             </div>
                           </div>
                           <div class="col-12 col-md-6">
                             <div class="form-group">
-                              <input type="number" class="form-control" id="quantite" placeholder="Quantite" v-model="new_demande.quantite">
+                              <label for="quantite">Quantite</label>
+                              <input type="number" class="form-control" id="quantite" placeholder="Quantite" v-model="new_offre.quantite">
                             </div>
                           </div>
                           <div class="col-12 col-md-6">
                             <div class="form-group">
-                              <input type="text" class="form-control" id="mesure" placeholder="Mesure" v-model="new_demande.mesure">
+                              <label for="mesure">Mesure</label>
+                              <input type="text" class="form-control" id="mesure" placeholder="Mesure" v-model="new_offre.mesure">
                             </div>
                           </div>
-                          <div class="col-12">
+                          <div class="col-12 col-md-6">
                             <div class="form-group">
-                              <label for="date_livraison">Date Livraison</label>
-                              <input type="date" class="form-control" id="date_livraison" placeholder="Date livraison" v-model="new_demande.date_livraison">
+                              <label for="prix">Prix</label>
+                              <input type="number" class="form-control" id="prix" placeholder="Prix" v-model="new_offre.prix_agriculteur">
+                            </div>
+                          </div>
+                          <div class="col-12 col-md-6">
+                            <div class="form-group">
+                              <label for="date_disponibilite">Date Disponible</label>
+                              <input type="date" class="form-control" id="date_disponibilite" placeholder="Date disponible" v-model="new_offre.date_disponibilite">
                             </div>
                           </div>
                           <div class="col-12">
                             <!-- div class="form-group">
-                              <textarea class="form-control" id="demande_description" cols="30" rows="10" placeholder="description" v-model="new_demande.description"></textarea>
+                              <textarea class="form-control" id="demande_description" cols="30" rows="10" placeholder="description" v-model="new_offre.description"></textarea>
                             </div -->
                             <vue-dropzone
                               @vdropzone-file-added="setOption()"
@@ -138,7 +146,7 @@
                             />
                           </div>
                           <div class="col-12">
-                            <base-button class="btn alazea-btn mt-15"  @click="envoyerDemande">Soumettre</base-button>
+                            <base-button class="btn alazea-btn mt-15"  @click="envoyerOffre">Soumettre</base-button>
                           </div>
                         </div>
                       </form>
@@ -441,7 +449,8 @@ import VueElementLoading from "vue-element-loading";
 
 import vueDropzone from 'vue2-dropzone-vue3';
 const demandeResource = new Resource('demandes');
-const tdemandeResource = new Resource('typeDemandes');
+const offreResource = new Resource('offres');
+const toffreResource = new Resource('typeOffres');
 export default {
   name: 'demandesDetail',
   props: {
@@ -465,9 +474,12 @@ export default {
       media: {},
       loading: true,
       demande: {},
+      type_offre_id: null,
       show: false,
       new_demande: {},
+      new_offre: {},
       type_demandes: [],
+      villages: [],
       collapse_id: null,
       authenticated : isLogged(),
     };
@@ -475,7 +487,8 @@ export default {
   created() {
     this.getdemandesDetail();
     if (this.authenticated){
-      this.getTypeDemandes();
+      this.getTypeOffreId();
+      this.getvillages();
     }
   },
   methods: {
@@ -487,9 +500,13 @@ export default {
         this.loading = false;
       });
     },
-    async getTypeDemandes() {
-      const { data } = await tdemandeResource.list();
-      this.type_demandes = data;
+    async getTypeOffreId() {
+      const query = {
+        keyword: 'offre_reponse',
+      };
+      const { data } = await toffreResource.list(query);
+      console.log('OFFRE REPONSE ID', data[0]);
+      this.type_offre_id = data[0].id;
     },
     setOption(){
       console.log('NOMBRE DE FILKE', this.$refs.myVueDropzone.dropzone.files.length);
@@ -498,7 +515,7 @@ export default {
         console.log('CLICKABLE',this.dropzoneOptions);
       }
     },
-    handleDemande(){
+    handleOffre(){
       console.log('AUTHENTICATED ', this.authenticated);
       if (!this.authenticated){
         Message({
@@ -511,18 +528,20 @@ export default {
         this.collapse_id = 'collapse-2';
       }
     },
-    envoyerDemande(){
-      this.new_demande.description = this.demande.id;
-      this.new_demande.village_id = this.demande.village.id;
-      this.new_demande.user_id = this.$store.getters.userId;
-      this.new_demande.variete_produit_id = this.demande.variete_produit.id;
+    envoyerOffre(){
+      this.new_offre.description = this.demande.id;
+      this.new_offre.prix_plateforme = parseInt(this.new_offre.prix_agriculteur) + 10000;
+      this.new_offre.prix_agriculteur = parseInt(this.new_offre.prix_agriculteur);
+      this.new_offre.type_offre_id = this.type_offre_id;
+      this.new_offre.user_id = this.$store.getters.userId;
+      this.new_offre.variete_produit_id = this.demande.variete_produit.id;
 
       const isUserLogged = isLogged();
-      console.log('DEMANDE A ENVOYER', this.new_demande);
+      console.log('DEMANDE A ENVOYER', this.new_offre);
       if (isUserLogged){
         console.log('USER CONNECTED', this.$store.getters.userId);
         this.show = true;
-        demandeResource.store(this.new_demande)
+        offreResource.store(this.new_offre)
           .then((response) => {
             console.log(response);
             Message({
@@ -545,7 +564,11 @@ export default {
         });
         this.$router.push(`/login?redirect=${this.$route.fullPath}`);
       }
-    }
+    },
+    async getvillages() {
+      const { data } = await new Resource('villages').list();
+      this.villages = data;
+    },
   }
 }
 </script>

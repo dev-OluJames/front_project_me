@@ -205,7 +205,7 @@
                               <td colspan="4" style="border-top: none; margin-top: 0px; margin-bottom: 0px">
                                 <b-collapse :id="'collapse-'+demande.id">
                                   <b-card>
-                                    <table class="table table-responsive">
+                                    <table v-if="demande.reponses" class="table table-responsive">
                                       <thead>
                                       <tr>
                                         <th>Date</th>
@@ -228,6 +228,7 @@
                                       </tr>
                                       </tbody>
                                     </table>
+                                    <p v-else> Vous n'avez aucune reponse à cette demande</p>
                                   </b-card>
                                 </b-collapse>
                               </td>
@@ -292,7 +293,7 @@
                               <td colspan="4" style="border-top: none; margin-top: 0px; margin-bottom: 0px">
                                 <b-collapse :id="'collapse-'+offre.id">
                                   <b-card>
-                                    <table class="table table-responsive">
+                                    <table v-if="offre.reponses.length > 0" class="table table-responsive">
                                       <thead>
                                       <tr>
                                         <th>Date</th>
@@ -315,6 +316,7 @@
                                       </tr>
                                       </tbody>
                                     </table>
+                                    <p v-else> Vous n'avez aucune reponse à cette offre</p>
                                   </b-card>
                                 </b-collapse>
                               </td>

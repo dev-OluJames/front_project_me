@@ -5,7 +5,7 @@
     <div class="breadcrumb-area">
       <!-- Top Breadcrumb Area -->
       <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(store/img/bg-img/24.jpg);">
-        <h2>DETAILS DU PRODUIT</h2>
+        <h2>DETAILS DE L'OFFRE</h2>
       </div>
 
       <div class="container">
@@ -101,10 +101,10 @@
                           </div>
                           <div class="col-12 col-md-6">
                             <div class="form-group">
-                              <label for="exampleFormControlSelect1">Type Demande</label>
-                              <select v-model="new_demande.type_demande_id" class="form-control" style="padding: 0px 0px;" id="exampleFormControlSelect1">
-                                <option v-for="demande in type_demandes" :key="demande.id" :value="demande.id">
-                                  {{demande.libelle}}
+                              <label for="exampleFormControlSelect1">Village</label>
+                              <select v-model="new_demande.village_id" class="form-control" style="padding: 0px 0px;" id="exampleFormControlSelect1">
+                                <option v-for="village in villages" :key="village.id" :value="village.id">
+                                  {{village.libelle}}
                                 </option>
                               </select>
                             </div>
@@ -464,11 +464,12 @@ export default {
         headers: { "My-Awesome-Header": "header value" }
       },
       media: {},
+      villages: [],
       loading: true,
       offre: {},
       show: false,
       new_demande: {},
-      type_demandes: [],
+      type_demande_id: null,
       collapse_id: null,
       authenticated : isLogged(),
     };
@@ -476,7 +477,8 @@ export default {
   created() {
     this.getOffresDetail();
     if (this.authenticated){
-      this.getTypeDemandes();
+      this.getTypeDemandeId();
+      this.getvillages();
     }
   },
   methods: {
@@ -488,9 +490,12 @@ export default {
         this.loading = false;
       });
     },
-    async getTypeDemandes() {
-      const { data } = await tdemandeResource.list();
-      this.type_demandes = data;
+    async getTypeDemandeId() {
+      const query = {
+        keyword: 'demande_reponse'
+      };
+      const { data } = await tdemandeResource.list(query);
+      this.type_demande_id = data[0].id;
     },
     setOption(){
       console.log('NOMBRE DE FILKE', this.$refs.myVueDropzone.dropzone.files.length);
@@ -512,9 +517,13 @@ export default {
         this.collapse_id = 'collapse-2';
       }
     },
+    async getvillages() {
+      const { data } = await new Resource('villages').list();
+      this.villages = data;
+    },
     envoyerDemande(){
       this.new_demande.description = this.offre.id;
-      this.new_demande.village_id = this.offre.village.id;
+      this.new_demande.type_demande_id = this.type_demande_id;
       this.new_demande.user_id = this.$store.getters.userId;
       this.new_demande.variete_produit_id = this.offre.variete_produit.id;
 

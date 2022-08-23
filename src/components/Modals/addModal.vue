@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-modal @ok="handleOk" ok-title="Ajouter" cancel-title="Annuler" size="xl" :id="id" :title="title">
+    <b-modal @change="setData" @ok="handleOk" :ok-title="action ==='ajout' ? 'Ajouter' : 'Modifier'" cancel-title="Annuler" size="xl" :id="id" :title="title">
       <vue-element-loading :active="show" spinner="bar-fade-scale" color="#2dce94" />
       <b-row>
         <b-col align-self="stretch">
@@ -14,16 +14,60 @@
         </b-col>
         <b-col>
           <b-row>
+            <b-col>
+              <h6>Libelle</h6>
+              <input type="text" class="form-control" id="libelle" placeholder="Libelle" v-model="donnees.libelle" style="margin-bottom: 10px">
+            </b-col>
+          </b-row>
+          <b-row>
             <b-col :cols="6">
               <h6>Produit</h6>
-              <input type="text" class="form-control" id="prdt" placeholder="Produit" v-model="donnees.libelle">
+              <el-select v-if="action === 'ajout'" v-model="produit_id" @click="getproduits" @change="getVarieteList" filterable
+                         placeholder="Produit" style="width: 100%">
+                <el-option value>
+                  <base-button type="primary" icon style="width: 100%;border-radius: 0px" @click="createProduit=!createProduit">
+                    Ajouter
+                  </base-button>
+                </el-option>
+                <el-option v-for="(option, index) in produits"
+                           :key="index"
+                           :label="option.nom"
+                           :value="option.id">
+                </el-option>
+              </el-select>
+              <el-select v-else v-model="donnees.variete_produit.produit_id" @click="getproduits" @change="getVarieteList" filterable
+                         placeholder="Produit" style="width: 100%">
+                <el-option value>
+                  <base-button type="primary" icon style="width: 100%;border-radius: 0px" @click="createProduit=!createProduit">
+                    Ajouter
+                  </base-button>
+                </el-option>
+                <el-option v-for="(option, index) in produits"
+                           :key="index"
+                           :label="option.nom"
+                           :value="option.id">
+                </el-option>
+              </el-select>
             </b-col>
             <b-col :cols="6">
               <h6>Variete</h6>
               <base-input>
-                <el-select v-model="donnees.variete_produit_id" @click="getVarieteList" filterable
+                <el-select v-if="action === 'ajout'" v-model="donnees.variete_produit_id" @click="getVarieteList" filterable
                            placeholder="Variete" style="width: 100%">
-                  <el-option v-if="type === 'offres'" value>
+                  <el-option value>
+                    <base-button type="primary" icon style="width: 100%;border-radius: 0px" @click="createVariety=!createVariety">
+                      Ajouter
+                    </base-button>
+                  </el-option>
+                  <el-option v-for="(option, index) in variete_list"
+                             :key="index"
+                             :label="option.nom"
+                             :value="option.id">
+                  </el-option>
+                </el-select>
+                <el-select v-else v-model="donnees.variete_produit.id" @click="getVarieteList" filterable
+                           placeholder="Variete" style="width: 100%">
+                  <el-option value>
                     <base-button type="primary" icon style="width: 100%;border-radius: 0px" @click="createVariety=!createVariety">
                       Ajouter
                     </base-button>
@@ -36,23 +80,31 @@
                 </el-select>
               </base-input>
             </b-col>
-            <!-- b-col v-if="type === 'offres'">
-              <base-button type="primary" class="lev-button is-circle" @click="createVariety=!createVariety">
-                <span class="btn-inner--icon"><i class="ni ni-fat-add"></i></span>
-              </base-button>
-            </b-col-->
           </b-row>
           <b-row>
             <b-col v-if="type === 'offres'">
               <h6>Type d'offre</h6>
               <base-input>
-                <el-select v-model="donnees.type_offre_id" @click="getTypeOffres" filterable
+                <el-select v-if="action === 'ajout'" v-model="donnees.type_offre_id" @click="getTypeOffres" filterable
                            placeholder="Type Offre" style="width: 100%">
-                  <el-option v-if="type === 'offres'" value>
+                  <!-- el-option v-if="type === 'offres'" value>
                     <base-button type="primary" style="width: 100%;border-radius: 0px" @click="createToffre=!createToffre">
                       Ajouter
                     </base-button>
+                  </el-option-->
+                  <el-option v-for="(option, index) in type_offres"
+                             :key="index"
+                             :label="option.libelle"
+                             :value="option.id">
                   </el-option>
+                </el-select>
+                <el-select v-else v-model="donnees.type_offre.id" @click="getTypeOffres" filterable
+                           placeholder="Type Offre" style="width: 100%">
+                  <!-- el-option v-if="type === 'offres'" value>
+                    <base-button type="primary" style="width: 100%;border-radius: 0px" @click="createToffre=!createToffre">
+                      Ajouter
+                    </base-button>
+                  </el-option-->
                   <el-option v-for="(option, index) in type_offres"
                              :key="index"
                              :label="option.libelle"
@@ -64,13 +116,26 @@
             <b-col v-else>
               <h6>Type demande</h6>
               <base-input>
-                <el-select v-model="donnees.type_demande_id" @click="getTypeDemandes" filterable
+                <el-select v-if="action === 'ajout'" v-model="donnees.type_demande_id" @click="getTypeDemandes" filterable
                            placeholder="Type demande" style="width: 100%">
-                  <el-option value>
+                  <!--el-option value>
                     <base-button type="primary" style="width: 100%;border-radius: 0px" @click="createTdemande=!createTdemande">
                       Ajouter
                     </base-button>
+                  </el-option-->
+                  <el-option v-for="(option, index) in type_demandes"
+                             :key="index"
+                             :label="option.libelle"
+                             :value="option.id">
                   </el-option>
+                </el-select>
+                <el-select v-else v-model="donnees.type_demande.id" @click="getTypeDemandes" filterable
+                           placeholder="Type demande" style="width: 100%">
+                  <!--el-option value>
+                    <base-button type="primary" style="width: 100%;border-radius: 0px" @click="createTdemande=!createTdemande">
+                      Ajouter
+                    </base-button>
+                  </el-option-->
                   <el-option v-for="(option, index) in type_demandes"
                              :key="index"
                              :label="option.libelle"
@@ -110,7 +175,15 @@
             <b-col style="margin-bottom: 12px">
               <h6>Village</h6>
               <base-input>
-                <el-select v-model="donnees.village_id" filterable
+                <el-select v-if="action === 'ajout'" v-model="donnees.village_id" filterable
+                           placeholder="Village" style="width: 100%">
+                  <el-option v-for="(option, index) in villages"
+                             :key="index"
+                             :label="option.libelle"
+                             :value="option.id">
+                  </el-option>
+                </el-select>
+                <el-select v-else v-model="donnees.village.id" filterable
                            placeholder="Village" style="width: 100%">
                   <el-option v-for="(option, index) in villages"
                              :key="index"
@@ -132,6 +205,32 @@
         </b-col>
       </b-row>
     </b-modal>
+    <modal :show.sync="createProduit">
+      <vue-element-loading :active="showProduit" spinner="bar-fade-scale" color="#2dce94" />
+      <h6 slot="header" class="modal-title">Ajout de Produit</h6>
+
+      <el-form ref="produitForm" :rules="produitRules" :model="new_produit" label-position="left">
+        <el-form-item label="Produit" prop="nom">
+          <el-input v-model="new_produit.nom" />
+        </el-form-item>
+        <el-form-item label="Description" prop="description">
+          <el-input v-model="new_produit.description" type="textarea" />
+        </el-form-item>
+      </el-form>
+      <template slot="footer">
+        <div style="text-align:right;padding-top:12px">
+          <base-button plain type="danger" @click="createProduit=!createProduit">
+            Annuler
+          </base-button>
+          <base-button type="primary" :loading="produitCreating" @click="createNewProduit()">
+            {{ produitCreating ? "En cours" : "Ajouter" }}
+          </base-button>
+        </div>
+<!--        <base-button type="primary">Ajouter</base-button>-->
+<!--        <base-button type="link" class="ml-auto" @click="createProduit = false">Annuler</base-button>-->
+      </template>
+
+    </modal>
     <modal :show.sync="createVariety">
       <vue-element-loading :active="showVariety" spinner="bar-fade-scale" color="#2dce94" />
       <h6 slot="header" class="modal-title">Ajout de variete</h6>
@@ -229,6 +328,7 @@ import Resource from "../../api/resource";
 import {Message} from "element-ui";
 import VueElementLoading from "vue-element-loading";
 import {isLogged} from "../../utils/auth";
+import Vue from "vue";
 const offreResource = new Resource('offres');
 const demandeResource = new Resource('demandes');
 const produitResource = new Resource('produits');
@@ -243,7 +343,7 @@ export default {
     vueDropzone,
     VueElementLoading
   },
-  props: ['id', 'title', 'type'],
+  props: {'id':{type: String}, 'title': {type: String}, 'type':{type: String}, 'item': {type: Object, default:{}}, 'action': {type: String, default: 'ajout'}},
   data() {
     return {
       dropzoneOptions: {
@@ -259,16 +359,19 @@ export default {
         [{ list: "ordered" }, { list: "bullet" }],
         ["image", "code-block"]
       ],
-      donnees: {},
+      donnees: this.item,
       produits: [],
       show: false,
       showVariety: false,
+      showProduit: false,
       showToffre: false,
       showTdemande: false,
       createVariety: false,
+      createProduit: false,
       createToffre: false,
       createTdemande: false,
       varietyCreating: false,
+      produitCreating: false,
       toffreCreating: false,
       tdemandeCreating: false,
       variete_list: [],
@@ -276,8 +379,14 @@ export default {
       type_demandes: [],
       villages: [],
       new_variety: {},
+      new_produit: {},
       new_toffre: {},
       new_tdemande: {},
+      produit_id: null,
+      produitRules: {
+        nom: [{ required: true, message: 'Renseignez le nom du Produit', trigger: 'blur' }],
+        // description: [{ required: true, message: this.$t('region.DescriptionRequired'), trigger: 'blur' }],
+      },
       varietyRules: {
         nom: [{ required: true, message: 'Renseignez le nom de la Variete', trigger: 'blur' }],
         // description: [{ required: true, message: this.$t('region.DescriptionRequired'), trigger: 'blur' }],
@@ -307,62 +416,147 @@ export default {
   },
   methods: {
     ...mapActions('comptes', ['addMemberCompte', 'updateMemberCompte']),
-
+    setData(){
+      console.log('DONNEEE ', this.type, this.item);
+      this.donnees = this.item;
+    },
     handleOk(bvModalEvent) {
-      this.donnees.user_id = this.$store.getters.userId;
-      console.log('Ajouter ', this.donnees);
-      bvModalEvent.preventDefault();
-      this.show = true;
-      if (this.type === 'offres'){
-        offreResource.store(this.donnees)
-          .then((response) => {
-            Message({
-              message: response.message,
-              type: 'success',
-              duration: 5 * 1000,
-            });
-          })
-          .catch((error) => {
-            Message({
-              message: error,
-              type: 'error',
-              duration: 5 * 1000,
-            });
-          })
-          .finally(() => {
-            this.show = false;
-            this.$nextTick(() => {
-              this.$bvModal.hide(this.id);
+      if (this.action === 'ajout') {
+        this.donnees.user_id = this.$store.getters.userId;
+        console.log('Ajouter ', this.donnees);
+        bvModalEvent.preventDefault();
+        this.show = true;
+        if (this.type === 'offres'){
+          offreResource.store(this.donnees)
+            .then((response) => {
+              Message({
+                message: response.message,
+                type: 'success',
+                duration: 5 * 1000,
+              });
             })
-            console.log('DONE');
-          });
-      } else if (this.type === 'demandes'){
-        demandeResource.store(this.donnees)
-          .then((response) => {
-            Message({
-              message: response.message,
-              type: 'success',
-              duration: 5 * 1000,
-            });
-          })
-          .catch((error) => {
-            Message({
-              message: error,
-              type: 'error',
-              duration: 5 * 1000,
-            });
-          })
-          .finally(() => {
-            this.show = false;
-            this.$nextTick(() => {
-              this.$bvModal.hide(this.id);
+            .catch((error) => {
+              Message({
+                message: error,
+                type: 'error',
+                duration: 5 * 1000,
+              });
             })
-            console.log('DONE');
-          });
+            .finally(() => {
+              this.show = false;
+              this.$emit('added');
+              this.$nextTick(() => {
+                this.$bvModal.hide(this.id);
+              })
+              console.log('DONE');
+            });
+        } else if (this.type === 'demandes'){
+          demandeResource.store(this.donnees)
+            .then((response) => {
+              Message({
+                message: response.message,
+                type: 'success',
+                duration: 5 * 1000,
+              });
+            })
+            .catch((error) => {
+              Message({
+                message: error,
+                type: 'error',
+                duration: 5 * 1000,
+              });
+            })
+            .finally(() => {
+              this.show = false;
+              this.$emit('added');
+              this.$nextTick(() => {
+                this.$bvModal.hide(this.id);
+              })
+              console.log('DONE');
+            });
+        } else {
+          console.log('NON SUPPORTED');
+        }
+        console.log('MEDIAS ', this.$refs.myVueDropzone.dropzone.files);
       } else {
-        console.log('NON SUPPORTED');
+        this.donnees.user_id = this.$store.getters.userId;
+        const querry = {};
+        querry.libelle = this.donnees.libelle;
+        querry.description = this.donnees.description;
+        querry.quantite = this.donnees.quantite;
+        querry.mesure = this.donnees.mesure;
+        querry.prix_agriculteur = this.donnees.prix_agriculteur;
+        querry.prix_plateforme = this.donnees.prix_plateforme;
+        querry.date_disponibilite = this.donnees.date_disponibilite;
+        querry.user_id = this.donnees.user_id;
+        querry.village_id = this.donnees.village.id;
+        querry.variete_produit_id = this.donnees.variete_produit.id;
+        console.log('Editer ', querry);
+        bvModalEvent.preventDefault();
+        this.show = true;
+        if (this.type === 'offres'){
+          offreResource.update(this.donnees.id, querry)
+            .then((response) => {
+              Message({
+                message: response.message,
+                type: 'success',
+                duration: 5 * 1000,
+              });
+            })
+            .catch((error) => {
+              Message({
+                message: error,
+                type: 'error',
+                duration: 5 * 1000,
+              });
+            })
+            .finally(() => {
+              this.show = false;
+              this.$emit('added');
+              this.$nextTick(() => {
+                this.$bvModal.hide(this.id);
+              })
+              console.log('DONE');
+            });
+        } else if (this.type === 'demandes'){
+          this.donnees.user_id = this.$store.getters.userId;
+          const querry = {};
+          querry.libelle = this.donnees.libelle;
+          querry.description = this.donnees.description;
+          querry.quantite = this.donnees.quantite;
+          querry.mesure = this.donnees.mesure;
+          querry.date_disponibilite = this.donnees.date_disponibilite;
+          querry.user_id = this.donnees.user_id;
+          querry.village_id = this.donnees.village.id;
+          querry.variete_produit_id = this.donnees.variete_produit.id;
+          demandeResource.update(this.donnees.id, this.donnees)
+            .then((response) => {
+              Message({
+                message: response.message,
+                type: 'success',
+                duration: 5 * 1000,
+              });
+            })
+            .catch((error) => {
+              Message({
+                message: error,
+                type: 'error',
+                duration: 5 * 1000,
+              });
+            })
+            .finally(() => {
+              this.show = false;
+              this.$emit('added');
+              this.$nextTick(() => {
+                this.$bvModal.hide(this.id);
+              })
+              console.log('DONE');
+            });
+        } else {
+          console.log('NON SUPPORTED');
+        }
+        console.log('MEDIAS ', this.$refs.myVueDropzone.dropzone.files);
       }
-      console.log('MEDIAS ', this.$refs.myVueDropzone.dropzone.files);
     },
     async getproduits(){
       const { data } = await produitResource.list();
@@ -396,16 +590,23 @@ export default {
       return NaN;
     },
     async getVarieteList(){
-      const {data} = await varieteResource.list();
+      const query = {
+        produit_id: this.produit_id,
+      };
+      const {data} = await varieteResource.list(query);
       this.variete_list = data;
     },
     async getTypeDemandes(){
       const {data} = await typeDemandeResource.list();
-      this.type_demandes = data;
+      this.type_demandes = data.filter((t_demande) => {
+        return t_demande.libelle !== 'demande_reponse';
+      });
     },
     async getTypeOffres(){
       const {data} = await typeOffreResource.list();
-      this.type_offres = data;
+      this.type_offres = data.filter((t_offre) => {
+        return t_offre.libelle !== 'offre_reponse';
+      });
     },
     createNewVariety(){
       this.showVariety = true;
@@ -426,6 +627,28 @@ export default {
       .finally(() => {
         this.showVariety = false;
         this.createVariety = false;
+      });
+    },
+    createNewProduit(){
+      this.showProduit = true;
+      console.log('VARIETE TO SEND', this.new_produit);
+      produitResource.store(this.new_produit)
+      .then((response) => {
+        console.log('RESPONSE DATA', response.data);
+        this.getVarieteList();
+        Message({
+          message: 'Produit Rajouté avec Succès',
+          type: 'success',
+          duration: 5 * 1000,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => {
+        this.showProduit = false;
+        this.createProduit = false;
+        this.getproduits();
       });
     },
     createTypeOffre(){

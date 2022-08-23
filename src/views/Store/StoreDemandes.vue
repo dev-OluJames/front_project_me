@@ -180,9 +180,10 @@
       </div>
     </section>
     <AddModal
-      id="modal-4"
+      id="modal-demandes"
       title="Faire une Demande"
       type="demandes"
+      @added="demandesList"
     />
   </div>
 </template>
@@ -228,7 +229,7 @@ export default {
         this.$router.push(`/login?redirect=${this.$route.fullPath}`);
       } else {
         console.log('Button', btn);
-        this.$root.$emit('bv::show::modal', "modal-4", btn)
+        this.$root.$emit('bv::show::modal', "modal-demandes", btn)
       }
       // this.$bvModal.show('ajouter-offre');
     },

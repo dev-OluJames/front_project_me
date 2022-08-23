@@ -5,7 +5,7 @@
     <div class="breadcrumb-area">
       <!-- Top Breadcrumb Area -->
       <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(store/img/bg-img/24.jpg);">
-        <h4>Offres</h4>
+        <h2>Offres</h2>
       </div>
 
       <div class="container">
@@ -142,7 +142,7 @@
                     <!-- Product Info -->
                     <div class="product-info mt-15 text-center">
                       <router-link :to="'/store/offres/detail/'+offre.id">
-                        <p>{{ offre.libelle }}</p>
+                        <p>{{ offre.variete_produit.nom }}</p>
                       </router-link>
                       <!--                      <h6>{{ offre.prix_plateforme }} FCFA</h6>-->
                     </div>
@@ -165,9 +165,10 @@
       </div>
     </section>
     <AddModal
-      id="modal-4"
+      id="modal-offre"
       title="Faire une offre"
       type="offres"
+      @added="offresList"
     />
   </div>
 </template>
@@ -229,7 +230,7 @@ export default {
         this.$router.push(`/login?redirect=${this.$route.fullPath}`);
       } else {
         console.log('Button', btn);
-        this.$root.$emit('bv::show::modal', "modal-4", btn)
+        this.$root.$emit('bv::show::modal', "modal-offre", btn)
       }
       // this.$bvModal.show('ajouter-offre');
     },
@@ -300,8 +301,5 @@ export default {
   color: #fff;
   background-color: #384a12;
   border-color: #384a12;
-}
-.h4, h4 {
-  font-size: 1.5rem;
 }
 </style>

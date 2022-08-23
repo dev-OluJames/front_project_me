@@ -13,7 +13,30 @@
               </base-button>
             </b-col>
           </b-row>
-          <b-form-input size="sm" placeholder="recherche ..." style="width: 20%; margin-top: 10px"></b-form-input>
+
+          <b-row>
+            <b-col cols="3">
+              <b-form-input size="sm" placeholder="recherche ..." style="margin-top: 10px"></b-form-input>
+            </b-col>
+            <b-col cols="5">
+              <el-select
+                v-model="type_offre_id"
+                multiple
+                filterable
+                size="small"
+                allow-create
+                default-first-option
+                style="margin-top: 10px; width: 80%"
+                placeholder="Type">
+                <el-option
+                  v-for="item in type_offres"
+                  :key="item.id"
+                  :label="item.libelle"
+                  :value="item.id">
+                </el-option>
+              </el-select>
+            </b-col>
+          </b-row>
         </b-card-header>
       <vue-element-loading :active="show" spinner="bar-fade-scale" color="#2dce94" />
       <el-table class="table-responsive table"
@@ -74,10 +97,10 @@
                            min-width="150px">
             <template v-slot="{row}">
                 <span class="text-sm">
-                  <a href="javascript:;" data-bs-toggle="tooltip" data-bs-original-title="Preview product">
+                  <router-link :to="'/store/offres/detail/'+row.id" data-bs-toggle="tooltip" data-bs-original-title="Preview product">
                     <i class="fas fa-eye text-secondary" aria-hidden="true"></i>
-                  </a>
-                  <a href="javascript:;" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Edit product">
+                  </router-link>
+                  <a href="javascript:;" @click="modifierOffre($event.target, row)" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Edit product">
                     <i class="fas fa-edit text-secondary" aria-hidden="true"></i>
                   </a>
                   <a href="javascript:;" data-bs-toggle="tooltip" data-bs-original-title="Delete product">
@@ -96,6 +119,9 @@
         id="modal-3"
         title="Ajouter une Offre"
         type="offres"
+        :item="offre"
+        :action="action"
+        @added="getOffresList"
       />
     </b-card>
 </template>
@@ -104,6 +130,8 @@
   import {Message, Table, TableColumn} from 'element-ui';
   import VueElementLoading from "vue-element-loading";
   import Resource from "../../../api/resource";
+
+  const typeOffreResource = new Resource('typeOffres');
   const offreResource = new Resource('offres');
   export default {
     name: 'table-offres',
@@ -119,15 +147,30 @@
         currentPage: 1,
         show: false,
         offres: [],
-
+        offre: {},
+        type_offres: [],
+        type_offre_id: null,
+        action: 'ajout'
       };
     },
     created() {
       this.getOffresList();
+      this.getTypeOffres();
     },
     methods: {
       ajoutOffre(btn){
         // this.$bvModal.show('ajouter-offre');
+        this.$root.$emit('bv::show::modal', "modal-3", btn)
+      },
+      async getTypeOffres(){
+        const {data} = await typeOffreResource.list();
+        this.type_offres = data;
+      },
+      modifierOffre(btn, offre){
+        // this.$bvModal.show('ajouter-offre');
+        console.log('ROW ', offre);
+        this.offre = offre;
+        this.action = 'edit';
         this.$root.$emit('bv::show::modal', "modal-3", btn)
       },
       getOffresList(){
@@ -139,7 +182,6 @@
         .finally(() => {
           this.show = false;
         });
-        console.log('OFFRES ', data);
       }
     }
   }

@@ -6,8 +6,8 @@ import store from "@/store";
 
 // Create axios instance
 const service = window.axios.create({
-  // baseURL: ' https://realafricalifeword.org/GIAC-APPLICATION/public/api/',
-  baseURL: 'http://localhost/GIAC-APPLICATION/public/api',
+  baseURL: ' https://realafricalifeword.org/GIAC-APPLICATION/public/api/',
+  // baseURL: 'http://localhost/GIAC-APPLICATION/public/api',
   // timeout: 10000000, // Request timeout
 });
 

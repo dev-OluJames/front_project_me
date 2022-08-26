@@ -19,20 +19,25 @@
             <b-col cols="5">
               <el-select
                 v-model="type_demande_id"
-                multiple
                 filterable
                 size="small"
+                @change="getDemandes"
                 allow-create
                 default-first-option
-                style="margin-top: 10px; width: 80%"
+                style="margin-top: 10px; width: 40%"
                 placeholder="Type">
                 <el-option
                   v-for="item in type_demandes"
                   :key="item.id"
                   :label="item.libelle"
-                  :value="item.id">
+                  :value="item.libelle">
                 </el-option>
               </el-select>
+            </b-col>
+            <b-col>
+              <base-button style="margin-top: 10px; margin-left: -18rem;" @click="resetTypeDemande" size="sm" icon type="primary">
+                <span class="btn-inner--icon"><i class="ni ni-fat-remove"></i></span>
+              </base-button>
             </b-col>
           </b-row>
         </b-card-header>
@@ -82,6 +87,23 @@
               </template>
             </el-table-column>
 
+          <el-table-column label="Status"
+                           min-width="100px"
+                           prop="status">
+            <template v-slot="{row}">
+              <el-switch
+                style="display: block"
+                active-color="#13ce66"
+                width="40"
+                inactive-color="#ff4949"
+                :active-value="true"
+                :inactive-value="false"
+                :value="row.is_active"
+                @change="setActive(row.id,row.is_active, 'Offre')"
+              />
+            </template>
+          </el-table-column>
+
           <el-table-column label="Action"
                            prop="completion"
                            min-width="250px">
@@ -118,7 +140,7 @@
     </b-card>
 </template>
 <script>
-  import { Table, TableColumn} from 'element-ui';
+import {Message, Table, TableColumn} from 'element-ui';
   import VueElementLoading from "vue-element-loading";
   import Resource from "../../../api/resource";
 
@@ -137,7 +159,7 @@
         demandes: [],
         demande: {},
         type_demandes: [],
-        type_demande_id: null,
+        type_demande_id: '',
         action: 'ajout',
         currentPage: 1,
         show: false,
@@ -148,6 +170,34 @@
       this.getTypeDemandes();
     },
     methods: {
+      async setActive(id, active, type){
+        let response;
+        response = await demandeResource.get('toogle_active/' + id);
+        if (response.success){
+          if (active) {
+            Message({
+              message: type + " cloturé ",
+              type: "success",
+              duration: 5 * 1000
+            });
+          } else {
+            Message({
+              message: type + " activé ",
+              type: "success",
+              duration: 5 * 1000
+            });
+          }
+          await this.getDemandes();
+        }
+        else {
+
+          Message({
+            message: "Erreur lors de l'operation' ",
+            type: "error",
+            duration: 5 * 1000
+          });
+        }
+      },
       ajoutDemande(btn){
         // this.$bvModal.show('ajouter-offre');
         this.action = 'ajout';
@@ -156,17 +206,26 @@
       },
       async getTypeDemandes(){
         const {data} = await typeDemandeResource.list();
-        this.type_demandes = data;
+        this.type_demandes = data.filter((t_d)=> {
+          return t_d.libelle !== 'demande_reponse';
+        });
       },
       getDemandes(){
         this.show = true;
-        demandeResource.list()
+        const querry = {
+          type_demande: this.type_demande_id,
+        };
+        demandeResource.list(querry)
         .then((response) => {
           this.demandes = response.data;
         })
         .finally(() => {
           this.show = false;
         })
+      },
+      resetTypeDemande(){
+        this.type_demande_id = '';
+        this.getDemandes();
       },
       modifierDemande(btn, demande){
         // this.$bvModal.show('ajouter-offre');

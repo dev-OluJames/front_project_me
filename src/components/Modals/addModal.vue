@@ -158,10 +158,6 @@
               <h6>Prix Agriculteur</h6>
               <input type="number" class="form-control" id="prix_agri" placeholder="Prix Agriculteur" rows="2" v-model="donnees.prix_agriculteur">
             </b-col>
-            <b-col style="margin-bottom: 12px">
-              <h6>Prix Plateforme</h6>
-              <input type="number" class="form-control" id="prix_plat" placeholder="Prix Plateforme" rows="2" v-model="donnees.prix_plateforme">
-            </b-col>
           </b-row>
           <b-row>
             <b-col v-if="type === 'offres'"  style="margin-bottom: 12px">
@@ -486,11 +482,12 @@ export default {
         querry.quantite = this.donnees.quantite;
         querry.mesure = this.donnees.mesure;
         querry.prix_agriculteur = this.donnees.prix_agriculteur;
-        querry.prix_plateforme = this.donnees.prix_plateforme;
+        querry.prix_plateforme = null;
         querry.date_disponibilite = this.donnees.date_disponibilite;
         querry.user_id = this.donnees.user_id;
         querry.village_id = this.donnees.village.id;
         querry.variete_produit_id = this.donnees.variete_produit.id;
+        querry.type_offre_id = this.donnees.type_offre.id;
         console.log('Editer ', querry);
         bvModalEvent.preventDefault();
         this.show = true;
@@ -529,6 +526,7 @@ export default {
           querry.user_id = this.donnees.user_id;
           querry.village_id = this.donnees.village.id;
           querry.variete_produit_id = this.donnees.variete_produit.id;
+          querry.type_demande_id = this.donnees.type_demande.id;
           demandeResource.update(this.donnees.id, this.donnees)
             .then((response) => {
               Message({

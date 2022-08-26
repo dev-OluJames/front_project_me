@@ -21,20 +21,27 @@
             <b-col cols="5">
               <el-select
                 v-model="type_offre_id"
-                multiple
                 filterable
                 size="small"
+                @change="getOffresList"
                 allow-create
                 default-first-option
-                style="margin-top: 10px; width: 80%"
+                style="margin-top: 10px; width: 40%"
                 placeholder="Type">
                 <el-option
                   v-for="item in type_offres"
                   :key="item.id"
                   :label="item.libelle"
-                  :value="item.id">
+                  :value="item.libelle">
                 </el-option>
               </el-select>
+            </b-col>
+            <b-col cols="3">
+              <div style=" margin-left: -18rem;">
+                <base-button style="margin-top: 10px;" @click="resetTypeOffre" size="sm" icon type="primary">
+                  <span class="btn-inner--icon"><i class="ni ni-fat-remove"></i></span>
+                </base-button>
+              </div>
             </b-col>
           </b-row>
         </b-card-header>
@@ -56,21 +63,13 @@
 
             <el-table-column label="Libelle"
                              prop="budget"
-                             min-width="150px">
+                             min-width="200px">
               <template v-slot="{row}">
                   <span class="status">{{row.libelle}}</span>
               </template>
             </el-table-column>
 
-<!--            <el-table-column label="Description"-->
-<!--                             min-width="350px"-->
-<!--                             prop="description">-->
-<!--                <template v-slot="{row}">-->
-<!--                      <span class="status" v-html="row.description"></span>-->
-<!--                </template>-->
-<!--            </el-table-column>-->
-
-            <el-table-column label="Quantite" min-width="150px">
+            <el-table-column label="Qtte" min-width="90px">
               <template v-slot="{row}">
                 <span class="status">{{row.quantite}}</span>
               </template>
@@ -78,7 +77,7 @@
 
             <el-table-column label="Prix Agriculteur"
                              prop="completion"
-                             min-width="150px">
+                             min-width="180px">
               <template v-slot="{row}">
                 <span class="status">{{row.prix_agriculteur}}</span>
               </template>
@@ -86,12 +85,59 @@
 
             <el-table-column label="Prix plateforme"
                              prop="completion"
-                             min-width="150px">
+                             min-width="230px">
               <template v-slot="{row}">
-                <span class="status">{{row.prix_plateforme}}</span>
+                <span v-if="row.prix_plateforme !== null" class="status">{{row.prix_plateforme}}</span>
+                <span v-else class="status">
+                  <span  v-if="!row.edit">
+                  <el-tag type="danger" @click="row.edit = true">Ajouter</el-tag>
+                  </span>
+                <span v-else>
+                  <b-row>
+                    <b-col>
+                      <el-input-number
+                        :controls="false"
+                        style="width: 135%"
+                        :value="row.prix_plateforme"
+                        v-model="prix_plateforme"
+                        size="small"
+                      />
+                    </b-col>
+                    <b-col>
+                      <span>
+                        <button class="btn btn-success btn-sm"
+                                @click="editRow(row)">
+                          <i class="el-icon-check"></i>
+                        </button>
+                      </span>
+                      <span>
+                        <button class="btn btn-neutral btn-sm"
+                                @click="row.edit=false">
+                          <i class="el-icon-close"></i>
+                        </button>
+                      </span>
+                    </b-col>
+                  </b-row>
+                </span>
+                </span>
               </template>
             </el-table-column>
 
+          <el-table-column label="Status"
+                           min-width="110px"
+                           prop="status">
+              <template v-slot="{row}">
+                <el-switch
+                  style="display: block"
+                  active-color="#13ce66"
+                  inactive-color="#ff4949"
+                  :active-value="true"
+                  :inactive-value="false"
+                  :value="row.is_active"
+                  @change="setActive(row,row.is_active, 'Offre')"
+                />
+              </template>
+          </el-table-column>
           <el-table-column label="Action"
                            prop="completion"
                            min-width="150px">
@@ -149,7 +195,9 @@
         offres: [],
         offre: {},
         type_offres: [],
-        type_offre_id: null,
+        type_offre_id: '',
+        add_prix_plateforme: false,
+        prix_plateforme: null,
         action: 'ajout'
       };
     },
@@ -158,13 +206,99 @@
       this.getTypeOffres();
     },
     methods: {
+      editRow(offre){
+        if(this.prix_plateforme){
+
+          offre.prix_plateforme =  this.prix_plateforme;
+          console.log('ROW RETURNED', offre);
+          const querry = {};
+          querry.libelle = offre.libelle;
+          querry.description = offre.description;
+          querry.quantite = offre.quantite;
+          querry.mesure = offre.mesure;
+          querry.prix_agriculteur = offre.prix_agriculteur;
+          querry.prix_plateforme = offre.prix_plateforme;
+          querry.date_disponibilite = offre.date_disponibilite;
+          querry.user_id = offre.user_id;
+          querry.village_id = offre.village.id;
+          querry.variete_produit_id = offre.variete_produit.id;
+          querry.user_id = this.$store.getters.userId;
+          querry.type_offre_id = offre.type_offre.id;
+          offreResource.update(offre.id, querry)
+          .then((response) =>{
+            console.log(response);
+            Message({
+              message: response.message,
+              type: 'success',
+              duration: 5 * 1000
+            });
+            this.add_prix_plateforme = false;
+          })
+          .catch((error)=>{
+            console.log(error);
+            this.prix_plateforme = null;
+            offre.prix_plateforme = null;
+          });
+        }
+        else
+
+          Message({
+            message: 'veuillez renseigner le prix',
+            type: 'warning',
+            duration: 5 * 1000
+          });
+      },
+      resetTypeOffre(){
+        this.type_offre_id = '';
+        this.getOffresList();
+      },
+      async setActive(offre, active, type){
+        let response;
+        if (offre.prix_plateforme !== null){
+          response = await offreResource.get('toogle_active/' + offre.id);
+          if (response.success){
+            if (active) {
+              Message({
+                message: type + " cloturé ",
+                type: "success",
+                duration: 5 * 1000
+              });
+            } else {
+              Message({
+                message: type + " activé ",
+                type: "success",
+                duration: 5 * 1000
+              });
+            }
+            await this.getOffresList();
+          }
+          else {
+
+            Message({
+              message: "Erreur lors de l'operation' ",
+              type: "error",
+              duration: 5 * 1000
+            });
+          }
+          offre.edit = true;
+        } else {
+          Message({
+            message: 'Veuillez renseigner le prix de la plateforme',
+            type: "warning",
+            duration: 5 * 1000,
+          })
+          this.add_prix_plateforme = true;
+        }
+      },
       ajoutOffre(btn){
         // this.$bvModal.show('ajouter-offre');
         this.$root.$emit('bv::show::modal', "modal-3", btn)
       },
       async getTypeOffres(){
         const {data} = await typeOffreResource.list();
-        this.type_offres = data;
+        this.type_offres = data.filter((t_o)=> {
+          return t_o.libelle !== 'offre_reponse';
+        });
       },
       modifierOffre(btn, offre){
         // this.$bvModal.show('ajouter-offre');
@@ -175,9 +309,16 @@
       },
       getOffresList(){
         this.show = true;
-        offreResource.list()
+        const querry = {
+          type_offre: this.type_offre_id,
+        }
+        offreResource.list(querry)
         .then((respone) => {
-          this.offres = respone.data;
+          const items = respone.data;
+          this.offres = items.map(v => {
+            this.$set(v, 'edit', false) // https://vuejs.org/v2/guide/reactivity.html
+            return v
+          })
         })
         .finally(() => {
           this.show = false;

@@ -198,7 +198,24 @@
                               <td class="price"><span>{{ demande.mesure }}</span></td>
                               <!--                            <td class="total_price"><span>CFA {{ prixTotal(demande.quantite, demande.prix_plateforme) }}</span></td>-->
                               <td class="action">
-                                <button v-b-toggle="'collapse-'+demande.id" class="alazea-btn btn-sm">Reponses</button>
+                                <div class="row">
+                                  <div class="col-6">
+                                    <button v-b-toggle="'collapse-'+demande.id" class="alazea-btn btn-sm">Reponses</button>
+                                  </div>
+                                  <div class="col-6" style="margin-top: -80px; padding-left: 150px;">
+                                    <h4 v-if="demande.is_active" style="margin-bottom: 20px">Cloturer</h4>
+                                    <h4 v-else style="margin-bottom: 20px">Activer</h4>
+                                    <el-switch
+                                      style="display: block"
+                                      active-color="#13ce66"
+                                      inactive-color="#ff4949"
+                                      :active-value="true"
+                                      :inactive-value="false"
+                                      :value="demande.is_active"
+                                      @change="setActive(demande.id,demande.is_active, 'Demande')"
+                                    />
+                                  </div>
+                                </div>
                               </td>
                             </tr>
                             <tr style="border-top: none; border-bottom: none">
@@ -286,7 +303,24 @@
                               <td class="price"><span>{{ offre.prix_plateforme }} CFA</span></td>
                               <!--                            <td class="total_price"><span>CFA {{ prixTotal(offre.quantite, offre.prix_plateforme) }}</span></td>-->
                               <td class="action">
-                                <button v-b-toggle="'collapse-'+offre.id" class="alazea-btn btn-sm">Reponses</button>
+                                <div class="row">
+                                  <div class="col-6">
+                                    <button v-b-toggle="'collapse-'+offre.id" class="alazea-btn btn-sm">Reponses</button>
+                                  </div>
+                                  <div class="col-6" style="margin-top: -80px; padding-left: 150px;">
+                                    <h4 v-if="offre.is_active" style="margin-bottom: 20px">Cloturer</h4>
+                                    <h4 v-else style="margin-bottom: 20px">Activer</h4>
+                                    <el-switch
+                                      style="display: block"
+                                      active-color="#13ce66"
+                                      inactive-color="#ff4949"
+                                      :active-value="true"
+                                      :inactive-value="false"
+                                      :value="offre.is_active"
+                                      @change="setActive(offre.id,offre.is_active, 'Offre')"
+                                    />
+                                  </div>
+                                </div>
                               </td>
                             </tr>
                             <tr style="border-top: none; border-bottom: none">
@@ -399,6 +433,7 @@
 <script>
 import request from "../../../utils/request";
 import Resource from "../../../api/resource";
+import {Message} from "element-ui";
 const demandeResource = new Resource('demandes');
 const offreResource = new Resource('offres');
 
@@ -409,6 +444,7 @@ export default {
       userFavoris: [],
       userDemandes: [],
       userOffres: [],
+      cloturer: false,
       query: {
         user_id: this.$store.getters.userId,
       }
@@ -432,6 +468,43 @@ export default {
       // })
       this.userFavoris = data;
       console.log('USERS FAVORIS ', this.userFavoris);
+    },
+    async setActive(id, active, type){
+      let response;
+      if(type === 'Demande'){
+        response = await demandeResource.get('toogle_active/' + id);
+      } else {
+        response = await offreResource.get('toogle_active/' + id);
+      }
+      if (response.success){
+        if (active) {
+          Message({
+            message: type + " cloturé ",
+            type: "success",
+            duration: 5 * 1000
+          });
+        } else {
+          Message({
+            message: type + " activé ",
+            type: "success",
+            duration: 5 * 1000
+          });
+        }
+        if (type === 'Offre'){
+          await this.getUserOffres();
+        }
+        else {
+          await this.getUserDemandes()
+        }
+      }
+      else {
+
+        Message({
+          message: "Erreur lors de l'operation' ",
+          type: "error",
+          duration: 5 * 1000
+        });
+      }
     },
     async getUserOffres(){
       const { data } = await offreResource.list(this.query);
@@ -468,6 +541,14 @@ export default {
   line-height: 42px;
   text-transform: uppercase;
   font-weight: 600;
+}
+.custom-toggle input:checked + .custom-toggle-slider {
+  border: 1px solid #cb4e4e;
+}
+.custom-toggle input:checked + .custom-toggle-slider:before {
+  background: #cb4e4e;
+  -webkit-transform: translateX(1.625rem);
+  transform: translateX(1.625rem);
 }
 .collapsed{
   border-color: rgba(112, 199, 69, 0.4);

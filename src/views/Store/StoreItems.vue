@@ -50,7 +50,7 @@
               <div class="row">
 
                 <!-- Single Product Area -->
-                <div class="col-12 col-sm-4 col-lg-2" v-for="(offre, index) in offres" :key="index">
+                <div class="col-12 col-sm-3 col-lg-3" v-for="(offre, index) in offres" :key="index">
                   <div class="single-product-area mb-50">
                     <!-- Product Image -->
                     <div class="product-img">
@@ -59,7 +59,7 @@
                       <div class="product-tag">
                         <a href="#">Hot</a>
                       </div>
-                      <div class="product-meta d-flex">
+                      <div v-if="$store.getters.roles[0] !== 'admin'" class="product-meta d-flex">
                         <a v-if="isFavoris(offre.id)" href="javascript:undefined;" class="wishlist-btn" style="background-color: #70c745;" @click="addFavoris(offre.id)"><i class="icon_heart_alt"></i></a>
                         <a v-else href="javascript:undefined;" class="wishlist-btn" @click="addFavoris(offre.id)"><i class="icon_heart_alt"></i></a>
 <!--                        <a href="#" class="compare-btn"><i class="arrow_left-right_alt"></i></a>-->
@@ -78,18 +78,63 @@
               </div>
 
               <!-- Pagination -->
-              <!-- nav aria-label="Page navigation">
+              <!--nav aria-label="Page navigation">
                 <ul class="pagination">
                   <li class="page-item"><a class="page-link" href="#">1</a></li>
                   <li class="page-item"><a class="page-link" href="#">2</a></li>
                   <li class="page-item"><a class="page-link" href="#"><i class="fa fa-angle-right"></i></a></li>
                 </ul>
-              </nav -->
+              </nav-->
             </div>
           </div>
         </div>
       </div>
     </section>
+    <!-- ##### Product Area Start ##### -->
+    <section class="new-arrivals-products-area section-padding-100" style="background-color: #f2f4f5;margin-bottom: 30px;">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <!-- Section Heading -->
+            <div class="section-heading text-center">
+              <h2>PACKS</h2>
+              <p>Souscrivez à l'un de ses packs</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="row justify-content-center">
+
+          <!-- Single Product Area -->
+          <div class="col-12 col-sm-3 col-lg-2" v-for="pack in packs" :key="pack.id">
+            <div class="single-product-area mb-50 wow fadeInUp" data-wow-delay="100ms">
+              <!-- Product Image -->
+              <div class="product-img">
+                <a href="shop-details.html"><img src="store/img/bg-img/9.jpg" alt=""></a>
+                <!-- Product Tag -->
+                <div class="product-tag">
+                  <a href="#">Hot</a>
+                </div>
+                <div class="product-meta d-flex">
+                  <a href="cart.html" class="add-to-cart-btn">Souscrire</a>
+                </div>
+              </div>
+              <!-- Product Info -->
+              <div class="product-info mt-15 text-center">
+                <a href="shop-details.html">
+                  <h6>{{ pack.libelle }}</h6>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 text-center">
+            <a href="#" class="btn alazea-btn">Tous les Packs</a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+    <!-- ##### Product Area End ##### -->
     <section class="shop-page section-padding-0-100">
       <div class="container">
         <div class="row">
@@ -115,7 +160,7 @@
               <div class="row">
 
                 <!-- Single Product Area -->
-                <div class="col-12 col-sm-4 col-lg-2" v-for="(demande, index) in demandes" :key="index">
+                <div class="col-12 col-sm-3 col-lg-3" v-for="(demande, index) in demandes" :key="index">
                   <div class="single-product-area mb-50">
                     <!-- Product Image -->
                     <div class="product-img">
@@ -124,7 +169,7 @@
                       <div class="product-tag">
                         <a href="#">Hot</a>
                       </div>
-                      <div class="product-meta d-flex">
+                      <div v-if="$store.getters.roles[0] !== 'admin'" class="product-meta d-flex">
                         <a v-if="isFavoris(demande.id)" href="javascript:undefined;" class="wishlist-btn" style="background-color: #70c745;" @click="addFavoris(demande.id)"><i class="icon_heart_alt"></i></a>
                         <a v-else href="javascript:undefined;" class="wishlist-btn" @click="addFavoris(demande.id)"><i class="icon_heart_alt"></i></a>
 <!--                        <a href="#" class="compare-btn"><i class="arrow_left-right_alt"></i></a>-->
@@ -166,6 +211,9 @@
 <script>
 // import Resource from "@/api/resource";
 // const storeOffer = new Resource('offres');
+// const storeDemande = new Resource('demandes');
+// const storePacks = new Resource('packs');
+
 import {isLogged} from "../../utils/auth";
 import Load from "../../components/Loading/Load";
 import request from "../../utils/request";
@@ -180,8 +228,12 @@ export default {
     return {
       offres: [],
       demandes: [],
+      packs: [],
       offreFavoris: {},
       demandeFavoris: {},
+      query: {
+        limit: 4,
+      },
       userFavoris: [],
       loaded: true,
       authenticated : isLogged(),
@@ -192,6 +244,7 @@ export default {
     this.demandesList();
     if (this.authenticated){
       this.getUserOffresFavoris(this.$store.getters.userId);
+      this.packList();
     }
   },
   methods: {
@@ -209,27 +262,42 @@ export default {
       }
       // this.$bvModal.show('ajouter-offre');
     },
-    offresList(){
-      // const { data } = await offreResource.list();
+    async offresList(){
+      // const { data } = await storeOffer.list(this.query);
       // this.offres = data;
       request({
         url: '/offres',
         method: 'get',
+        params: {limit: 4},
       }).then((response) => {
         this.offres = response.data;
         console.log('DATA OFFRES', response.data);
         this.loaded = false;
       });
     },
-    demandesList(){
-      // const { data } = await offreResource.list();
-      // this.offres = data;
+    async demandesList(){
+      // const { data } = await storeDemande.list(this.query);
+      // this.demandes = data;
       request({
         url: '/demandes',
         method: 'get',
+        params: {limit: 4},
       }).then((response) => {
         this.demandes = response.data;
         console.log('DATA DEMANDES', response.data);
+        this.loaded = false;
+      });
+    },
+    async packList(){
+      // const { data } = await storeDemande.list(this.query);
+      // this.demandes = data;
+      request({
+        url: '/packs',
+        method: 'get',
+        params: {limit: 4},
+      }).then((response) => {
+        this.packs = response.data;
+        console.log('DATA PACKS', response.data);
         this.loaded = false;
       });
     },
@@ -291,5 +359,55 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-
+.btn:not(:disabled):not(.disabled) {
+  cursor: pointer;
+}
+.section-padding-100 {
+  padding-top: 10px;
+  padding-bottom: 23px;
+}
+.alazea-btn {
+  -webkit-transition-duration: 400ms;
+  transition-duration: 400ms;
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  min-width: 150px;
+  height: 46px;
+  color: #ffffff;
+  background-color: #70c745;
+  border: 2px solid #70c745;
+  border-radius: 2px;
+  padding: 0 20px;
+  font-size: 16px;
+  line-height: 42px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.btn {
+  display: inline-block;
+  font-weight: 400;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 1px solid transparent;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.single-product-area .product-img .product-meta .add-to-cart-btn {
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 calc(100% - 100px);
+  flex: 0 0 100%;
+  max-width: 100%;
+  width: 100%;
+  border-left: 1px solid rgba(235, 235, 235, 0.5);
+  border-right: 1px solid rgba(235, 235, 235, 0.5);
+}
 </style>

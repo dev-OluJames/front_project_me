@@ -160,15 +160,23 @@ const userRessource = new Resource('users');
           nom_entreprise: '',
           nom_utilisateur: '',
           type_user_id: 1,
-          role: 'admin'
+          role: ''
         },
         password_confirm: '',
         agree: true,
       }
     },
+    created() {
+      console.log('ROLE UTILISATEUR', this.$store.getters.roles);
+    },
     methods: {
       onSubmit() {
         console.log('MODEL RENDERED', this.model);
+        if (this.$store.getters.roles[0] === 'admin'){
+          this.model.role = 'admin';
+        } else {
+          this.model.role = 'utilisateur';
+        }
         userRessource.store(this.model)
         .then((response) => {
           console.log('RESPONSE', response);

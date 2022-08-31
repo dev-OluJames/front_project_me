@@ -70,7 +70,7 @@
                   <p v-html="offre.description"></p>
                 </div>
 
-                <div class="cart--area d-flex flex-wrap align-items-center">
+                <div v-if="$store.getters.roles[0] !== 'admin'" class="cart--area d-flex flex-wrap align-items-center">
                   <!-- Add to Cart Form -->
                   <div class="cart clearfix d-flex align-items-center">
                     <!-- div class="quantity">
@@ -443,6 +443,7 @@ import vueDropzone from 'vue2-dropzone-vue3';
 const offreResource = new Resource('offres');
 const tdemandeResource = new Resource('typeDemandes');
 const demandeResource = new Resource('demandes');
+const produitResource = new Resource('produits');
 export default {
   name: 'OffresDetail',
   props: {
@@ -482,6 +483,15 @@ export default {
     }
   },
   methods: {
+    getProduit(id = null){
+      let data = {};
+      produitResource.get(id)
+      .then((response)=> {
+        data = response.data;
+        console.log('DATA PRODUIT', data);
+        return data.nom;
+      });
+    },
     getOffresDetail(){
       offreResource.get(this.$route.params.id)
       .then((response) => {

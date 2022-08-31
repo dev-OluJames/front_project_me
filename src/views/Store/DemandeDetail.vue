@@ -70,14 +70,9 @@
 <!--                  <p v-html="demande.description"></p>-->
                 </div>
 
-                <div class="cart--area d-flex flex-wrap align-items-center">
+                <div v-if="$store.getters.roles[0] !== 'admin'" class="cart--area d-flex flex-wrap align-items-center">
                   <!-- Add to Cart Form -->
                   <div class="cart clearfix d-flex align-items-center">
-                    <!-- div class="quantity">
-                      <span class="qty-minus"><i class="fa fa-minus" aria-hidden="true"></i></span>
-                      <input type="number" class="qty-text" step="1" min="0" :max="demande.quantite" v-model="new_demande.quantite" value="0">
-                      <span class="qty-plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
-                    </div-->
                     <base-button  v-b-toggle="'collapse-2'" id="collapse" class="btn alazea-btn ml-15" @click="handleOffre">Repondre</base-button>
                   </div>
                   <!-- Wishlist & Compare -->

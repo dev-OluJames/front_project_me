@@ -33,7 +33,7 @@
               <div class="shop-page-count">
                 <h1 class="display-4">Demandes</h1>
               </div>
-              <div class="search_by_terms">
+              <div v-if="$store.getters.roles[0] !== 'admin'" class="search_by_terms">
                 <base-button type="success" data-toggle="tooltip" data-original-title="Edit product" @click="ajoutDemande($event.target)">
                   <span class="btn-inner--icon"><i class="ni ni-bag-17"></i></span>
                   <span class="btn-inner--text">Faire une Demande</span>
@@ -148,7 +148,7 @@
                       <div class="product-tag">
                         <a href="#">Hot</a>
                       </div>
-                      <div class="product-meta d-flex">
+                      <div v-if="$store.getters.roles[0] !== 'admin'" class="product-meta d-flex">
                         <a v-if="isFavoris(demande.id)" href="javascript:undefined;" class="wishlist-btn" style="background-color: #70c745;" @click="addFavoris(demande.id)"><i class="icon_heart_alt"></i></a>
                         <a v-else href="javascript:undefined;" class="wishlist-btn" @click="addFavoris(demande.id)"><i class="icon_heart_alt"></i></a>
 <!--                        <a href="#" class="compare-btn"><i class="arrow_left-right_alt"></i></a>-->

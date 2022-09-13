@@ -2,24 +2,21 @@
   <card>
     <b-row align-v="center" slot="header" >
       <b-col cols="8">
-        <h3 class="mb-0">Edit profile </h3>
-      </b-col>
-      <b-col cols="4" class="text-right">
-        <a href="#!" class="btn btn-sm btn-primary">Settings</a>
+        <h3 class="mb-0">Modifier profile </h3>
       </b-col>
     </b-row>
 
-    <b-form @submit.prevent="updateProfile">
-      <h6 class="heading-small text-muted mb-4">User information</h6>
+    <b-form>
+      <h6 class="heading-small text-muted mb-4">Information Utilisateurs</h6>
 
       <div class="pl-lg-4">
         <b-row>
           <b-col lg="6">
             <base-input
               type="text"
-              label="Username"
+              label="Nom Utilisateur"
               placeholder="Username"
-              v-model="user.username"
+              v-model="user.nom_utilisateur"
             >
             </base-input>
           </b-col>
@@ -37,18 +34,18 @@
           <b-col lg="6">
             <base-input
               type="text"
-              label="First Name"
+              label="Prenom"
               placeholder="First Name"
-              v-model="user.firstName"
+              v-model="user.prenom"
             >
             </base-input>
           </b-col>
           <b-col lg="6">
             <base-input
               type="text"
-              label="Last Name"
+              label="Nom"
               placeholder="Last Name"
-              v-model="user.lastName"
+              v-model="user.nom"
             >
             </base-input>
           </b-col>
@@ -57,84 +54,119 @@
       <hr class="my-4">
 
       <!-- Address -->
-      <h6 class="heading-small text-muted mb-4">Contact information</h6>
+      <h6 class="heading-small text-muted mb-4">Information Entreprise</h6>
 
       <div class="pl-lg-4">
         <b-row>
-          <b-col md="12">
+          <b-col md="6">
             <base-input
               type="text"
-              label="Address"
-              placeholder="Home Address"
-              v-model="user.address"
+              label="Entreprise"
+              placeholder="Role"
+              v-model="user.nom_entreprise"
             >
             </base-input>
           </b-col>
-        </b-row>
-        <b-row>
-          <b-col lg="4">
+          <b-col md="6">
             <base-input
               type="text"
-              label="City"
-              placeholder="City"
-              v-model="user.city"
-            >
-            </base-input>
-          </b-col>
-          <b-col lg="4">
-            <base-input
-              type="text"
-              label="Country"
-              placeholder="Country"
-              v-model="user.country"
-            >
-            </base-input>
-          </b-col>
-          <b-col lg="4">
-            <base-input
-              label="Postal Code"
-              placeholder="ZIP Code"
-              v-model="user.postalCode"
+              label="Telephone"
+              placeholder="telephone"
+              v-model="user.telephone"
             >
             </base-input>
           </b-col>
         </b-row>
       </div>
-
-      <hr class="my-4">
-      <!-- Description -->
-      <h6 class="heading-small text-muted mb-4">About me</h6>
+      <h6 class="heading-small text-muted mb-4">Information Role</h6>
       <div class="pl-lg-4">
-        <b-form-group label="About Me" label-class="form-control-label" class="mb-0" label-for="about-form-textaria">
-         <!--  <label class="form-control-label">About Me</label> -->
-          <b-form-textarea rows="4" value="A beautiful premium dashboard for BootstrapVue." id="about-form-textaria" placeholder="A few words about you ..."></b-form-textarea>
-        </b-form-group>
+        <b-row>
+          <b-col lg="6">
+            <label class="form-control-label">
+              Role
+            </label> <br/>
+            <el-select v-model="role_id" filterable placeholder="Select">
+              <el-option
+                v-for="(item, index) in roles"
+                :key="index"
+                :label="item.name"
+                :value="item.name">
+              </el-option>
+            </el-select>
+          </b-col>
+        </b-row>
+          <button @click="updateProfile" class="text-right mt-3 btn btn-sm btn-primary">Modifier</button>
       </div>
+
+<!--      <hr class="my-4">-->
+<!--      &lt;!&ndash; Description &ndash;&gt;-->
+<!--      <h6 class="heading-small text-muted mb-4">About me</h6>-->
+<!--      <div class="pl-lg-4">-->
+<!--        <b-form-group label="About Me" label-class="form-control-label" class="mb-0" label-for="about-form-textaria">-->
+<!--         &lt;!&ndash;  <label class="form-control-label">About Me</label> &ndash;&gt;-->
+<!--          <b-form-textarea rows="4" value="A beautiful premium dashboard for BootstrapVue." id="about-form-textaria" placeholder="A few words about you ..."></b-form-textarea>-->
+<!--        </b-form-group>-->
+<!--      </div>-->
 
     </b-form>
   </card>
 </template>
 <script>
+import Resource from "../../../api/resource";
+import {Message} from "element-ui";
+
+const roleResource = new Resource('roles');
+const userResource = new Resource('users');
+
 export default {
+  props: {
+    id: {
+      type: String,
+    }
+  },
   data() {
     return {
-      user: {
-        company: 'Creative Code Inc.',
-        username: 'michael23',
-        email: '',
-        firstName: 'Mike',
-        lastName: 'Andrew',
-        address: 'Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09',
-        city: 'New York',
-        country: 'USA',
-        postalCode: '',
-        aboutMe: `Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo.`
-      }
+      user:{},
+      roles: [],
+      role_id: '',
     };
   },
+  created() {
+    this.getUser();
+    this.getRoles();
+  },
   methods: {
+    async getUser(){
+      const { data } = await userResource.get(this.id);
+      this.user = data;
+      this.role_id = this.user.roles[0];
+    },
+    async getRoles(){
+      const {data} = await roleResource.list();
+      this.roles = data;
+    },
     updateProfile() {
-      alert('Your data: ' + JSON.stringify(this.user));
+      const user = this.user;
+      const resource = {
+          nom: user.nom,
+          prenom: user.prenom,
+          sexe: user.sexe,
+          email: user.email,
+          telephone: user.telephone,
+          nom_entreprise: user.nom_entreprise,
+          nom_utilisateur: user.nom_utilisateur,
+          type_user_id: 1,
+          role: this.role_id,
+      };
+      userResource.update(this.user.id, resource)
+      .then((response) => {
+        Message({
+          message: response.message,
+          type: 'success',
+          duration: 5 * 1000
+        });
+        this.getUser();
+      });
     }
   }
 };

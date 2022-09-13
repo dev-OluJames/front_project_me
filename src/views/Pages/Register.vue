@@ -106,6 +106,21 @@
                               :rules="{required: true}"
                               v-model="model.nom_utilisateur">
                   </base-input>
+
+                  <div v-if="authenticated && $store.getters.roles[0] === 'admin'">
+                    <label class="form-control-label">
+                      Role
+                    </label> <br/>
+                    <el-select class="mb-3" v-model="model.role" filterable placeholder="Select">
+                      <el-option
+                        v-for="(item, index) in roles"
+                        :key="index"
+                        :label="item.name"
+                        :value="item.name">
+                      </el-option>
+                    </el-select>
+                  </div>
+
                   <b-row>
                     <b-col sm="4">
                       <base-radio name="f" class="mb-3" v-model="model.sexe">
@@ -145,6 +160,7 @@
 <script>
 import Resource from "../../api/resource";
 import {Message} from "element-ui";
+import {isLogged} from "../../utils/auth";
 const userRessource = new Resource('users');
   export default {
     name: 'register',
@@ -162,19 +178,27 @@ const userRessource = new Resource('users');
           type_user_id: 1,
           role: ''
         },
+        roles: [],
         password_confirm: '',
+        authenticated: isLogged(),
         agree: true,
       }
     },
     created() {
       console.log('ROLE UTILISATEUR', this.$store.getters.roles);
+      if (this.authenticated){
+        this.getRoles();
+      }
     },
     methods: {
+      async getRoles(){
+        const roleResource = new Resource('roles');
+        const { data } = await roleResource.list();
+        this.roles = data;
+      },
       onSubmit() {
         console.log('MODEL RENDERED', this.model);
-        if (this.$store.getters.roles[0] === 'admin'){
-          this.model.role = 'admin';
-        } else {
+        if (this.$store.getters.roles[0] === 'utilisateur'){
           this.model.role = 'utilisateur';
         }
         userRessource.store(this.model)
@@ -191,6 +215,9 @@ const userRessource = new Resource('users');
           console.log(error);
         })
         .finally(()=>{
+          if (this.$store.getters.roles[0] !== 'utilisateur'){
+            this.$router.push({path: '/administration/users'});
+          }
           this.$router.push({path: '/login'});
         })
       }

@@ -168,11 +168,6 @@ const constantRoutes = [
         component: () => import(/* webpackChunkName: "demo" */ '../views/Localites/Localites')
       },
       {
-        path: 'profile',
-        name: 'profile',
-        component: () => import(/* webpackChunkName: "demo" */ '../views/Pages/UserProfile.vue')
-      },
-      {
         path: 'maps',
         name: 'maps',
         component: () => import(/* webpackChunkName: "demo" */ '../views/GoogleMaps.vue')
@@ -233,6 +228,13 @@ const constantRoutes = [
         component: () => import(/* webpackChunkName: "users" */ '@/views/Admin/Utilisateurs'),
         name: 'Utilisateurs',
         meta: { title: 'users', icon: 'el-icon-user-solid' },
+      },
+      {
+        path: 'users/:id(\\d+)',
+        component: () => import(/* webpackChunkName: "Packsdetail" */ '@/views/Pages/UserProfile'),
+        name: 'profile',
+        meta: { title: 'Profile', noCache: true },
+        hidden: true,
       },
       /** Roles et permissions */
       {

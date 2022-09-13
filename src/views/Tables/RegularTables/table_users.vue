@@ -6,10 +6,10 @@
               <h3 class="mb-0">Utilisateurs</h3>
             </b-col>
             <b-col class="col-6 text-right">
-              <a href="#/" class="btn btn-sm btn-primary btn-round btn-icon" data-toggle="tooltip" data-original-title="Edit product">
+              <button @click="registerUser" class="btn btn-sm btn-primary btn-round btn-icon" data-toggle="tooltip" data-original-title="Edit product">
                 <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
                 <span class="btn-inner--text">Ajouter</span>
-              </a>
+              </button>
             </b-col>
           </b-row>
         </b-card-header>
@@ -53,7 +53,7 @@
 
             <el-table-column label="Role"
                              prop="role"
-                             min-width="150px">
+                             min-width="170px">
               <template v-slot="{row}">
                 <span class="status">{{row.roles[0]}}</span>
               </template>
@@ -63,19 +63,24 @@
                              prop="permissions"
                              min-width="150px">
               <template v-slot="{row}">
-                <span class="status">{{row.permissions}}</span>
+                <span class="status" v-for="(permission,index) in row.permissions" :key="permission.id">
+                  <el-tag size="small" v-if="index < 3">{{ permission }}</el-tag>
+                </span>
+                      <span>
+                  <el-tag
+                    v-if="row.permissions.length > 0">
+                   + {{ row.permissions.length-3}} Autres
+                  </el-tag>
+                </span>
               </template>
             </el-table-column>
 
             <el-table-column label="Action"
                              prop="completion"
-                             min-width="150px">
+                             min-width="130px">
               <template v-slot="{row}">
                 <span class="text-sm">
-                  <a href="javascript:;" data-bs-toggle="tooltip" data-bs-original-title="Preview product">
-                    <i class="fas fa-eye text-secondary" aria-hidden="true"></i>
-                  </a>
-                  <a href="javascript:;" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Edit product">
+                  <a href="javascript:;" @click="previewProfile(row.id)"  class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Edit product">
                     <i class="fas fa-user-edit text-secondary" aria-hidden="true"></i>
                   </a>
                   <a href="javascript:;" data-bs-toggle="tooltip" data-bs-original-title="Delete product">
@@ -128,6 +133,13 @@
           console.log('DONE');
           this.show = false;
         })
+      },
+      previewProfile(id){
+        console.log('OK PROCEED');
+        this.$router.push({ path: '/administration/users/'+id });
+      },
+      registerUser(){
+        this.$router.push({path: '/register'});
       }
     }
   }

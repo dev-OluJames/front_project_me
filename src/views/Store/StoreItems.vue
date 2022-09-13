@@ -232,9 +232,7 @@ export default {
         method: 'get',
         params: {limit: 4},
       }).then((response) => {
-        this.offres = response.data.filter((offre)=> {
-          return offre.is_active === true;
-        });
+        this.offres = response.data;
         console.log('DATA OFFRES', this.offres);
         this.loaded = false;
       });
@@ -247,9 +245,7 @@ export default {
         method: 'get',
         params: {limit: 4},
       }).then((response) => {
-        this.demandes = response.data.filter((demande)=> {
-          return demande.is_active === true;
-        });
+        this.demandes = response.data;
         this.loaded = false;
       });
     },

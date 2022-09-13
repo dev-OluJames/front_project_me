@@ -161,205 +161,411 @@
                 <!-- ========== DEMANDE =========== -->
                 <div class="tab-pane fade" id="demande" role="tabpanel" aria-labelledby="contact-tab">
                   <div class="container">
-                    <div class="section-heading">
-                      <h2 class="text-left" style="margin-top: 12px">
-                        List des Demandes
-                      </h2>
-                    </div>
-                    <div v-if="userDemandes.length === 0" class="">
-                      <p>
-                        Vous n'avez effectué aucune Demande
-                      </p>
-                    </div>
-                    <div v-else class="row">
-                      <div class="col-12">
-                        <div class="cart-table clearfix">
-                          <table class="table table-responsive" style="padding: 0px 0px">
-                            <thead>
-                            <tr>
-                              <th>Produits</th>
-                              <th>Quantité</th>
-                              <th></th>
-                            </tr>
-                            </thead>
-                            <tbody v-for="demande in userDemandes" :key="demande.id" style="border-bottom: none">
-                            <tr  style="border-top: none; border-bottom: none">
-                              <td class="cart_product_img">
-                                <a href="#"><img src="store/img/bg-img/34.jpg" alt="Product"></a>
-                                <h5>{{ demande.libelle }}</h5>
-                              </td>
-                              <td class="qty">
-                                <div class="quantity">
-                                  <span class="qty-minus" ><i class="fa fa-minus" aria-hidden="true"></i></span>
-                                  <input type="number" class="qty-text" step="1" min="1" :max="demande.quantite" name="quantity" :value="demande.quantite">
-                                  <span class="qty-plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
-                                </div>
-                              </td>
-                              <td class="price"><span>{{ demande.mesure }}</span></td>
-                              <!--                            <td class="total_price"><span>CFA {{ prixTotal(demande.quantite, demande.prix_plateforme) }}</span></td>-->
-                              <td class="action">
-                                <div class="row">
-                                  <div class="col-6">
-                                    <button v-b-toggle="'collapse-'+demande.id" class="alazea-btn btn-sm">Reponses</button>
-                                  </div>
-                                  <div class="col-6" style="margin-top: -80px; padding-left: 150px;">
-                                    <h4 v-if="demande.is_active" style="margin-bottom: 20px">Cloturer</h4>
-                                    <h4 v-else style="margin-bottom: 20px">Activer</h4>
-                                    <el-switch
-                                      style="display: block"
-                                      active-color="#13ce66"
-                                      inactive-color="#ff4949"
-                                      :active-value="true"
-                                      :inactive-value="false"
-                                      :value="demande.is_active"
-                                      @change="setActive(demande.id,demande.is_active, 'Demande')"
-                                    />
-                                  </div>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr style="border-top: none; border-bottom: none">
-                              <td colspan="4" style="border-top: none; margin-top: 0px; margin-bottom: 0px">
-                                <b-collapse :id="'collapse-'+demande.id">
-                                  <b-card>
-                                    <table v-if="demande.reponses" class="table table-responsive">
-                                      <thead>
-                                      <tr>
-                                        <th>Date</th>
-                                        <th>Utilisateur</th>
-                                        <th>Reponse</th>
-                                        <th>Actions</th>
-                                        <th></th>
-                                      </tr>
-                                      </thead>
-                                      <tbody v-for="response in demande.reponses" :key="response.id" style="border-bottom: none">
-                                      <tr  style="border-top: none; border-bottom: none">
-                                        <td class="price">
-                                          <span>{{ response.created_at }}</span>
-                                        </td>
-                                        <td class="price"><span>{{ response.user.nom_utilisateur }}</span></td>
-                                        <td class="price"><span>{{ response.libelle }}</span></td>
-                                        <td class="action">
-                                          <button class="alazea-btn btn-sm">voir</button>
-                                        </td>
-                                      </tr>
-                                      </tbody>
-                                    </table>
-                                    <p v-else> Vous n'avez aucune reponse à cette demande</p>
-                                  </b-card>
-                                </b-collapse>
-                              </td>
-                            </tr>
-                            </tbody>
-                          </table>
+                    <el-tabs type="card" class="mt-5">
+                      <el-tab-pane label="Demandes">
+                        <div class="section-heading">
+                          <h2 class="text-left" style="margin-top: 12px">
+                            List des Demandes
+                          </h2>
                         </div>
-                      </div>
-                    </div>
-                  </div>
+                        <div v-if="userDemandes.length === 0" class="">
+                          <p>
+                            Vous n'avez effectué aucune Demande
+                          </p>
+                        </div>
+                        <div v-else class="row">
+                          <div class="col-12">
+                            <div class="cart-table clearfix">
+                              <table class="table table-responsive" style="padding: 0px 0px">
+                                <thead>
+                                <tr>
+                                  <th>Produits</th>
+                                  <th>Quantité</th>
+                                  <th></th>
+                                </tr>
+                                </thead>
+                                <tbody v-for="demande in userDemandes" :key="demande.id" style="border-bottom: none">
+                                <tr  style="border-top: none; border-bottom: none">
+                                  <td class="cart_product_img">
+                                    <a href="#"><img src="store/img/bg-img/34.jpg" alt="Product"></a>
+                                    <h5>{{ demande.libelle }}</h5>
+                                  </td>
+                                  <td class="qty">
+                                    <div class="quantity">
+                                      <span class="qty-minus" ><i class="fa fa-minus" aria-hidden="true"></i></span>
+                                      <input type="number" class="qty-text" step="1" min="1" :max="demande.quantite" name="quantity" :value="demande.quantite">
+                                      <span class="qty-plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                                    </div>
+                                  </td>
+                                  <td class="price"><span>{{ demande.mesure }}</span></td>
+                                  <!--                            <td class="total_price"><span>CFA {{ prixTotal(demande.quantite, demande.prix_plateforme) }}</span></td>-->
+                                  <td class="action">
+                                    <div class="row">
+                                      <div class="col-6">
+                                        <button v-b-toggle="'collapse-'+demande.id" class="alazea-btn btn-sm">Reponses</button>
+                                      </div>
+                                      <div class="col-6" style="margin-top: -80px; padding-left: 150px;">
+                                        <h4 v-if="demande.is_active" style="margin-bottom: 20px">Cloturer</h4>
+                                        <h4 v-else style="margin-bottom: 20px">Activer</h4>
+                                        <el-switch
+                                          style="display: block"
+                                          active-color="#13ce66"
+                                          inactive-color="#ff4949"
+                                          :active-value="true"
+                                          :inactive-value="false"
+                                          :value="demande.is_active"
+                                          @change="setActive(demande.id,demande.is_active, 'Demande')"
+                                        />
+                                      </div>
+                                    </div>
+                                  </td>
+                                </tr>
+                                <tr style="border-top: none; border-bottom: none">
+                                  <td colspan="4" style="border-top: none; margin-top: 0px; margin-bottom: 0px">
+                                    <b-collapse :id="'collapse-'+demande.id">
+                                      <b-card>
+                                        <table v-if="demande.reponses" class="table table-responsive">
+                                          <thead>
+                                          <tr>
+                                            <th>Date</th>
+                                            <th>Utilisateur</th>
+                                            <th>Reponse</th>
+                                            <th>Actions</th>
+                                            <th></th>
+                                          </tr>
+                                          </thead>
+                                          <tbody v-for="response in demande.reponses" :key="response.id" style="border-bottom: none">
+                                          <tr  style="border-top: none; border-bottom: none">
+                                            <td class="price">
+                                              <span>{{ response.created_at }}</span>
+                                            </td>
+                                            <td class="price"><span>{{ response.user.nom_utilisateur }}</span></td>
+                                            <td class="price"><span>{{ response.libelle }}</span></td>
+                                            <td class="action">
+                                              <button class="alazea-btn btn-sm">voir</button>
+                                            </td>
+                                          </tr>
+                                          </tbody>
+                                        </table>
+                                        <p v-else> Vous n'avez aucune reponse à cette demande</p>
+                                      </b-card>
+                                    </b-collapse>
+                                  </td>
+                                </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </el-tab-pane>
+
+                      <el-tab-pane label="Reponses">
+                        <div class="section-heading">
+                          <h2 class="text-left" style="margin-top: 12px">
+                            List des Demandes Reponses
+                          </h2>
+                        </div>
+                        <div v-if="demandeReponses.length === 0" class="">
+                          <p>
+                            Vous n'avez publié aucune Demande
+                          </p>
+<!--                          <button class="alazea-btn mt-15 btn-sm">Ajouter</button>-->
+                        </div>
+                        <div v-else class="row">
+                          <div class="col-12">
+                            <div class="cart-table clearfix">
+                              <table class="table table-responsive" style="padding: 0px 0px">
+                                <thead>
+                                <tr>
+                                  <th>Produits</th>
+                                  <th>Quantité</th>
+                                  <th>TOTAL</th>
+                                  <th></th>
+                                </tr>
+                                </thead>
+                                <tbody v-for="demande in demandeReponses" :key="demande.id" style="border-bottom: none">
+                                <tr  style="border-top: none; border-bottom: none">
+                                  <td class="cart_product_img">
+                                    <a href="#"><img src="store/img/bg-img/34.jpg" alt="Product"></a>
+                                    <h5>{{ demande.libelle }}</h5>
+                                  </td>
+                                  <td class="qty">
+                                    <div class="quantity">
+                                      <span class="qty-minus" ><i class="fa fa-minus" aria-hidden="true"></i></span>
+                                      <input type="number" class="qty-text" step="1" min="1" :max="demande.quantite" name="quantity" :value="demande.quantite">
+                                      <span class="qty-plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                                    </div>
+                                  </td>
+                                  <td class="price"><span>{{ demande.mesure }}</span></td>
+                                  <!--                            <td class="total_price"><span>CFA {{ prixTotal(offre.quantite, offre.prix_plateforme) }}</span></td>-->
+                                  <td class="action">
+                                    <div class="row">
+                                      <div class="col-6">
+                                        <button v-b-toggle="'collapse-'+demande.id" class="alazea-btn btn-sm">Reponses</button>
+                                      </div>
+                                      <div class="col-6" style="margin-top: -80px; padding-left: 150px;">
+                                        <h4 v-if="demande.is_active" style="margin-bottom: 20px">Cloturer</h4>
+                                        <h4 v-else style="margin-bottom: 20px">Activer</h4>
+                                        <el-switch
+                                          style="display: block"
+                                          active-color="#13ce66"
+                                          inactive-color="#ff4949"
+                                          :active-value="true"
+                                          :inactive-value="false"
+                                          :value="demande.is_active"
+                                          @change="setActive(demande.id,demande.is_active, 'demande')"
+                                        />
+                                      </div>
+                                    </div>
+                                  </td>
+                                </tr>
+                                <tr style="border-top: none; border-bottom: none">
+                                  <td colspan="4" style="border-top: none; margin-top: 0px; margin-bottom: 0px">
+                                    <b-collapse :id="'collapse-'+demande.id">
+                                      <b-card>
+                                        <table v-if="demande.reponses.length > 0" class="table table-responsive">
+                                          <thead>
+                                          <tr>
+                                            <th>Date</th>
+                                            <th>Utilisateur</th>
+                                            <th>Reponse</th>
+                                            <th>Actions</th>
+                                            <th></th>
+                                          </tr>
+                                          </thead>
+                                          <tbody v-for="response in offre.reponses" :key="response.id" style="border-bottom: none">
+                                          <tr  style="border-top: none; border-bottom: none">
+                                            <td class="price">
+                                              <span>{{ response.created_at }}</span>
+                                            </td>
+                                            <td class="price"><span>{{ response.user.nom_utilisateur }}</span></td>
+                                            <td class="price"><span>{{ response.libelle }}</span></td>
+                                            <td class="action">
+                                              <button class="alazea-btn btn-sm">voir</button>
+                                            </td>
+                                          </tr>
+                                          </tbody>
+                                        </table>
+                                        <p v-else> Vous n'avez aucune reponse à cette demande</p>
+                                      </b-card>
+                                    </b-collapse>
+                                  </td>
+                                </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </el-tab-pane>
+                    </el-tabs></div>
                 </div>
                 <!-- ========== FIN DEMANDES =========== -->
 
                 <!-- ========== OFFRES =========== -->
                 <div class="tab-pane fade" id="offre" role="tabpanel" aria-labelledby="contact-tab">
                   <div class="container">
-                    <div class="section-heading">
-                      <h2 class="text-left" style="margin-top: 12px">
-                        List des Offres
-                      </h2>
-                    </div>
-                    <div v-if="userOffres.length === 0" class="">
-                      <p>
-                        Vous n'avez publié aucune Offre
-                      </p>
-                      <button class="alazea-btn mt-15 btn-sm">Ajouter</button>
-                    </div>
-                    <div v-else class="row">
-                      <div class="col-12">
-                        <div class="cart-table clearfix">
-                          <table class="table table-responsive" style="padding: 0px 0px">
-                            <thead>
-                            <tr>
-                              <th>Produits</th>
-                              <th>Quantité</th>
-                              <th>Prix</th>
-                              <th>TOTAL</th>
-                              <th></th>
-                            </tr>
-                            </thead>
-                            <tbody v-for="offre in userOffres" :key="offre.id" style="border-bottom: none">
-                            <tr  style="border-top: none; border-bottom: none">
-                              <td class="cart_product_img">
-                                <a href="#"><img src="store/img/bg-img/34.jpg" alt="Product"></a>
-                                <h5>{{ offre.libelle }}</h5>
-                              </td>
-                              <td class="qty">
-                                <div class="quantity">
-                                  <span class="qty-minus" ><i class="fa fa-minus" aria-hidden="true"></i></span>
-                                  <input type="number" class="qty-text" step="1" min="1" :max="offre.quantite" name="quantity" :value="offre.quantite">
-                                  <span class="qty-plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
-                                </div>
-                              </td>
-                              <td class="price"><span>{{ offre.mesure }}</span></td>
-                              <td class="price"><span>{{ offre.prix_plateforme }} CFA</span></td>
-                              <!--                            <td class="total_price"><span>CFA {{ prixTotal(offre.quantite, offre.prix_plateforme) }}</span></td>-->
-                              <td class="action">
-                                <div class="row">
-                                  <div class="col-6">
-                                    <button v-b-toggle="'collapse-'+offre.id" class="alazea-btn btn-sm">Reponses</button>
-                                  </div>
-                                  <div class="col-6" style="margin-top: -80px; padding-left: 150px;">
-                                    <h4 v-if="offre.is_active" style="margin-bottom: 20px">Cloturer</h4>
-                                    <h4 v-else style="margin-bottom: 20px">Activer</h4>
-                                    <el-switch
-                                      style="display: block"
-                                      active-color="#13ce66"
-                                      inactive-color="#ff4949"
-                                      :active-value="true"
-                                      :inactive-value="false"
-                                      :value="offre.is_active"
-                                      @change="setActive(offre.id,offre.is_active, 'Offre')"
-                                    />
-                                  </div>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr style="border-top: none; border-bottom: none">
-                              <td colspan="4" style="border-top: none; margin-top: 0px; margin-bottom: 0px">
-                                <b-collapse :id="'collapse-'+offre.id">
-                                  <b-card>
-                                    <table v-if="offre.reponses.length > 0" class="table table-responsive">
-                                      <thead>
-                                      <tr>
-                                        <th>Date</th>
-                                        <th>Utilisateur</th>
-                                        <th>Reponse</th>
-                                        <th>Actions</th>
-                                        <th></th>
-                                      </tr>
-                                      </thead>
-                                      <tbody v-for="response in offre.reponses" :key="response.id" style="border-bottom: none">
-                                      <tr  style="border-top: none; border-bottom: none">
-                                        <td class="price">
-                                          <span>{{ response.created_at }}</span>
-                                        </td>
-                                        <td class="price"><span>{{ response.user.nom_utilisateur }}</span></td>
-                                        <td class="price"><span>{{ response.libelle }}</span></td>
-                                        <td class="action">
-                                          <button class="alazea-btn btn-sm">voir</button>
-                                        </td>
-                                      </tr>
-                                      </tbody>
-                                    </table>
-                                    <p v-else> Vous n'avez aucune reponse à cette offre</p>
-                                  </b-card>
-                                </b-collapse>
-                              </td>
-                            </tr>
-                            </tbody>
-                          </table>
+                    <el-tabs type="card" class="mt-5">
+                      <el-tab-pane label="Offres">
+                        <div class="section-heading">
+                          <h2 class="text-left" style="margin-top: 12px">
+                            List des Offres
+                          </h2>
                         </div>
-                      </div>
-                    </div>
+                        <div v-if="userOffres.length === 0" class="">
+                          <p>
+                            Vous n'avez publié aucune Offre
+                          </p>
+                          <button class="alazea-btn mt-15 btn-sm">Ajouter</button>
+                        </div>
+                        <div v-else class="row">
+                          <div class="col-12">
+                            <div class="cart-table clearfix">
+                              <table class="table table-responsive" style="padding: 0px 0px">
+                                <thead>
+                                <tr>
+                                  <th>Produits</th>
+                                  <th>Quantité</th>
+                                  <th>Prix</th>
+                                  <th>TOTAL</th>
+                                  <th></th>
+                                </tr>
+                                </thead>
+                                <tbody v-for="offre in userOffres" :key="offre.id" style="border-bottom: none">
+                                <tr  style="border-top: none; border-bottom: none">
+                                  <td class="cart_product_img">
+                                    <a href="#"><img src="store/img/bg-img/34.jpg" alt="Product"></a>
+                                    <h5>{{ offre.libelle }}</h5>
+                                  </td>
+                                  <td class="qty">
+                                    <div class="quantity">
+                                      <span class="qty-minus" ><i class="fa fa-minus" aria-hidden="true"></i></span>
+                                      <input type="number" class="qty-text" step="1" min="1" :max="offre.quantite" name="quantity" :value="offre.quantite">
+                                      <span class="qty-plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                                    </div>
+                                  </td>
+                                  <td class="price"><span>{{ offre.mesure }}</span></td>
+                                  <td class="price"><span>{{ offre.prix_plateforme }} CFA</span></td>
+                                  <!--                            <td class="total_price"><span>CFA {{ prixTotal(offre.quantite, offre.prix_plateforme) }}</span></td>-->
+                                  <td class="action">
+                                    <div class="row">
+                                      <div class="col-6">
+                                        <button v-b-toggle="'collapse-'+offre.id" class="alazea-btn btn-sm">Reponses</button>
+                                      </div>
+                                      <div class="col-6" style="margin-top: -80px; padding-left: 150px;">
+                                        <h4 v-if="offre.is_active" style="margin-bottom: 20px">Cloturer</h4>
+                                        <h4 v-else style="margin-bottom: 20px">Activer</h4>
+                                        <el-switch
+                                          style="display: block"
+                                          active-color="#13ce66"
+                                          inactive-color="#ff4949"
+                                          :active-value="true"
+                                          :inactive-value="false"
+                                          :value="offre.is_active"
+                                          @change="setActive(offre.id,offre.is_active, 'Offre')"
+                                        />
+                                      </div>
+                                    </div>
+                                  </td>
+                                </tr>
+                                <tr style="border-top: none; border-bottom: none">
+                                  <td colspan="4" style="border-top: none; margin-top: 0px; margin-bottom: 0px">
+                                    <b-collapse :id="'collapse-'+offre.id">
+                                      <b-card>
+                                        <table v-if="offre.reponses.length > 0" class="table table-responsive">
+                                          <thead>
+                                          <tr>
+                                            <th>Date</th>
+                                            <th>Utilisateur</th>
+                                            <th>Reponse</th>
+                                            <th>Actions</th>
+                                            <th></th>
+                                          </tr>
+                                          </thead>
+                                          <tbody v-for="response in offre.reponses" :key="response.id" style="border-bottom: none">
+                                          <tr  style="border-top: none; border-bottom: none">
+                                            <td class="price">
+                                              <span>{{ response.created_at }}</span>
+                                            </td>
+                                            <td class="price"><span>{{ response.user.nom_utilisateur }}</span></td>
+                                            <td class="price"><span>{{ response.libelle }}</span></td>
+                                            <td class="action">
+                                              <button class="alazea-btn btn-sm">voir</button>
+                                            </td>
+                                          </tr>
+                                          </tbody>
+                                        </table>
+                                        <p v-else> Vous n'avez aucune reponse à cette offre</p>
+                                      </b-card>
+                                    </b-collapse>
+                                  </td>
+                                </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </el-tab-pane>
+                      <el-tab-pane label="Reponses">
+                        <div class="section-heading">
+                          <h2 class="text-left" style="margin-top: 12px">
+                            List des Offres Reponses
+                          </h2>
+                        </div>
+                        <div v-if="offreReponses.length === 0" class="">
+                          <p>
+                            Vous n'avez publié aucune Offre
+                          </p>
+                          <button class="alazea-btn mt-15 btn-sm">Ajouter</button>
+                        </div>
+                        <div v-else class="row">
+                          <div class="col-12">
+                            <div class="cart-table clearfix">
+                              <table class="table table-responsive" style="padding: 0px 0px">
+                                <thead>
+                                <tr>
+                                  <th>Produits</th>
+                                  <th>Quantité</th>
+                                  <th>Prix</th>
+                                  <th>TOTAL</th>
+                                  <th></th>
+                                </tr>
+                                </thead>
+                                <tbody v-for="offre in offreReponses" :key="offre.id" style="border-bottom: none">
+                                <tr  style="border-top: none; border-bottom: none">
+                                  <td class="cart_product_img">
+                                    <a href="#"><img src="store/img/bg-img/34.jpg" alt="Product"></a>
+                                    <h5>{{ offre.libelle }}</h5>
+                                  </td>
+                                  <td class="qty">
+                                    <div class="quantity">
+                                      <span class="qty-minus" ><i class="fa fa-minus" aria-hidden="true"></i></span>
+                                      <input type="number" class="qty-text" step="1" min="1" :max="offre.quantite" name="quantity" :value="offre.quantite">
+                                      <span class="qty-plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                                    </div>
+                                  </td>
+                                  <td class="price"><span>{{ offre.mesure }}</span></td>
+                                  <td class="price"><span>{{ offre.prix_plateforme }} CFA</span></td>
+                                  <!--                            <td class="total_price"><span>CFA {{ prixTotal(offre.quantite, offre.prix_plateforme) }}</span></td>-->
+                                  <td class="action">
+                                    <div class="row">
+                                      <div class="col-6">
+                                        <button v-b-toggle="'collapse-'+offre.id" class="alazea-btn btn-sm">Reponses</button>
+                                      </div>
+                                      <div class="col-6" style="margin-top: -80px; padding-left: 150px;">
+                                        <h4 v-if="offre.is_active" style="margin-bottom: 20px">Cloturer</h4>
+                                        <h4 v-else style="margin-bottom: 20px">Activer</h4>
+                                        <el-switch
+                                          style="display: block"
+                                          active-color="#13ce66"
+                                          inactive-color="#ff4949"
+                                          :active-value="true"
+                                          :inactive-value="false"
+                                          :value="offre.is_active"
+                                          @change="setActive(offre.id,offre.is_active, 'Offre')"
+                                        />
+                                      </div>
+                                    </div>
+                                  </td>
+                                </tr>
+                                <tr style="border-top: none; border-bottom: none">
+                                  <td colspan="4" style="border-top: none; margin-top: 0px; margin-bottom: 0px">
+                                    <b-collapse :id="'collapse-'+offre.id">
+                                      <b-card>
+                                        <table v-if="offre.reponses.length > 0" class="table table-responsive">
+                                          <thead>
+                                          <tr>
+                                            <th>Date</th>
+                                            <th>Utilisateur</th>
+                                            <th>Reponse</th>
+                                            <th>Actions</th>
+                                            <th></th>
+                                          </tr>
+                                          </thead>
+                                          <tbody v-for="response in offre.reponses" :key="response.id" style="border-bottom: none">
+                                          <tr  style="border-top: none; border-bottom: none">
+                                            <td class="price">
+                                              <span>{{ response.created_at }}</span>
+                                            </td>
+                                            <td class="price"><span>{{ response.user.nom_utilisateur }}</span></td>
+                                            <td class="price"><span>{{ response.libelle }}</span></td>
+                                            <td class="action">
+                                              <button class="alazea-btn btn-sm">voir</button>
+                                            </td>
+                                          </tr>
+                                          </tbody>
+                                        </table>
+                                        <p v-else> Vous n'avez aucune reponse à cette offre</p>
+                                      </b-card>
+                                    </b-collapse>
+                                  </td>
+                                </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </el-tab-pane>
+                    </el-tabs>
                   </div>
                 </div>
                 <!-- ========== FIN OFFRES =========== -->
@@ -443,6 +649,8 @@ export default {
     return {
       userFavoris: [],
       userDemandes: [],
+      offreReponses: [],
+      demandeReponses: [],
       userOffres: [],
       cloturer: false,
       query: {
@@ -454,8 +662,22 @@ export default {
     this.getUserOffresFavoris(this.$store.getters.userId);
     this.getUserDemandes();
     this.getUserOffres();
+    this.getOffreReponses();
+    this.getDemandeReponses();
   },
   methods: {
+    async getOffreReponses(){
+      this.query.type_offre = 'offre_reponse';
+      const { data } = await offreResource.list(this.query);
+      this.offreReponses = data;
+      console.log('USER OFFRES', this.offreReponses);
+    },
+    async getDemandeReponses(){
+      this.query.type_offre = 'demande_reponse';
+      const { data } = await demandeResource.list(this.query);
+      this.demandeReponses = data;
+      console.log('USER DEMANDES REPONSE', this.demandeReponses);
+    },
     async getUserOffresFavoris(id){
       const { data } = await request({
         url: 'users/'+id+'/offre_favoris',

@@ -65,6 +65,24 @@ const constantRoutes = [
         meta: { title: 'Equipe', icon: 'el-icon-key' },
       },
       {
+        path: '/store/forum',
+        component: () => import(/* webpackChunkName: "roles" */ '@/views/Store/Forum'),
+        name: 'forum',
+        meta: { title: 'Forum', icon: 'el-icon-key' },
+      },
+      {
+        path: '/store/packs',
+        component: () => import(/* webpackChunkName: "roles" */ '@/views/Store/Packs'),
+        name: 'pack-store',
+        meta: { title: 'PackStore', icon: 'el-icon-key' },
+      },
+      {
+        path: '/store/forum/:id(\\d+)',
+        component: () => import(/* webpackChunkName: "roles" */ '@/views/Store/ForumDetail'),
+        name: 'forum_detail',
+        meta: { title: 'ForumDetail', icon: 'el-icon-key' },
+      },
+      {
         path: '/store/contact',
         component: () => import(/* webpackChunkName: "roles" */ '@/views/Store/Contact'),
         name: 'contact',

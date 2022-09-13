@@ -3373,6 +3373,11 @@ dotenv@^7.0.0:
   resolved "https://registry.npmjs.org/dotenv/-/dotenv-7.0.0.tgz"
   integrity sha512-M3NhsLbV1i6HuGzBUH8vXrtxOk+tWmzWKDMbAVSUp3Zsjm7ywFeuwrUXhmhQyRK1q5B5GGy7hcXPbj3bnfZg2g==
 
+dropzone-vue@^0.1.11:
+  version "0.1.11"
+  resolved "https://registry.yarnpkg.com/dropzone-vue/-/dropzone-vue-0.1.11.tgz#673b950b7eda51d268008b81edeb6a31adb16da8"
+  integrity sha512-+XZfKbE2n8FpEoxSTYl9Us4z4qRcRrX24+/uMQxhh4mQuEV1OFAD7v3X2/10ulrRab6wYf5Nv/8pBYchc1ZQyQ==
+
 dropzone@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/dropzone/-/dropzone-4.3.0.tgz#48b0b8f2ad092872e4b535b672a7c3f1a1d67c91"

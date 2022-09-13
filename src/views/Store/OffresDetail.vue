@@ -151,6 +151,7 @@
                   <p><span>VILLAGE:</span> <span>{{ offre.village ? offre.village.libelle : ''}}</span></p>
                   <p><span>QTTE:</span> <span>{{ offre.quantite }} {{ offre.mesure }}</span></p>
                   <p><span>DATE DISPONIBLE:</span> <span>{{ offre.date_disponibilite }}</span></p>
+                  <p><span>PAR:</span> <span>{{ offre.user.nom_utilisateur }}</span></p>
                   <!-- p><span>SKU:</span> <span>CT201807</span></p>
                   <p><span>Category:</span> <span>En cour..</span></p>
                   <p><span>Tags:</span> <span>En cour..</span></p-->

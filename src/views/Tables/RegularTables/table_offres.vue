@@ -15,33 +15,37 @@
           </b-row>
 
           <b-row>
-            <b-col cols="3">
-              <b-form-input size="sm" placeholder="recherche ..." style="margin-top: 10px"></b-form-input>
-            </b-col>
-            <b-col cols="5">
-              <el-select
-                v-model="type_offre_id"
-                filterable
-                size="small"
-                @change="getOffresList"
-                allow-create
-                default-first-option
-                style="margin-top: 10px; width: 40%"
-                placeholder="Type">
-                <el-option
-                  v-for="item in type_offres"
-                  :key="item.id"
-                  :label="item.libelle"
-                  :value="item.libelle">
-                </el-option>
-              </el-select>
-            </b-col>
-            <b-col cols="3">
-              <div style=" margin-left: -18rem;">
-                <base-button style="margin-top: 10px;" @click="resetTypeOffre" size="sm" icon type="primary">
-                  <span class="btn-inner--icon"><i class="ni ni-fat-remove"></i></span>
-                </base-button>
-              </div>
+            <b-col cols="6">
+              <b-row>
+                <b-col cols="5">
+                  <b-form-input size="sm" placeholder="recherche ..." style="margin-top: 10px"></b-form-input>
+                </b-col>
+                <b-col cols="5">
+                  <el-select
+                    v-model="type_offre_id"
+                    filterable
+                    size="small"
+                    @change="getOffresList"
+                    allow-create
+                    default-first-option
+                    style="margin-top: 10px; width: 100%"
+                    placeholder="Type">
+                    <el-option
+                      v-for="item in type_offres"
+                      :key="item.id"
+                      :label="item.libelle"
+                      :value="item.libelle">
+                    </el-option>
+                  </el-select>
+                </b-col>
+                <b-col cols="2">
+                  <div>
+                    <base-button style="margin-top: 10px;" @click="resetTypeOffre" size="sm" icon type="primary">
+                      <span class="btn-inner--icon"><i class="ni ni-fat-remove"></i></span>
+                    </base-button>
+                  </div>
+                </b-col>
+              </b-row>
             </b-col>
           </b-row>
         </b-card-header>
@@ -55,7 +59,8 @@
                 <template v-slot="{row}">
                     <b-media no-body class="align-items-center">
                         <a href="#" class="avatar rounded-circle mr-3">
-                            <img alt="Image placeholder" src="img/theme/team-1.jpg">
+                          <img v-if="row.image" :src="row.image[0].lien" alt="image holder">
+                          <img v-else alt="Image placeholder" src="img/theme/team-1.jpg">
                         </a>
                     </b-media>
                 </template>
@@ -146,7 +151,7 @@
                   <router-link :to="'/store/offres/detail/'+row.id" data-bs-toggle="tooltip" data-bs-original-title="Preview product">
                     <i class="fas fa-eye text-secondary" aria-hidden="true"></i>
                   </router-link>
-                  <a href="javascript:;" @click="modifierOffre($event.target, row)" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Edit product">
+                  <a href="javascript:;" @click="modifierOffre($event.target, row.id)" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Edit product">
                     <i class="fas fa-edit text-secondary" aria-hidden="true"></i>
                   </a>
                   <a href="javascript:;" data-bs-toggle="tooltip" data-bs-original-title="Delete product">
@@ -165,7 +170,7 @@
         id="modal-3"
         title="Ajouter une Offre"
         type="offres"
-        :item="offre"
+        :item="offre_id"
         :action="action"
         @added="getOffresList"
       />
@@ -194,6 +199,7 @@
         show: false,
         offres: [],
         offre: {},
+        offre_id: {},
         type_offres: [],
         type_offre_id: '',
         add_prix_plateforme: false,
@@ -292,6 +298,8 @@
       },
       ajoutOffre(btn){
         // this.$bvModal.show('ajouter-offre');
+        this.action = 'ajout';
+        this.offre_id= null;
         this.$root.$emit('bv::show::modal', "modal-3", btn)
       },
       async getTypeOffres(){
@@ -300,10 +308,10 @@
           return t_o.libelle !== 'offre_reponse';
         });
       },
-      modifierOffre(btn, offre){
+      modifierOffre(btn, id){
         // this.$bvModal.show('ajouter-offre');
-        console.log('ROW ', offre);
-        this.offre = offre;
+        console.log('ROW ', id);
+        this.offre_id = id;
         this.action = 'edit';
         this.$root.$emit('bv::show::modal', "modal-3", btn)
       },

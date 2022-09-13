@@ -76,18 +76,33 @@
                       </router-link>
                     </li>
                     <li>
-                      <router-link to="/store/presentation">
-                        Présentation
+                      <a href="#">Pages</a>
+                      <ul class="dropdown">
+                        <li>
+                          <a href="/#/store/presentation">
+                            Présentation
+                          </a>
+                        </li>
+                        <li>
+                          <a href="/#/store/partenaire">
+                            Nos Partenaires
+                          </a>
+                        </li>
+                        <li>
+                          <a href="/#/store/equipe">
+                            Equipes
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+                    <li>
+                      <router-link to="/store/packs">
+                        Packs
                       </router-link>
                     </li>
                     <li>
-                      <router-link to="/store/partenaire">
-                        Nos Partenaires
-                      </router-link>
-                    </li>
-                    <li>
-                      <router-link to="/store/equipe">
-                        Equipes
+                      <router-link to="/store/forum">
+                        Forum
                       </router-link>
                     </li>
                     <li>
@@ -269,35 +284,3 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.header-area .alazea-main-menu .classynav ul li a {
-  font-size: 18px;
-  padding: 0 20px;
-}
-
-.header-area .alazea-main-menu .classynav ul li a {
-  padding: 0 30px;
-  font-weight: 500;
-  text-transform: capitalize;
-  font-size: 20px;
-  color: #ffffff;
-}
-.classynav ul li a {
-  padding: 0 12px;
-  display: block;
-  height: 35px;
-  font-size: 14px;
-  line-height: 34px;
-}
-body {
-  margin: 0;
-  /* font-family: Open Sans, sans-serif; */
-  font-family: Dosis, serif;
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.5;
-  color: #525f7f;
-  text-align: left;
-  background-color: #f8f9fe;
-}
-</style>

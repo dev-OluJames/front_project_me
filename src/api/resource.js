@@ -44,10 +44,11 @@ class Resource {
       data: resource,
     });
   }
-  destroy(id) {
+  destroy(id, resource = null) {
     return request({
       url: '/' + this.uri + '/' + id,
       method: 'delete',
+      data: resource,
     });
   }
   extra(id, resource) {

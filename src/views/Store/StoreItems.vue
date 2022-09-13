@@ -51,10 +51,13 @@
 
                 <!-- Single Product Area -->
                 <div class="col-12 col-sm-3 col-lg-3" v-for="(offre, index) in offres" :key="index">
-                  <div class="single-product-area mb-50">
+                  <div v-if="offre.is_active" class="single-product-area mb-50">
                     <!-- Product Image -->
                     <div class="product-img">
-                      <a href="#"><img src="store/img/bg-img/40.png" alt=""></a>
+                      <a href="#">
+                        <img v-if="offre.image" style="width:210px; height:302px" :src="offre.image[0].lien" alt="">
+                        <img v-else src="store/img/bg-img/40.png" alt="">
+                      </a>
                       <!-- Product Tag -->
                       <div class="product-tag">
                         <a href="#">Hot</a>
@@ -68,7 +71,7 @@
                     <!-- Product Info -->
                     <div class="product-info mt-15 text-center">
                       <router-link :to="'/store/offres/detail/'+offre.id">
-                        <p>{{ offre.libelle }}</p>
+                        <h6>{{ offre.libelle }}</h6>
                       </router-link>
                       <h6>{{ offre.prix_plateforme }} FCFA</h6>
                     </div>
@@ -90,51 +93,7 @@
         </div>
       </div>
     </section>
-    <!-- ##### Product Area Start ##### -->
-    <section class="new-arrivals-products-area section-padding-100" style="background-color: #f2f4f5;margin-bottom: 30px;">
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <!-- Section Heading -->
-            <div class="section-heading text-center">
-              <h2>PACKS</h2>
-              <p>Souscrivez à l'un de ses packs</p>
-            </div>
-          </div>
-        </div>
 
-        <div class="row justify-content-center">
-
-          <!-- Single Product Area -->
-          <div class="col-12 col-sm-3 col-lg-2" v-for="pack in packs" :key="pack.id">
-            <div class="single-product-area mb-50 wow fadeInUp" data-wow-delay="100ms">
-              <!-- Product Image -->
-              <div class="product-img">
-                <a href="shop-details.html"><img src="store/img/bg-img/9.jpg" alt=""></a>
-                <!-- Product Tag -->
-                <div class="product-tag">
-                  <a href="#">Hot</a>
-                </div>
-                <div class="product-meta d-flex">
-                  <a href="cart.html" class="add-to-cart-btn">Souscrire</a>
-                </div>
-              </div>
-              <!-- Product Info -->
-              <div class="product-info mt-15 text-center">
-                <a href="shop-details.html">
-                  <h6>{{ pack.libelle }}</h6>
-                </a>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 text-center">
-            <a href="#" class="btn alazea-btn">Tous les Packs</a>
-          </div>
-
-        </div>
-      </div>
-    </section>
-    <!-- ##### Product Area End ##### -->
     <section class="shop-page section-padding-0-100">
       <div class="container">
         <div class="row">
@@ -164,7 +123,10 @@
                   <div class="single-product-area mb-50">
                     <!-- Product Image -->
                     <div class="product-img">
-                      <a href="#"><img src="store/img/bg-img/40.png" alt=""></a>
+                      <a href="#">
+                        <img v-if="demande.image" style="width:210px; height:302px"  :src="demande.image[0].lien" alt="">
+                        <img v-else src="store/img/bg-img/40.png" alt="">
+                      </a>
                       <!-- Product Tag -->
                       <div class="product-tag">
                         <a href="#">Hot</a>
@@ -270,8 +232,10 @@ export default {
         method: 'get',
         params: {limit: 4},
       }).then((response) => {
-        this.offres = response.data;
-        console.log('DATA OFFRES', response.data);
+        this.offres = response.data.filter((offre)=> {
+          return offre.is_active === true;
+        });
+        console.log('DATA OFFRES', this.offres);
         this.loaded = false;
       });
     },
@@ -283,8 +247,9 @@ export default {
         method: 'get',
         params: {limit: 4},
       }).then((response) => {
-        this.demandes = response.data;
-        console.log('DATA DEMANDES', response.data);
+        this.demandes = response.data.filter((demande)=> {
+          return demande.is_active === true;
+        });
         this.loaded = false;
       });
     },

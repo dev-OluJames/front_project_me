@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-modal @change="setData" @ok="handleOk" :ok-title="action ==='ajout' ? 'Ajouter' : 'Modifier'" cancel-title="Annuler" size="xl" :id="id" :title="title">
+    <b-modal @change="setData" @ok="handleOk" @hidden="resetDonnee" :ok-title="action ==='ajout' ? 'Ajouter' : 'Modifier'" cancel-title="Annuler" size="xl" :id="id" :title="title">
       <vue-element-loading :active="show" spinner="bar-fade-scale" color="#2dce94" />
       <b-row>
         <b-col align-self="stretch">
@@ -11,6 +11,7 @@
             id="dropzone"
             :options="dropzoneOptions"
           />
+          <img v-if="donnees.image" :src="donnees.image[0].lien" alt="">
         </b-col>
         <b-col>
           <b-row>
@@ -35,7 +36,7 @@
                            :value="option.id">
                 </el-option>
               </el-select>
-              <el-select v-else v-model="donnees.variete_produit.produit_id" @click="getproduits" @change="getVarieteList" filterable
+              <el-select v-else v-model="produit_id" @click="getproduits" @change="getVarieteList" filterable
                          placeholder="Produit" style="width: 100%">
                 <el-option value>
                   <base-button type="primary" icon style="width: 100%;border-radius: 0px" @click="createProduit=!createProduit">
@@ -65,7 +66,7 @@
                              :value="option.id">
                   </el-option>
                 </el-select>
-                <el-select v-else v-model="donnees.variete_produit.id" @click="getVarieteList" filterable
+                <el-select v-else v-model="donnees.variete_produit_id" @click="getVarieteList" filterable
                            placeholder="Variete" style="width: 100%">
                   <el-option value>
                     <base-button type="primary" icon style="width: 100%;border-radius: 0px" @click="createVariety=!createVariety">
@@ -98,7 +99,7 @@
                              :value="option.id">
                   </el-option>
                 </el-select>
-                <el-select v-else v-model="donnees.type_offre.id" @click="getTypeOffres" filterable
+                <el-select v-else v-model="donnees.type_offre_id" @click="getTypeOffres" filterable
                            placeholder="Type Offre" style="width: 100%">
                   <!-- el-option v-if="type === 'offres'" value>
                     <base-button type="primary" style="width: 100%;border-radius: 0px" @click="createToffre=!createToffre">
@@ -129,7 +130,7 @@
                              :value="option.id">
                   </el-option>
                 </el-select>
-                <el-select v-else v-model="donnees.type_demande.id" @click="getTypeDemandes" filterable
+                <el-select v-else v-model="donnees.type_demande_id" @click="getTypeDemandes" filterable
                            placeholder="Type demande" style="width: 100%">
                   <!--el-option value>
                     <base-button type="primary" style="width: 100%;border-radius: 0px" @click="createTdemande=!createTdemande">
@@ -166,7 +167,7 @@
             </b-col>
             <b-col v-else style="margin-bottom: 12px">
               <h6>Date livraison</h6>
-              <input type="date" class="form-control" id="date_livraison" placeholder="Date de disponibilité" rows="2" v-model="donnees.date_livraison">
+              <input type="date" class="form-control" id="date_livraison" placeholder="Date de livraison" rows="2" v-model="donnees.date_livraison">
             </b-col>
             <b-col style="margin-bottom: 12px">
               <h6>Village</h6>
@@ -179,7 +180,7 @@
                              :value="option.id">
                   </el-option>
                 </el-select>
-                <el-select v-else v-model="donnees.village.id" filterable
+                <el-select v-else v-model="donnees.village_id" filterable
                            placeholder="Village" style="width: 100%">
                   <el-option v-for="(option, index) in villages"
                              :key="index"
@@ -239,7 +240,7 @@
           <el-option
             v-for="(produit, idex) in produits"
             :key="idex"
-            :label="produit.nom | uppercaseFirst"
+            :label="produit.nom"
             :value="produit.id"
             :disabled="!produit.is_active"
           />
@@ -332,6 +333,7 @@ const varieteResource = new Resource('varieteProduits');
 const typeOffreResource = new Resource('typeOffres');
 const typeDemandeResource = new Resource('typeDemandes');
 const villageResource = new Resource('villages');
+const imageResource = new Resource('images');
 
 export default {
   name: 'AddModal',
@@ -339,23 +341,23 @@ export default {
     vueDropzone,
     VueElementLoading
   },
-  props: {'id':{type: String}, 'title': {type: String}, 'type':{type: String}, 'item': {type: Object, default:{}}, 'action': {type: String, default: 'ajout'}},
+  props: {'id':{type: String}, 'title': {type: String}, 'type':{type: String}, 'item': {type: Number}, 'action': {type: String, default: 'ajout'}},
   data() {
     return {
       dropzoneOptions: {
         url: 'https://httpbin.org/post',
-        maxFilesize: 256,
+        maxFilesize: 512,
         maxFiles: 3,
         clickable: true,
         addRemoveLinks: true,
-        headers: { "My-Awesome-Header": "header value" }
+        headers: { 'Content-Type': 'multipart/form-data' }
       },
       customToolbar: [
         ["bold", "italic", "underline"],
         [{ list: "ordered" }, { list: "bullet" }],
         ["image", "code-block"]
       ],
-      donnees: this.item,
+      donnees: {},
       produits: [],
       show: false,
       showVariety: false,
@@ -412,9 +414,54 @@ export default {
   },
   methods: {
     ...mapActions('comptes', ['addMemberCompte', 'updateMemberCompte']),
-    setData(){
-      console.log('DONNEEE ', this.type, this.item);
-      this.donnees = this.item;
+    resetDonnee(){
+      this.donnees = {};
+    },
+    async setData(){
+      if (this.action !== 'ajout'){
+        if (this.type === 'demandes'){
+          const {data} = await demandeResource.get(this.item);
+          this.donnees = data;
+          const date = this.donnees.date_livraison;
+          const jr  = date.split('-')[0];
+          const moi = date.split('-')[1];
+          const annee = date.split('-')[2];
+          this.donnees.date_livraison = [annee, moi, jr].join('-');
+          this.donnees.type_demande_id = this.donnees.type_demande.id;
+        } else if (this.type === 'offres'){
+          const {data} = await offreResource.get(this.item);
+          this.donnees = data;
+          const date = this.donnees.date_disponibilite;
+          const jr  = date.split('-')[0];
+          const moi = date.split('-')[1];
+          const annee = date.split('-')[2];
+          this.donnees.date_disponibilite = [annee, moi, jr].join('-');
+          this.donnees.type_offre_id = this.donnees.type_offre.id;
+        }
+        this.produit_id = this.donnees.variete_produit.produit_id;
+        this.donnees.variete_produit_id = this.donnees.variete_produit.id;
+        this.donnees.village_id = this.donnees.village.id;
+      } else {
+        this.donnees = {};
+        this.produit_id = null;
+      }
+      console.log('DONNEEE ', this.type, this.donnees);
+    },
+    uploadImage(){
+      console.log('FILE', this.$refs.myVueDropzone.dropzone.files[0]);
+      const fd = new FormData();
+      fd.append('fichier', this.$refs.myVueDropzone.dropzone.files[0], this.$refs.myVueDropzone.dropzone.files[0].upload.filename)
+      fd.append('type', 'offre');
+      fd.append('id',1);
+      // const resource = {
+      //   'fichier': this.$refs.myVueDropzone.dropzone.files[0],
+      //   'type': 'offre',
+      //   'id': 1
+      // }
+      imageResource.store(fd)
+        .then((response) =>{
+          console.log(response);
+        })
     },
     handleOk(bvModalEvent) {
       if (this.action === 'ajout') {
@@ -425,6 +472,9 @@ export default {
         if (this.type === 'offres'){
           offreResource.store(this.donnees)
             .then((response) => {
+              if(this.$refs.myVueDropzone.dropzone.files.length > 0){
+                this.saveImage(response.data.id, 'offre');
+              }
               Message({
                 message: response.message,
                 type: 'success',
@@ -449,6 +499,9 @@ export default {
         } else if (this.type === 'demandes'){
           demandeResource.store(this.donnees)
             .then((response) => {
+              if(this.$refs.myVueDropzone.dropzone.files.length > 0){
+                this.saveImage(response.data.id, 'demande');
+              }
               Message({
                 message: response.message,
                 type: 'success',
@@ -475,25 +528,28 @@ export default {
         }
         console.log('MEDIAS ', this.$refs.myVueDropzone.dropzone.files);
       } else {
-        this.donnees.user_id = this.$store.getters.userId;
-        const querry = {};
-        querry.libelle = this.donnees.libelle;
-        querry.description = this.donnees.description;
-        querry.quantite = this.donnees.quantite;
-        querry.mesure = this.donnees.mesure;
-        querry.prix_agriculteur = this.donnees.prix_agriculteur;
-        querry.prix_plateforme = null;
-        querry.date_disponibilite = this.donnees.date_disponibilite;
-        querry.user_id = this.donnees.user_id;
-        querry.village_id = this.donnees.village.id;
-        querry.variete_produit_id = this.donnees.variete_produit.id;
-        querry.type_offre_id = this.donnees.type_offre.id;
-        console.log('Editer ', querry);
         bvModalEvent.preventDefault();
         this.show = true;
         if (this.type === 'offres'){
+          this.donnees.user_id = this.$store.getters.userId;
+          const querry = {};
+          querry.libelle = this.donnees.libelle;
+          querry.description = this.donnees.description;
+          querry.quantite = this.donnees.quantite;
+          querry.mesure = this.donnees.mesure;
+          querry.prix_agriculteur = this.donnees.prix_agriculteur;
+          querry.prix_plateforme = null;
+          querry.date_disponibilite = this.donnees.date_disponibilite;
+          querry.user_id = this.donnees.user_id;
+          querry.village_id = this.donnees.village_id;
+          querry.variete_produit_id = this.donnees.variete_produit_id;
+          querry.type_offre_id = this.donnees.type_offre_id;
+          console.log('Editer ', querry);
           offreResource.update(this.donnees.id, querry)
             .then((response) => {
+              if(this.$refs.myVueDropzone.dropzone.files.length > 0){
+                this.saveImage(response.data.id, 'offre');
+              }
               Message({
                 message: response.message,
                 type: 'success',
@@ -514,6 +570,7 @@ export default {
                 this.$bvModal.hide(this.id);
               })
               console.log('DONE');
+              this.donnees = {};
             });
         } else if (this.type === 'demandes'){
           this.donnees.user_id = this.$store.getters.userId;
@@ -522,13 +579,16 @@ export default {
           querry.description = this.donnees.description;
           querry.quantite = this.donnees.quantite;
           querry.mesure = this.donnees.mesure;
-          querry.date_disponibilite = this.donnees.date_disponibilite;
+          querry.date_livraison = this.donnees.date_livraison;
           querry.user_id = this.donnees.user_id;
-          querry.village_id = this.donnees.village.id;
-          querry.variete_produit_id = this.donnees.variete_produit.id;
-          querry.type_demande_id = this.donnees.type_demande.id;
-          demandeResource.update(this.donnees.id, this.donnees)
+          querry.village_id = this.donnees.village_id;
+          querry.variete_produit_id = this.donnees.variete_produit_id;
+          querry.type_demande_id = this.donnees.type_demande_id;
+          demandeResource.update(this.donnees.id, querry)
             .then((response) => {
+              if(this.$refs.myVueDropzone.dropzone.files.length > 0){
+                this.saveImage(response.data.id, 'demande');
+              }
               Message({
                 message: response.message,
                 type: 'success',
@@ -549,6 +609,7 @@ export default {
                 this.$bvModal.hide(this.id);
               })
               console.log('DONE');
+              this.donnees = {};
             });
         } else {
           console.log('NON SUPPORTED');
@@ -581,6 +642,27 @@ export default {
           done();
         })
         .catch(_ => {});
+    },
+    saveImage(id, type){
+      const fd = new FormData();
+      fd.append('fichier', this.$refs.myVueDropzone.dropzone.files[0], this.$refs.myVueDropzone.dropzone.files[0].upload.filename)
+      fd.append('type', type);
+      fd.append('id',id);
+      if (this.donnees.image !== null){
+        imageResource.destroy(this.donnees.image[0].id)
+          .then((response) =>{
+            console.log(response);
+          });
+      }
+      imageResource.store(fd)
+        .then((response) =>{
+          console.log(response);
+          Message({
+            message: 'Image success',
+            type: 'success',
+            duration: 5 * 1000
+          });
+        });
     },
     filterInt (value) {
       if (/^(-|\+)?(\d+|Infinity)$/.test(value))
@@ -691,6 +773,16 @@ export default {
         this.createTdemande = false;
       });
     },
+    dataURItoBlob(dataurl) {
+      var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+      while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      console.log('BLOB', new Blob([u8arr], {type:mime}));
+      return new Blob([u8arr], {type:mime});
+
+    }
   }
 }
 </script>

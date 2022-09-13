@@ -13,31 +13,35 @@
             </b-col>
           </b-row>
           <b-row>
-            <b-col cols="3">
-              <b-form-input size="sm" placeholder="recherche ..." style="margin-top: 10px"></b-form-input>
-            </b-col>
-            <b-col cols="5">
-              <el-select
-                v-model="type_demande_id"
-                filterable
-                size="small"
-                @change="getDemandes"
-                allow-create
-                default-first-option
-                style="margin-top: 10px; width: 40%"
-                placeholder="Type">
-                <el-option
-                  v-for="item in type_demandes"
-                  :key="item.id"
-                  :label="item.libelle"
-                  :value="item.libelle">
-                </el-option>
-              </el-select>
-            </b-col>
-            <b-col>
-              <base-button style="margin-top: 10px; margin-left: -18rem;" @click="resetTypeDemande" size="sm" icon type="primary">
-                <span class="btn-inner--icon"><i class="ni ni-fat-remove"></i></span>
-              </base-button>
+            <b-col cols="6">
+              <b-row>
+                <b-col cols="5">
+                  <b-form-input size="sm" placeholder="recherche ..." style="margin-top: 10px"></b-form-input>
+                </b-col>
+                <b-col cols="5" >
+                  <el-select
+                    v-model="type_demande_id"
+                    filterable
+                    size="small"
+                    @change="getDemandes"
+                    allow-create
+                    default-first-option
+                    style="margin-top: 10px; width: 100%"
+                    placeholder="Type">
+                    <el-option
+                      v-for="item in type_demandes"
+                      :key="item.id"
+                      :label="item.libelle"
+                      :value="item.libelle">
+                    </el-option>
+                  </el-select>
+                </b-col>
+                <b-col >
+                  <base-button style="margin-top: 10px;" @click="resetTypeDemande" size="sm" icon type="primary">
+                    <span class="btn-inner--icon"><i class="ni ni-fat-remove"></i></span>
+                  </base-button>
+                </b-col>
+              </b-row>
             </b-col>
           </b-row>
         </b-card-header>
@@ -51,8 +55,8 @@
                 <template v-slot="{row}">
                     <b-media no-body class="align-items-center">
                         <a href="#" class="avatar rounded-circle mr-3">
-                            <img alt="Image placeholder" src="img/theme/team-1.jpg">
-                        </a>
+                          <img v-if="row.image" :src="row.image[0].lien" alt="image holder">
+                          <img v-else alt="Image placeholder" src="img/theme/team-1.jpg">                        </a>
                     </b-media>
                 </template>
             </el-table-column>
@@ -94,7 +98,7 @@
               <el-switch
                 style="display: block"
                 active-color="#13ce66"
-                width="40"
+                :width=40
                 inactive-color="#ff4949"
                 :active-value="true"
                 :inactive-value="false"
@@ -112,7 +116,7 @@
                   <router-link :to="'/store/demandes/detail/'+row.id" data-bs-toggle="tooltip" data-bs-original-title="Preview product">
                     <i class="fas fa-eye text-secondary" aria-hidden="true"></i>
                   </router-link>
-                  <a href="javascript:;" @click="modifierDemande($event.target, row)" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Edit product">
+                  <a href="javascript:;" @click="modifierDemande($event.target, row.id)" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Edit product">
                     <i class="fas fa-edit text-secondary" aria-hidden="true"></i>
                   </a>
                   <a href="javascript:;" data-bs-toggle="tooltip" data-bs-original-title="Delete product">
@@ -133,7 +137,7 @@
         title="Faire une Demande"
         type="demandes"
         :action="action"
-        :item="demande"
+        :item="demande_id"
         @added="getDemandes"
       />
 
@@ -157,7 +161,7 @@ import {Message, Table, TableColumn} from 'element-ui';
     data() {
       return {
         demandes: [],
-        demande: {},
+        demande_id: null,
         type_demandes: [],
         type_demande_id: '',
         action: 'ajout',
@@ -201,7 +205,6 @@ import {Message, Table, TableColumn} from 'element-ui';
       ajoutDemande(btn){
         // this.$bvModal.show('ajouter-offre');
         this.action = 'ajout';
-        this.demande = {};
         this.$root.$emit('bv::show::modal', "modal-4", btn)
       },
       async getTypeDemandes(){
@@ -227,10 +230,10 @@ import {Message, Table, TableColumn} from 'element-ui';
         this.type_demande_id = '';
         this.getDemandes();
       },
-      modifierDemande(btn, demande){
+      modifierDemande(btn, id){
         // this.$bvModal.show('ajouter-offre');
-        console.log('ROW ', demande);
-        this.demande = demande;
+        console.log('ROW ', id);
+        this.demande_id = id;
         this.action = 'edit';
         this.$root.$emit('bv::show::modal', "modal-4", btn)
       },

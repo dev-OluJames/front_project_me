@@ -128,7 +128,8 @@
                   <div class="single-product-area mb-50">
                     <!-- Product Image -->
                     <div class="product-img">
-                      <a href="#"><img src="store/img/bg-img/40.png" alt=""></a>
+                      <img v-if="offre.image" style="width:210px; height:302px" :src="offre.image[0].lien" alt="">
+                      <img v-else src="store/img/bg-img/40.png" alt="">
                       <!-- Product Tag -->
                       <div class="product-tag">
                         <a href="#">Hot</a>
@@ -239,7 +240,9 @@ export default {
       // this.offres = data;
       offreResource.list(this.query)
         .then((response) => {
-          this.offres = response.data;
+          this.offres = response.data.filter((offre)=> {
+            return offre.is_active === true;
+          });
           console.log('DATA offreS', response.data);
           this.loaded = false;
         });

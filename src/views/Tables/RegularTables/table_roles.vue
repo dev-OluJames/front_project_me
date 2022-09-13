@@ -6,7 +6,7 @@
           <h3 class="mb-0">Roles</h3>
         </b-col>
         <b-col class="col-6 text-right">
-          <base-button class="btn btn-sm btn-primary btn-round btn-icon" data-toggle="tooltip" data-original-title="Edit product" @click="triggerModal" >
+          <base-button class="btn btn-sm btn-primary btn-round btn-icon" data-toggle="tooltip" data-original-title="Edit product" @click="triggerModal($event.target)">
             <span class="btn-inner--icon"><i class="fas fa-key"></i></span>
             <span class="btn-inner--text">Ajouter</span>
           </base-button>
@@ -30,7 +30,15 @@
                        prop="permissions"
                        min-width="150px">
         <template v-slot="{row}">
-          <span class="status">{{row.permissions}}</span>
+          <span class="status" v-for="(permission,index) in row.permissions" :key="permission.id">
+            <el-tag size="small" v-if="index < 3">{{ permission.name }}</el-tag>
+          </span>
+          <span>
+            <el-tag
+              v-if="row.permissions.length > 0">
+             + {{ row.permissions.length-3}} Autres
+            </el-tag>
+          </span>
         </template>
       </el-table-column>
 
@@ -38,7 +46,7 @@
                        min-width="150px"
                        prop="userscount">
         <template v-slot="{row}">
-          <span class="status">{{row.userscount}}</span>
+          <span class="status" style="text-align: center">{{row.userscount}}</span>
         </template>
       </el-table-column>
       <el-table-column label="Action"
@@ -49,7 +57,7 @@
                   <a href="javascript:;" data-bs-toggle="tooltip" data-bs-original-title="Preview product">
                     <i class="fas fa-eye text-secondary" aria-hidden="true"></i>
                   </a>
-                  <a href="javascript:;" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Edit product">
+                  <a href="javascript:;" @click="editRole($event.target, row)" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Edit product">
                     <i class="fas fa-user-edit text-secondary" aria-hidden="true"></i>
                   </a>
                   <a href="javascript:;" data-bs-toggle="tooltip" data-bs-original-title="Delete product">
@@ -63,12 +71,11 @@
     <b-card-footer class="py-4 d-flex justify-content-end">
       <base-pagination v-model="currentPage" :per-page="10" :total="50"></base-pagination>
     </b-card-footer>
-    <add-role-modal :trigger="activate" @opened="deactivate"/>
+    <add-role-modal id="modal-4" @added="setLoad" :trigger="activate" :set_role="role" @opened="deactivate"/>
 
   </b-card>
 </template>
 <script>
-import { Table, TableColumn} from 'element-ui';
 import Resource from "../../../api/resource";
 import VueElementLoading from "vue-element-loading";
 import addRoleModal from "../../../components/Modals/addRoleModal";
@@ -77,8 +84,6 @@ const roleResource = new Resource('roles');
 export default {
   name: 'roles-list',
   components: {
-    [Table.name]: Table,
-    [TableColumn.name]: TableColumn,
     VueElementLoading,
     addRoleModal
   },
@@ -86,6 +91,7 @@ export default {
     return {
       activate: false,
       list: [],
+      role: {},
       currentPage: 1,
       show: false,
     };
@@ -94,11 +100,17 @@ export default {
     this.getRoles();
   },
   methods: {
+    setLoad(){
+      this.getRoles();
+      this.activate = false;
+    },
     deactivate(){
       this.activate = false;
     },
-    triggerModal(){
+    triggerModal(btn){
       this.activate = true;
+      this.role = {};
+      this.$root.$emit('bv::show::modal', "modal-4", btn);
     },
     getRoles(){
       this.show = true;
@@ -113,11 +125,17 @@ export default {
         this.show = false;
         console.log('DONE');
       })
+    },
+    editRole(btn, role){
+      this.role = role;
+      console.log('ROLE', this.role);
+      this.$root.$emit('bv::show::modal', "modal-4", btn);
+      this.activate = true;
     }
   }
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .text-secondary {
   color: #8392ab!important;
 }
@@ -133,7 +151,10 @@ export default {
   color: #adb5bd;
   margin: 0 -0.55rem;
 }
-
+.modal-backdrop
+{
+  opacity:0.5 !important;
+}
 a, a:hover {
   text-decoration: none;
 }

@@ -1,5 +1,5 @@
 <template>
-<div class="forum">
+<div>
   <Load :loaded="loaded"/>
   <!-- ##### Breadcrumb Area Start ##### -->
   <div class="breadcrumb-area">
@@ -40,7 +40,9 @@
                   <a href="#"><i class="fa fa-clock-o" aria-hidden="true"></i> {{ sujet.created_at }}</a>
                   <a href="#"><i class="fa fa-user" aria-hidden="true"></i> {{ sujet.user ? sujet.user.nom : '' }} {{ sujet.user ? sujet.user.prenom : '' }} </a>
                 </div>
-                <p>Integer luctus diam ac scerisque consectetur. Vimus ottawas euismod nec lacus sit amet. Aenean interdus midu vitae, uttah mattis augue fermentum. Donec auctor massa orci, quis condimentum odio eleifended. Orci varius natoque penatibuset magnis discount parturient montes, nascetur ridiculus mus. Ut felis lectus, sagittis in turpis sit amet, ornare interdu ligula. Proin sed dolor eu nulla fermentum fermentum. Suspendisse eget mollis diam. Nulla non mauris et eros accumsan imperdit sed ut turpis. Ut aliquam et sapien at convallis. Integer eu porttitor lacus. Curabitur id aliquam mauris.</p>
+                <p>
+                  {{sujet.contenu}}
+                </p>
                 </div>
             </div>
 
@@ -63,58 +65,47 @@
 
             <!-- Comment Area Start -->
             <div class="comment_area clearfix">
-              <h4 class="headline">2 Comments</h4>
+              <h4 class="headline">{{ sujet.commentaires ? sujet.commentaires.length : 0 }} Commentaire(s)</h4>
 
               <ol>
-                <li class="single_comment_area">
+                <li class="single_comment_area" v-for="comment in sujet.commentaires" :key="comment.id">
                   <div class="comment-wrapper d-flex">
                     <!-- Comment Meta -->
                     <div class="comment-author">
-                      <img src="store/img/bg-img/39.jpg" alt="">
+                      <img src="store/img/bg-img/23.jpg" alt="">
                     </div>
                     <!-- Comment Content -->
                     <div class="comment-content">
                       <div class="d-flex align-items-center justify-content-between">
-                        <h5>Maria Sharapova</h5>
-                        <span class="comment-date">02:20 PM,  20 Jun 2018</span>
+                        <h5>{{ comment.user ? comment.user.nom_utilisateur : '' }}</h5>
+                        <span class="comment-date">{{ comment.created_at }}</span>
                       </div>
-                      <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetu adipisci velit, sed quia non numquam eius modi</p>
-                      <a class="active" href="#">Reply</a>
+                      <p>
+                        {{comment.contenu}}
+                      </p>
                     </div>
                   </div>
                 </li>
+
               </ol>
             </div>
 
             <!-- Leave A Comment -->
             <div class="leave-comment-area clearfix">
               <div class="comment-form">
-                <h4 class="headline">Leave A Comment</h4>
+                <h4 class="headline">Commenter</h4>
 
                 <div class="contact-form-area">
-                  <!-- Comment Form -->
-                  <form action="#" method="post">
                     <div class="row">
-                      <div class="col-12 col-md-6">
+                      <div class="col-12">
                         <div class="form-group">
-                          <input type="text" class="form-control" id="contact-name" placeholder="Name">
-                        </div>
-                      </div>
-                      <div class="col-12 col-md-6">
-                        <div class="form-group">
-                          <input type="email" class="form-control" id="contact-email" placeholder="Email">
+                          <textarea class="form-control" v-model="new_comment.contenu" id="message" cols="30" rows="10" placeholder="Contenu"></textarea>
                         </div>
                       </div>
                       <div class="col-12">
-                        <div class="form-group">
-                          <textarea class="form-control" name="message" id="message" cols="30" rows="10" placeholder="Comment"></textarea>
-                        </div>
-                      </div>
-                      <div class="col-12">
-                        <button type="submit" class="btn alazea-btn">Post Comment</button>
+                        <button @click="saveComment" type="submit" class="btn alazea-btn">Poster</button>
                       </div>
                     </div>
-                  </form>
                 </div>
               </div>
             </div>
@@ -135,11 +126,13 @@
                     <img src="img/bg-img/29.jpg" alt="">
                   </div>
                   <div class="author-name">
-                    <h5>Alan Jackson</h5>
-                    <p>Editor</p>
+                    <h5>{{ sujet.user ? sujet.user.nom_utilisateur : '' }}</h5>
+                    <p>{{ $store.getters.roles[0] }}</p>
                   </div>
                 </div>
-                <p>I’m the editor for houseplants &amp; garden design articles on social, and I like to put each of those articles in the topic.</p>
+                <p>
+                  {{ sujet.user ? sujet.user.nom_entreprise : '' }}
+                </p>
                 <div class="social-info">
                   <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
                   <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
@@ -200,6 +193,7 @@ import Resource from "../../api/resource";
 import {Message} from "element-ui";
 import Load from "../../components/Loading/Load";
 const sujetResource = new Resource('sujets');
+const commentResource = new Resource('commentaires');
 export default {
   name: "Forum",
   components: {
@@ -209,8 +203,9 @@ export default {
     return {
       new_sujet: {},
       sujet: {},
-      loaded: false,
+      loaded: true,
       description: '',
+      new_comment: {},
     }
   },
   created() {
@@ -229,11 +224,25 @@ export default {
         this.sujetDetail();
       })
     },
+    saveComment(){
+      this.new_comment.sujet_id = this.sujet.id;
+      this.new_comment.user_id = this.$store.getters.userId;
+      commentResource.store(this.new_comment)
+      .then((response) => {
+        Message({
+          message: response.message,
+          type: "success",
+          duration: 5 * 1000
+        });
+        this.sujetDetail();
+      })
+    },
     sujetDetail(){
       this.loaded = true;
       sujetResource.get(this.$route.params.id)
       .then((response) => {
         this.sujet = response.data;
+        console.log('LE SUJET ', this.sujet);
         this.loaded = false;
       });
     }

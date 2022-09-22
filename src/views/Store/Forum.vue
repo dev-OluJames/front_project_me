@@ -20,7 +20,7 @@
         </div>
         <div class="col-4">
           <div style="margin-top: 20px">
-            <a href="#" class="btn alazea-btn" v-b-modal.modal-center >Ajouter</a>
+            <a href="#" class="btn alazea-btn" v-b-modal="'modal-center'" >Ajouter</a>
           </div>
         </div>
       </div>
@@ -46,7 +46,7 @@
                     <a href="#"><i class="fa fa-clock-o" aria-hidden="true"></i>{{ sujet.created_at}}</a>
                     <a href="#"><i class="fa fa-user" aria-hidden="true"></i> {{ sujet.user.nom }} {{ sujet.user.prenom }} </a>
                   </div>
-                  <p class="post-excerpt">{{ sujet.description }}</p>
+                  <p class="post-excerpt">{{ sujet.contenu.substring(0,100)+".." }}</p>
                 </div>
               </div>
             </div>
@@ -140,7 +140,7 @@
                   </div>
                   <div class="col-12">
                     <div class="form-group">
-                      <textarea class="form-control" v-model="description" id="message" cols="30" rows="10" placeholder="Description"></textarea>
+                      <textarea class="form-control" v-model="new_sujet.contenu" id="message" cols="30" rows="10" placeholder="Contenu"></textarea>
                     </div>
                   </div>
                   <div class="col-12">
@@ -190,6 +190,7 @@ export default {
           duration: 5 * 1000
         });
         this.sujetList();
+        this.$bvModal.hide('modal-center');
       })
     },
     sujetList(){
@@ -204,7 +205,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .h5, h5 {
   font-size: 1.25rem;
 }
@@ -225,6 +226,10 @@ export default {
   line-height: 42px;
   text-transform: uppercase;
   font-weight: 600;
+}
+.modal-backdrop
+{
+  opacity:0.5 !important;
 }
 .btn {
   display: inline-block;

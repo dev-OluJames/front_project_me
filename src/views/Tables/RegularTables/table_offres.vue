@@ -138,8 +138,8 @@
                   inactive-color="#ff4949"
                   :active-value="true"
                   :inactive-value="false"
-                  :value="row.is_active"
-                  @change="setActive(row,row.is_active, 'Offre')"
+                  :value="!row.brouillon"
+                  @change="setActive(row,row.brouillon, 'Offre')"
                 />
               </template>
           </el-table-column>
@@ -261,17 +261,17 @@
       async setActive(offre, active, type){
         let response;
         if (offre.prix_plateforme !== null){
-          response = await offreResource.get('toogle_active/' + offre.id);
+          response = await offreResource.get('toogle_brouillon/' + offre.id);
           if (response.success){
-            if (active) {
+            if (!active) {
               Message({
-                message: type + " cloturé ",
+                message: type + " desactivé ",
                 type: "success",
                 duration: 5 * 1000
               });
             } else {
               Message({
-                message: type + " activé ",
+                message: type + " ouvert ",
                 type: "success",
                 duration: 5 * 1000
               });
@@ -319,6 +319,7 @@
         this.show = true;
         const querry = {
           type_offre: this.type_offre_id,
+          brouillon: true,
         }
         offreResource.list(querry)
         .then((respone) => {

@@ -5,55 +5,55 @@
       <!-- Card stats -->
       <b-row>
         <b-col xl="3" md="6">
-          <stats-card title="Total traffic"
+          <stats-card title="Total Offres"
                       type="gradient-red"
-                      sub-title="350,897"
+                      :sub-title="dashboard.total_offre"
                       icon="ni ni-active-40"
                       class="mb-4">
 
             <template slot="footer">
-              <span class="text-success mr-2">3.48%</span>
-              <span class="text-nowrap">Since last month</span>
+              <span :class="offre_progress > 20 ? 'text-success mr-2' : 'text-danger mr-2'">{{ offre_progress }}%</span>
+              <span class="text-nowrap">Depuis le mois Passé</span>
             </template>
           </stats-card>
         </b-col>
         <b-col xl="3" md="6">
-          <stats-card title="Total traffic"
+          <stats-card title="Total Demandes"
                       type="gradient-orange"
-                      sub-title="2,356"
+                      :sub-title="dashboard.total_demande"
                       icon="ni ni-chart-pie-35"
                       class="mb-4">
 
             <template slot="footer">
-              <span class="text-success mr-2">12.18%</span>
-              <span class="text-nowrap">Since last month</span>
+              <span :class="demande_progress > 20 ? 'text-success mr-2' : 'text-danger mr-2'">{{ demande_progress }}%</span>
+              <span class="text-nowrap">Depuis le mois passé</span>
             </template>
           </stats-card>
         </b-col>
         <b-col xl="3" md="6">
-          <stats-card title="Sales"
+          <stats-card title="Utilisateurs"
                       type="gradient-green"
-                      sub-title="924"
+                      :sub-title="dashboard.nbre_user_par_type_user[0].nbre_user + dashboard.nbre_user_par_type_user[1].nbre_user"
                       icon="ni ni-money-coins"
                       class="mb-4">
 
             <template slot="footer">
-              <span class="text-danger mr-2">5.72%</span>
-              <span class="text-nowrap">Since last month</span>
+<!--              <span class="text-danger mr-2">5.72%</span>-->
+              <span class="text-nowrap">Admins: {{dashboard.nbre_user_par_type_user[0].nbre_user}} | Utilisateurs: {{ dashboard.nbre_user_par_type_user[1].nbre_user }}</span>
             </template>
           </stats-card>
 
         </b-col>
         <b-col xl="3" md="6">
-          <stats-card title="Performance"
+          <stats-card title="Utilisateurs/Packs"
                       type="gradient-info"
-                      sub-title="49,65%"
+                      :sub-title="0"
                       icon="ni ni-chart-bar-32"
                       class="mb-4">
 
             <template slot="footer">
-              <span class="text-success mr-2">54.8%</span>
-              <span class="text-nowrap">Since last month</span>
+              <span class="text-success mr-2">0%</span>
+              <span class="text-nowrap">En cours</span>
             </template>
           </stats-card>
         </b-col>
@@ -68,7 +68,7 @@
             <b-row align-v="center" slot="header">
               <b-col>
                 <h6 class="text-light text-uppercase ls-1 mb-1">Overview</h6>
-                <h5 class="h3 text-white mb-0">Sales value</h5>
+                <h5 class="h3 text-white mb-0">Offres / Demandes</h5>
               </b-col>
               <b-col>
                 <b-nav class="nav-pills justify-content-end">
@@ -77,7 +77,7 @@
                        :active="bigLineChart.activeIndex === 0"
                        link-classes="py-2 px-3"
                        @click.prevent="initBigChart(0)">
-                      <span class="d-none d-md-block">Month</span>
+                      <span class="d-none d-md-block">Offres</span>
                       <span class="d-md-none">M</span>
                   </b-nav-item>
                   <b-nav-item
@@ -85,7 +85,7 @@
                     :active="bigLineChart.activeIndex === 1"
                     @click.prevent="initBigChart(1)"
                   >
-                    <span class="d-none d-md-block">Week</span>
+                    <span class="d-none d-md-block">Demandes</span>
                     <span class="d-md-none">W</span>
                   </b-nav-item>
                 </b-nav>
@@ -101,7 +101,7 @@
           </card>
         </b-col>
 
-        <b-col xl="4" class="mb-5 mb-xl-0">
+        <!-- b-col xl="4" class="mb-5 mb-xl-0">
           <card header-classes="bg-transparent">
             <b-row align-v="center" slot="header">
               <b-col>
@@ -117,19 +117,19 @@
             >
             </bar-chart>
           </card>
-        </b-col>
+        </b-col -->
       </b-row>
       <!-- End charts-->
 
       <!--Tables-->
-      <b-row class="mt-5">
+      <!-- b-row class="mt-5">
         <b-col xl="8" class="mb-5 mb-xl-0">
           <page-visits-table></page-visits-table>
         </b-col>
         <b-col xl="4" class="mb-5 mb-xl-0">
           <social-traffic-table></social-traffic-table>
         </b-col>
-      </b-row>
+      </b-row -->
       <!--End tables-->
     </b-container>
 
@@ -148,6 +148,9 @@
   // Tables
   import SocialTrafficTable from './Dashboard/SocialTrafficTable';
   import PageVisitsTable from './Dashboard/PageVisitsTable';
+  import Resource from "../api/resource";
+
+  const dasshBoardResource = new Resource('dashboard');
 
   export default {
     components: {
@@ -160,6 +163,9 @@
     },
     data() {
       return {
+        months: [
+          "janvier","fevrier","mars","avril","mai","juin","jullet","aout","septembre","octobre","novembre","decembre"
+        ],
         bigLineChart: {
           allData: [
             [0, 20, 10, 30, 15, 40, 20, 60, 60],
@@ -177,6 +183,9 @@
           },
           extraOptions: chartConfigs.blueChartOptions,
         },
+        dashboard: {},
+        offre_progress: null,
+        demande_progress: null,
         redBarChart: {
           chartData: {
             labels: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
@@ -188,6 +197,9 @@
           extraOptions: chartConfigs.blueChartOptions
         }
       };
+    },
+    created() {
+      this.getDashBoard();
     },
     methods: {
       initBigChart(index) {
@@ -202,11 +214,27 @@
         };
         this.bigLineChart.chartData = chartData;
         this.bigLineChart.activeIndex = index;
-      }
+      },
+      getDashBoard(){
+        dasshBoardResource.list()
+        .then((response) => {
+          this.dashboard = response.data;
+          const d = new Date();
+          const m = d.getMonth();
+          const month = this.months[m];
+          const prev_month = this.months[m-1];
+          const m_data = this.dashboard.agiots[month];
+          const last_m = this.dashboard.agiots[prev_month];
+          console.log('THIS MONTH', m_data);
+          this.offre_progress = Math.round((m_data.total_offre / (this.dashboard.total_offre - m_data.total_offre))*100);
+          this.demande_progress = Math.round((m_data.total_demande / (this.dashboard.total_demande - m_data.total_demande))*100);
+          console.log('PROGRESS ', this.offre_progress);
+        })
+      },
     },
     mounted() {
       this.initBigChart(0);
-    }
+    },
   };
 </script>
 <style>

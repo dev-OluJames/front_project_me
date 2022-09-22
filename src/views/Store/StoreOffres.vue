@@ -143,7 +143,7 @@
                     <!-- Product Info -->
                     <div class="product-info mt-15 text-center">
                       <router-link :to="'/store/offres/detail/'+offre.id">
-                        <p>{{ offre.variete_produit.nom }}</p>
+                        <h6>{{ offre.variete_produit.nom }}</h6>
                       </router-link>
                       <!--                      <h6>{{ offre.prix_plateforme }} FCFA</h6>-->
                     </div>

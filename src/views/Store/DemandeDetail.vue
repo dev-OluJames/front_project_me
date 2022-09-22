@@ -154,7 +154,7 @@
                   <p><span>VILLAGE:</span> <span>{{ demande.village ? demande.village.libelle : ''}}</span></p>
                   <p><span>QTTE:</span> <span>{{ demande.quantite }} {{ demande.mesure }}</span></p>
                   <p><span>DATE DISPONIBLE:</span> <span>{{ demande.date_disponibilite }}</span></p>
-                  <p><span>PAR:</span> <span>{{ demande.user.nom_utilisateur }}</span></p>
+                  <p><span>PAR:</span> <span>{{ demande.user ? demande.user.nom_utilisateur : '' }}</span></p>
                   <!-- p><span>SKU:</span> <span>CT201807</span></p>
                   <p><span>Category:</span> <span>En cour..</span></p>
                   <p><span>Tags:</span> <span>En cour..</span></p-->
@@ -318,120 +318,6 @@
       </div>
     </section>
     <!-- ##### Single Product Details Area End ##### -->
-
-    <!-- ##### Related Product Area Start ##### -->
-    <div class="related-products-area">
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <!-- Section Heading -->
-            <div class="section-heading text-center">
-              <h2>Produits Similaires</h2>
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
-
-          <!-- Single Product Area -->
-          <div class="col-12 col-sm-6 col-lg-3">
-            <div class="single-product-area mb-100">
-              <!-- Product Image -->
-              <div class="product-img">
-                <a href="shop-details.html"><img src="store/img/bg-img/40.png" alt=""></a>
-                <!-- Product Tag -->
-                <div class="product-tag">
-                  <a href="#">Hot</a>
-                </div>
-                <div class="product-meta d-flex">
-                  <a href="#" class="wishlist-btn"><i class="icon_heart_alt"></i></a>
-                  <a href="cart.html" class="add-to-cart-btn">Add to cart</a>
-                  <a href="#" class="compare-btn"><i class="arrow_left-right_alt"></i></a>
-                </div>
-              </div>
-              <!-- Product Info -->
-              <div class="product-info mt-15 text-center">
-                <a href="shop-details.html">
-                  <p>Cactus Flower</p>
-                </a>
-                <h6>$10.99</h6>
-              </div>
-            </div>
-          </div>
-
-          <!-- Single Product Area -->
-          <div class="col-12 col-sm-6 col-lg-3">
-            <div class="single-product-area mb-100">
-              <!-- Product Image -->
-              <div class="product-img">
-                <a href="shop-details.html"><img src="store/img/bg-img/41.png" alt=""></a>
-                <div class="product-meta d-flex">
-                  <a href="#" class="wishlist-btn"><i class="icon_heart_alt"></i></a>
-                  <a href="cart.html" class="add-to-cart-btn">Add to cart</a>
-                  <a href="#" class="compare-btn"><i class="arrow_left-right_alt"></i></a>
-                </div>
-              </div>
-              <!-- Product Info -->
-              <div class="product-info mt-15 text-center">
-                <a href="shop-details.html">
-                  <p>Cactus Flower</p>
-                </a>
-                <h6>$10.99</h6>
-              </div>
-            </div>
-          </div>
-
-          <!-- Single Product Area -->
-          <div class="col-12 col-sm-6 col-lg-3">
-            <div class="single-product-area mb-100">
-              <!-- Product Image -->
-              <div class="product-img">
-                <a href="shop-details.html"><img src="store/img/bg-img/42.png" alt=""></a>
-                <div class="product-meta d-flex">
-                  <a href="#" class="wishlist-btn"><i class="icon_heart_alt"></i></a>
-                  <a href="cart.html" class="add-to-cart-btn">Add to cart</a>
-                  <a href="#" class="compare-btn"><i class="arrow_left-right_alt"></i></a>
-                </div>
-              </div>
-              <!-- Product Info -->
-              <div class="product-info mt-15 text-center">
-                <a href="shop-details.html">
-                  <p>Cactus Flower</p>
-                </a>
-                <h6>$10.99</h6>
-              </div>
-            </div>
-          </div>
-
-          <!-- Single Product Area -->
-          <div class="col-12 col-sm-6 col-lg-3">
-            <div class="single-product-area mb-100">
-              <!-- Product Image -->
-              <div class="product-img">
-                <a href="shop-details.html"><img src="store/img/bg-img/43.png" alt=""></a>
-                <!-- Product Tag -->
-                <div class="product-tag sale-tag">
-                  <a href="#">Hot</a>
-                </div>
-                <div class="product-meta d-flex">
-                  <a href="#" class="wishlist-btn"><i class="icon_heart_alt"></i></a>
-                  <a href="cart.html" class="add-to-cart-btn">Add to cart</a>
-                  <a href="#" class="compare-btn"><i class="arrow_left-right_alt"></i></a>
-                </div>
-              </div>
-              <!-- Product Info -->
-              <div class="product-info mt-15 text-center">
-                <a href="shop-details.html">
-                  <p>Cactus Flower</p>
-                </a>
-                <h6>$10.99</h6>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 

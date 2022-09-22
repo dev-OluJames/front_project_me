@@ -112,6 +112,11 @@ const constantRoutes = [
         component: () => import(/* webpackChunkName: "demo" */ '../views/Menu/TypeOffre.vue')
       },
       {
+        path: 'mesures',
+        name: 'mesures',
+        component: () => import(/* webpackChunkName: "demo" */ '../views/Menu/Mesure.vue')
+      },
+      {
         path: 'produits',
         name: 'produits',
         component: () => import(/* webpackChunkName: "demo" */ '../views/Produits/Produits')

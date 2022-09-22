@@ -23,7 +23,7 @@
           <b-row>
             <b-col :cols="6">
               <h6>Produit</h6>
-              <el-select v-if="action === 'ajout'" v-model="produit_id" @click="getproduits" @change="getVarieteList" filterable
+              <el-select v-if="action === 'ajout'" v-model="produit_id" @click="getproduits" @change="getProduitVarietes" filterable
                          placeholder="Produit" style="width: 100%">
                 <el-option value>
                   <base-button type="primary" icon style="width: 100%;border-radius: 0px" @click="createProduit=!createProduit">
@@ -36,7 +36,7 @@
                            :value="option.id">
                 </el-option>
               </el-select>
-              <el-select v-else v-model="produit_id" @click="getproduits" @change="getVarieteList" filterable
+              <el-select v-else v-model="produit_id" @click="getproduits" @change="getProduitVarietes" filterable
                          placeholder="Produit" style="width: 100%">
                 <el-option value>
                   <base-button type="primary" icon style="width: 100%;border-radius: 0px" @click="createProduit=!createProduit">
@@ -151,7 +151,20 @@
             </b-col>
             <b-col style="margin-bottom: 12px">
               <h6>Mesure</h6>
-              <input type="texte" class="form-control" id="mesure" placeholder="Mesure " rows="2" v-model="donnees.mesure">
+              <el-select v-model="donnees.mesure" @click="getMesures" filterable
+                         placeholder="Mesure" style="width: 100%">
+                <!--el-option value>
+                  <base-button type="primary" style="width: 100%;border-radius: 0px" @click="createTdemande=!createTdemande">
+                    Ajouter
+                  </base-button>
+                </el-option-->
+                <el-option v-for="(option, index) in mesures"
+                           :key="index"
+                           :label="option.abreviation"
+                           :value="option.abreviation">
+                </el-option>
+              </el-select>
+<!--              <input type="texte" class="form-control" id="mesure" placeholder="Mesure " rows="2" v-model="donnees.mesure">-->
             </b-col>
           </b-row>
           <b-row v-if="type === 'offres'">
@@ -358,6 +371,7 @@ export default {
         ["image", "code-block"]
       ],
       donnees: {},
+      mesures: [],
       produits: [],
       show: false,
       showVariety: false,
@@ -410,6 +424,7 @@ export default {
       this.getVarieteList();
       this.getTypeOffres();
       this.getTypeDemandes();
+      this.getMesures();
     }
   },
   methods: {
@@ -462,6 +477,11 @@ export default {
         .then((response) =>{
           console.log(response);
         })
+    },
+    async getMesures(){
+      const { data } = await new Resource('mesures').list();
+      this.mesures = data;
+      console.log('THIS MESURES', this.mesures);
     },
     handleOk(bvModalEvent) {
       if (this.action === 'ajout') {
@@ -673,7 +693,13 @@ export default {
       const query = {
         produit_id: this.produit_id,
       };
+
       const {data} = await varieteResource.list(query);
+      // const {data} = await produitResource.get(this.produit_id+'/varietes');
+      this.variete_list = data;
+    },
+    async getProduitVarietes(){
+      const {data} = await produitResource.get(this.produit_id+'/varietes');
       this.variete_list = data;
     },
     async getTypeDemandes(){

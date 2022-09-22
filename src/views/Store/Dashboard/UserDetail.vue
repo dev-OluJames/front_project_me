@@ -673,7 +673,7 @@ export default {
       console.log('USER OFFRES', this.offreReponses);
     },
     async getDemandeReponses(){
-      this.query.type_offre = 'demande_reponse';
+      this.query.type_demande = 'demande_reponse';
       const { data } = await demandeResource.list(this.query);
       this.demandeReponses = data;
       console.log('USER DEMANDES REPONSE', this.demandeReponses);

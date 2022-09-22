@@ -69,6 +69,12 @@
                     },
                   },
                   { link : {
+                    name: 'Mesure',
+                    path: '/menu/mesures',
+                    icon: 'ni ni-shop text-green'
+                    },
+                  },
+                  { link : {
                     name: 'Type Demande',
                     path: '/menu/typedemande',
                     icon: 'ni ni-circle-08 text-blue',

@@ -40,7 +40,7 @@
             <template slot="footer">
 <!--              <span class="text-danger mr-2">5.72%</span>-->
               <span class="text-nowrap" v-for="(user,index) in dashboard.nbre_user_par_type_user" :key="index">
-                {{ user.type_user }} : {{user.nbre_user}} |
+                {{ user.type_user[0].toUpperCase() + user.type_user.slice(1) }} : {{user.nbre_user}} |
               </span>
             </template>
           </stats-card>

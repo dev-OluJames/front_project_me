@@ -7,7 +7,7 @@
         <b-col xl="3" md="6">
           <stats-card title="Total Offres"
                       type="gradient-red"
-                      :sub-title="dashboard.total_offre"
+                      :sub-title="dashboard.total_offre+''"
                       icon="ni ni-active-40"
                       class="mb-4">
 
@@ -20,7 +20,7 @@
         <b-col xl="3" md="6">
           <stats-card title="Total Demandes"
                       type="gradient-orange"
-                      :sub-title="dashboard.total_demande"
+                      :sub-title="dashboard.total_demande+''"
                       icon="ni ni-chart-pie-35"
                       class="mb-4">
 
@@ -33,7 +33,7 @@
         <b-col xl="3" md="6">
           <stats-card title="Utilisateurs"
                       type="gradient-green"
-                      :sub-title="dashboard.nbre_user_par_type_user[0].nbre_user + dashboard.nbre_user_par_type_user[1].nbre_user"
+                      :sub-title="utilisateur_total+''"
                       icon="ni ni-money-coins"
                       class="mb-4">
 
@@ -49,7 +49,7 @@
         <b-col xl="3" md="6">
           <stats-card title="Utilisateurs/Packs"
                       type="gradient-info"
-                      :sub-title="0"
+                      :sub-title="'0'"
                       icon="ni ni-chart-bar-32"
                       class="mb-4">
 
@@ -188,6 +188,7 @@
         dashboard: {},
         offre_progress: null,
         demande_progress: null,
+        utilisateur_total: null,
         redBarChart: {
           chartData: {
             labels: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
@@ -230,6 +231,11 @@
           console.log('THIS MONTH', m_data);
           this.offre_progress = Math.round((m_data.total_offre / (this.dashboard.total_offre - m_data.total_offre))*100);
           this.demande_progress = Math.round((m_data.total_demande / (this.dashboard.total_demande - m_data.total_demande))*100);
+          let utilisateur_total = 0;
+          response.data.nbre_user_par_type_user.forEach((user) => {
+            utilisateur_total = utilisateur_total + user.nbre_user;
+          })
+          this.utilisateur_total = utilisateur_total;
           console.log('PROGRESS ', this.offre_progress);
         })
       },

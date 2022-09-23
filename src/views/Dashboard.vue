@@ -80,7 +80,7 @@
                        link-classes="py-2 px-3"
                        @click.prevent="initBigChart(0)">
                       <span class="d-none d-md-block">Offres</span>
-                      <span class="d-md-none">M</span>
+                      <span class="d-md-none">O</span>
                   </b-nav-item>
                   <b-nav-item
                     link-classes="py-2 px-3"
@@ -88,7 +88,7 @@
                     @click.prevent="initBigChart(1)"
                   >
                     <span class="d-none d-md-block">Demandes</span>
-                    <span class="d-md-none">W</span>
+                    <span class="d-md-none">D</span>
                   </b-nav-item>
                 </b-nav>
               </b-col>
@@ -103,7 +103,7 @@
           </card>
         </b-col>
 
-        <!-- b-col xl="4" class="mb-5 mb-xl-0">
+        <b-col xl="4" class="mb-5 mb-xl-0">
           <card header-classes="bg-transparent">
             <b-row align-v="center" slot="header">
               <b-col>
@@ -119,7 +119,7 @@
             >
             </bar-chart>
           </card>
-        </b-col -->
+        </b-col>
       </b-row>
       <!-- End charts-->
 
@@ -138,21 +138,21 @@
   </div>
 </template>
 <script>
-  // Charts
-  import * as chartConfigs from '@/components/Charts/config';
-  import LineChart from '@/components/Charts/LineChart';
-  import BarChart from '@/components/Charts/BarChart';
+// Charts
+import * as chartConfigs from '@/components/Charts/config';
+import LineChart from '@/components/Charts/LineChart';
+import BarChart from '@/components/Charts/BarChart';
 
-  // Components
-  import BaseProgress from '@/components/BaseProgress';
-  import StatsCard from '@/components/Cards/StatsCard';
+// Components
+import BaseProgress from '@/components/BaseProgress';
+import StatsCard from '@/components/Cards/StatsCard';
 
-  // Tables
-  import SocialTrafficTable from './Dashboard/SocialTrafficTable';
-  import PageVisitsTable from './Dashboard/PageVisitsTable';
-  import Resource from "../api/resource";
+// Tables
+import SocialTrafficTable from './Dashboard/SocialTrafficTable';
+import PageVisitsTable from './Dashboard/PageVisitsTable';
+import Resource from "../api/resource";
 
-  const dasshBoardResource = new Resource('dashboard');
+const dasshBoardResource = new Resource('dashboard');
 
   export default {
     components: {
@@ -166,22 +166,21 @@
     data() {
       return {
         months: [
-          "janvier","fevrier","mars","avril","mai","juin","jullet","aout","septembre","octobre","novembre","decembre"
+          "janvier","fevrier","mars","avril","mai","juin","juillet","aout","septembre","octobre","novembre","decembre"
         ],
         bigLineChart: {
-          allData: [
-            [0, 20, 10, 30, 15, 40, 20, 60, 60],
-            [0, 20, 5, 25, 10, 30, 15, 40, 40]
-          ],
+          allData: [],
           activeIndex: 0,
           chartData: {
             datasets: [
               {
-                label: 'Performance',
-                data: [0, 20, 10, 30, 15, 40, 20, 60, 60],
+                label: 'Total',
+                data: [],
               }
             ],
-            labels: ['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            labels: [
+              "jan","fev","mars","avr","mai","juin","juil","aout","sept","oct","nov","dec"
+            ],
           },
           extraOptions: chartConfigs.blueChartOptions,
         },
@@ -206,21 +205,23 @@
     },
     methods: {
       initBigChart(index) {
-        let chartData = {
+        this.bigLineChart.chartData = {
           datasets: [
             {
-              label: 'Performance',
+              label: 'Total',
               data: this.bigLineChart.allData[index]
             }
           ],
-          labels: ['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+          labels: [
+            "jan","fev","mars","avr","mai","juin","juil","aout","sept","oct","nov","dec"
+          ],
         };
-        this.bigLineChart.chartData = chartData;
         this.bigLineChart.activeIndex = index;
       },
       getDashBoard(){
         dasshBoardResource.list()
         .then((response) => {
+
           this.dashboard = response.data;
           const d = new Date();
           const m = d.getMonth();
@@ -229,6 +230,7 @@
           const m_data = this.dashboard.agiots[month];
           const last_m = this.dashboard.agiots[prev_month];
           console.log('THIS MONTH', m_data);
+
           this.offre_progress = Math.round((m_data.total_offre / (this.dashboard.total_offre - m_data.total_offre))*100);
           this.demande_progress = Math.round((m_data.total_demande / (this.dashboard.total_demande - m_data.total_demande))*100);
           let utilisateur_total = 0;
@@ -237,6 +239,17 @@
           })
           this.utilisateur_total = utilisateur_total;
           console.log('PROGRESS ', this.offre_progress);
+
+          let offre_values = [];
+          let demande_values = [];
+          this.months.forEach((month)=> {
+            offre_values.push(this.dashboard.agiots[month].total_offre);
+            demande_values.push(this.dashboard.agiots[month].total_demande);
+          });
+          console.log('VALUES ', offre_values, demande_values);
+          this.bigLineChart.allData.push(offre_values);
+          this.bigLineChart.allData.push(demande_values);
+          this.initBigChart(0);
         })
       },
     },

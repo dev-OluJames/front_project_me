@@ -106,9 +106,30 @@
         <b-col xl="4" class="mb-5 mb-xl-0">
           <card header-classes="bg-transparent">
             <b-row align-v="center" slot="header">
-              <b-col>
-                <h6 class="text-uppercase text-muted ls-1 mb-1">Performance</h6>
-                <h5 class="h3 mb-0">Total orders</h5>
+              <b-col cols="4">
+                <h6 class="text-uppercase text-muted ls-1 mb-1">Offres/
+                  demandes</h6>
+                <h5 class="h3 mb-0">Total Cloturées</h5>
+              </b-col>
+              <b-col cols="8">
+                <b-nav class="nav-pills justify-content-end">
+                  <b-nav-item
+                    class="mr-2 mr-md-0"
+                    :active="offre_clot"
+                    link-classes="py-2 px-3"
+                    @click.prevent="initBarChart()">
+                    <span class="d-none d-md-block">Offres</span>
+                    <span class="d-md-none">O</span>
+                  </b-nav-item>
+                  <b-nav-item
+                    :active="!offre_clot"
+                    link-classes="py-2 px-3"
+                    @click.prevent="initBarChart(false)"
+                  >
+                    <span class="d-none d-md-block">Demandes</span>
+                    <span class="d-md-none">D</span>
+                  </b-nav-item>
+                </b-nav>
               </b-col>
             </b-row>
 
@@ -185,16 +206,14 @@ const dasshBoardResource = new Resource('dashboard');
           extraOptions: chartConfigs.blueChartOptions,
         },
         dashboard: {},
+        offre_clot: true,
         offre_progress: null,
         demande_progress: null,
         utilisateur_total: null,
         redBarChart: {
           chartData: {
-            labels: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-            datasets: [{
-              label: 'Sales',
-              data: [25, 20, 30, 22, 17, 29]
-            }]
+            labels: ["jan","fev","mars","avr","mai","juin","juil","aout","sept","oct","nov","dec"],
+            datasets: []
           },
           extraOptions: chartConfigs.blueChartOptions
         }
@@ -218,6 +237,28 @@ const dasshBoardResource = new Resource('dashboard');
         };
         this.bigLineChart.activeIndex = index;
       },
+      initBarChart(offre=true){
+        let offre_clot = [];
+        let demande_clot = [];
+        this.redBarChart.chartData.datasets = [];
+        this.months.forEach((month)=> {
+          offre_clot.push(this.dashboard.agiots[month].offre_cloturee);
+          demande_clot.push(this.dashboard.agiots[month].demande_cloturee);
+        });
+        if (offre){
+          this.redBarChart.chartData.datasets.push({
+            label: 'Offre',
+            data: offre_clot
+          });
+        } else {
+          this.redBarChart.chartData.datasets.push({
+            label: 'Demande',
+            data: demande_clot
+          });
+        }
+        console.log('REDCHART', this.redBarChart);
+        this.offre_clot = offre;
+      },
       getDashBoard(){
         dasshBoardResource.list()
         .then((response) => {
@@ -239,22 +280,26 @@ const dasshBoardResource = new Resource('dashboard');
           })
           this.utilisateur_total = utilisateur_total;
           console.log('PROGRESS ', this.offre_progress);
-
+          console.log('VALUES ', this.redBarChart);
+        })
+        .finally(()=>{
           let offre_values = [];
           let demande_values = [];
           this.months.forEach((month)=> {
             offre_values.push(this.dashboard.agiots[month].total_offre);
             demande_values.push(this.dashboard.agiots[month].total_demande);
           });
-          console.log('VALUES ', offre_values, demande_values);
           this.bigLineChart.allData.push(offre_values);
           this.bigLineChart.allData.push(demande_values);
           this.initBigChart(0);
+          this.initBarChart();
         })
       },
+
     },
     mounted() {
       this.initBigChart(0);
+      this.initBarChart();
     },
   };
 </script>

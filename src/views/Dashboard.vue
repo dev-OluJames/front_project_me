@@ -5,27 +5,27 @@
       <!-- Card stats -->
       <b-row>
         <b-col xl="3" md="6">
-          <stats-card title="Total Offres"
+          <stats-card title="Offres"
                       type="gradient-red"
                       :sub-title="dashboard.total_offre+''"
                       icon="ni ni-active-40"
                       class="mb-4">
 
             <template slot="footer">
-              <span :class="offre_progress > 20 ? 'text-success mr-2' : 'text-danger mr-2'">{{ offre_progress }}%</span>
+              <span :class="offre_progress > 20 ? 'text-success mr-2' : 'text-danger mr-2'">{{ offre_progress ? offre_progress : 0 }}%</span>
               <span class="text-nowrap">Depuis le mois Passé</span>
             </template>
           </stats-card>
         </b-col>
         <b-col xl="3" md="6">
-          <stats-card title="Total Demandes"
+          <stats-card title="Demandes"
                       type="gradient-orange"
                       :sub-title="dashboard.total_demande+''"
                       icon="ni ni-chart-pie-35"
                       class="mb-4">
 
             <template slot="footer">
-              <span :class="demande_progress > 20 ? 'text-success mr-2' : 'text-danger mr-2'">{{ demande_progress }}%</span>
+              <span :class="demande_progress > 20 ? 'text-success mr-2' : 'text-danger mr-2'">{{ demande_progress ? demande_progress : 0 }}%</span>
               <span class="text-nowrap">Depuis le mois passé</span>
             </template>
           </stats-card>
@@ -40,14 +40,14 @@
             <template slot="footer">
 <!--              <span class="text-danger mr-2">5.72%</span>-->
               <span class="text-nowrap" v-for="(user,index) in dashboard.nbre_user_par_type_user" :key="index">
-                {{ user.type_user[0].toUpperCase() + user.type_user.slice(1) }} : {{user.nbre_user}} |
+                {{ user.type_user[0].toUpperCase() + user.type_user.slice(1,4) }} : {{user.nbre_user}} |
               </span>
             </template>
           </stats-card>
 
         </b-col>
         <b-col xl="3" md="6">
-          <stats-card title="Utilisateurs/Packs"
+          <stats-card title="Users/Packs"
                       type="gradient-info"
                       :sub-title="'0'"
                       icon="ni ni-chart-bar-32"
@@ -109,7 +109,7 @@
               <b-col cols="4">
                 <h6 class="text-uppercase text-muted ls-1 mb-1">Offres/
                   demandes</h6>
-                <h5 class="h3 mb-0">Total Cloturées</h5>
+                <h5 class="h3 mb-0">Cloturés</h5>
               </b-col>
               <b-col cols="8">
                 <b-nav class="nav-pills justify-content-end">

@@ -66,7 +66,24 @@
               <router-link to="/dashboard" class="text-light"><small>Forgot password?</small></router-link>
             </b-col>
             <b-col cols="6" class="text-right">
-              <router-link to="/register" class="text-light"><small>Create new account</small></router-link>
+              <a href="#"><p class="text-white" v-b-modal.modal-center>Créer un Compte</p></a>
+              <b-modal id="modal-center" style="color: #fbfbfb;" body-bg-variant="dark" footer-bg-variant="dark" footer-border-variant="primary" header-bg-variant="dark" hide-footer centered title="Quel Profile vous correspond ?">
+                <b-row>
+                  <b-col class="text-center">
+                    <b-img src="img/theme/profile2.png" rounded="circle" alt="Circle image"></b-img>
+                    <router-link :to="{ name: 'register', params: { type: 'utilisateur' }}" class="text-light"><small>Utilisateur</small></router-link>
+                  </b-col>
+                  <b-col class="text-center">
+                    <b-img src="img/theme/img.png" rounded="circle" alt="Circle image"></b-img>
+                    <router-link :to="{ name: 'register', params: { type: 'aggregateur' }}" class="text-light"><small>Aggregateur</small></router-link>
+                  </b-col>
+                  <b-col class="text-center">
+                    <b-img src="img/theme/agriculteur.png" rounded="circle" alt="Circle image"></b-img>
+                    <router-link :to="{ name: 'register', params: { type: 'agriculteur' }}" class="text-light"><small>Agriculteur</small></router-link>
+                  </b-col>
+                </b-row>
+              </b-modal>
+<!--              <router-link to="/register" class="text-light"><small>Create new account</small></router-link>-->
             </b-col>
           </b-row>
         </b-col>
@@ -123,6 +140,9 @@ import { csrf } from '../../api/auth';
         immediate: true,
       },
     },
+    created() {
+      localStorage.removeItem('type_user');
+    },
     methods: {
       onSubmit() {
         this.loading = true;
@@ -148,7 +168,7 @@ import { csrf } from '../../api/auth';
     }
   };
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .page-header {
   padding: 0;
   position: relative;
@@ -169,5 +189,24 @@ import { csrf } from '../../api/auth';
  }
 .pb-lg-8, .py-lg-8 {
   padding-bottom: 5rem !important;
+}
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+  margin-bottom: 0.5rem;
+  font-family: inherit;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #ffffff;
+}
+.close {
+  float: right;
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1;
+  color: rgb(247 245 245 / 60%);
+  text-shadow: none;
+  opacity: 0.5;
+}
+.bg-dark {
+  background-color: #294158 !important;
 }
 </style>

@@ -92,7 +92,7 @@
                              prop="completion"
                              min-width="230px">
               <template v-slot="{row}">
-                <span v-if="row.prix_plateforme !== null" class="status">{{row.prix_plateforme}}</span>
+                <span v-if="row.prix_plateforme !== null && row.prix_plateforme !== 0" class="status">{{row.prix_plateforme}}</span>
                 <span v-else class="status">
                   <span  v-if="!row.edit">
                   <el-tag type="danger" @click="row.edit = true">Ajouter</el-tag>
@@ -260,7 +260,7 @@
       },
       async setActive(offre, active, type){
         let response;
-        if (offre.prix_plateforme !== null){
+        if (offre.prix_plateforme !== null && offre.prix_plateforme !== 0){
           response = await offreResource.get('toogle_brouillon/' + offre.id);
           if (response.success){
             if (!active) {

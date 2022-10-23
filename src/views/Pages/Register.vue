@@ -8,7 +8,7 @@
         <div class="header-body text-center mb-7">
           <b-row class="justify-content-center">
             <b-col xl="5" lg="6" md="8" class="px-5">
-              <h1 class="text-white">Créer un compte</h1>
+              <h1 class="text-white">Créer un compte  {{ type_user }}</h1>
               <p class="text-lead text-white">Veuillez renseigner vos informations utiles à la création d'un compte</p>
             </b-col>
           </b-row>
@@ -29,7 +29,7 @@
           <b-card no-body class="bg-secondary border-0">
             <b-card-body class="px-lg-5 py-lg-5">
               <div class="text-center text-muted mb-4">
-                <small>Créer un Compte</small>
+                <small>Renseignez toutes les informations</small>
               </div>
               <validation-observer v-slot="{handleSubmit}" ref="formValidator">
                 <b-form role="form" @submit.prevent="handleSubmit(onSubmit)">
@@ -78,6 +78,43 @@
                               name="Confirmer"
                               :rules="{required: true, min: 6}"
                               v-model="password_confirm">
+                  </base-input>
+
+                  <div v-if="type_user === 'agriculteur' || type_user === 'aggregateur'" style="width: 100%">
+                    <label class="form-control-label">
+                      Village
+                    </label> <br/>
+                    <el-select class="mb-3" v-model="model.village_id" filterable placeholder="Select">
+                      <el-option
+                        v-for="(item, index) in villages"
+                        :key="index"
+                        :label="item.libelle"
+                        :value="item.id">
+                      </el-option>
+                    </el-select>
+                  </div>
+
+                  <b-row v-if="type_user === 'agriculteur'">
+                    <b-col sm="4">
+                      <base-radio name="individuelle" class="mb-3" v-model="model.cooperative">
+                        Individuelle
+                      </base-radio>
+                    </b-col>
+                    <b-col sm="4">
+                      <base-radio name="cooperative" class="mb-3" v-model="model.cooperative">
+                        Cooperative
+                      </base-radio>
+                    </b-col>
+                  </b-row>
+
+                  <base-input alternative
+                              v-if="type_user === 'aggregateur'"
+                              class="mb-3"
+                              prepend-icon="ni ni-building"
+                              placeholder="Magasin"
+                              name="magasin"
+                              :rules="{required: true}"
+                              v-model="model.magasin">
                   </base-input>
 
                   <base-input alternative
@@ -162,10 +199,13 @@ import Resource from "../../api/resource";
 import {Message} from "element-ui";
 import {isLogged} from "../../utils/auth";
 const userRessource = new Resource('users');
+const villageResource = new Resource('villages');
+const typeUserResource = new Resource('typeUsers');
   export default {
     name: 'register',
     data() {
       return {
+        type_user: 'utilisateur',
         model: {
           nom: '',
           prenom: '',
@@ -173,11 +213,15 @@ const userRessource = new Resource('users');
           email: '',
           password: '',
           telephone: '',
+          village_id: '',
+          cooperative: 'individuelle',
+          magasin: '',
           nom_entreprise: '',
           nom_utilisateur: '',
           type_user_id: 1,
-          role: ''
+          role: 'utilisateur'
         },
+        villages: [],
         roles: [],
         password_confirm: '',
         authenticated: isLogged(),
@@ -189,18 +233,35 @@ const userRessource = new Resource('users');
       if (this.authenticated){
         this.getRoles();
       }
+      this.getVillages();
+      this.getTypeUser();
     },
     methods: {
+      getTypeUser(){
+        this.type_user = localStorage.getItem('type_user');
+        if (!this.type_user){
+          localStorage.setItem('type_user', this.$route.params.type);
+          this.type_user = localStorage.getItem('type_user');
+        }
+        console.log('TYPE SENT', this.type_user);
+      },
       async getRoles(){
         const roleResource = new Resource('roles');
         const { data } = await roleResource.list();
         this.roles = data;
       },
-      onSubmit() {
-        console.log('MODEL RENDERED', this.model);
-        if (this.$store.getters.roles[0] === 'utilisateur'){
-          this.model.role = 'utilisateur';
+      async getVillages(){
+        const { data } = await villageResource.list();
+        this.villages = data;
+      },
+      async onSubmit() {
+        if (this.$store.getters.roles[0] === 'admin'){
+          this.model.role = 'admin';
         }
+        this.model.cooperative = this.model.cooperative !== 'individuelle';
+        const { data } = await typeUserResource.list({'keyword': this.type_user});
+        this.model.type_user_id = data[0].id
+        console.log('MODEL RENDERED', this.model);
         userRessource.store(this.model)
         .then((response) => {
           console.log('RESPONSE', response);

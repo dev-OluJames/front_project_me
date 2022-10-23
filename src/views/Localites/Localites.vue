@@ -51,15 +51,38 @@
       <b-row class="justify-content-center">
         <b-col lg="12">
           <card header-classes="bg-transparent">
-            <h3 slot="header" class="mb-0">Localites</h3>
-            <el-button @click="drawer = true" type="primary" style="margin-left: 16px;">
-              open
-            </el-button>
-            <el-tabs v-model="activeName" @tab-click="handleClick">
-              <el-tab-pane label="User" name="first">User</el-tab-pane>
-              <el-tab-pane label="Config" name="second">Config</el-tab-pane>
-              <el-tab-pane label="Role" name="third">Role</el-tab-pane>
-              <el-tab-pane label="Task" name="fourth">Task</el-tab-pane>
+            <b-row>
+                <h3 slot="header" class="mb-0">Localites</h3>
+                <el-button @click="drawer = true" type="primary" icon="el-icon-plus" circle style="margin-left: 5px; margin-bottom: 5px"></el-button>
+            </b-row>
+            <el-tabs :tab-position="'left'">
+              <el-tab-pane label="Pays">
+                <b-container fluid>
+                  <b-row>
+                    <b-col>
+                      <table_pays/>
+                    </b-col>
+                  </b-row>
+                </b-container>
+              </el-tab-pane>
+              <el-tab-pane label="Villes">
+                <b-container fluid>
+                  <b-row>
+                    <b-col>
+                      <table_villes/>
+                    </b-col>
+                  </b-row>
+                </b-container>
+              </el-tab-pane>
+              <el-tab-pane label="Villages">
+                <b-container fluid>
+                  <b-row>
+                    <b-col>
+                      <table_villages/>
+                    </b-col>
+                  </b-row>
+                </b-container>
+              </el-tab-pane>
             </el-tabs>
 
             <el-drawer
@@ -221,6 +244,9 @@
   import VueClipboard from 'vue-clipboard2'
   import BaseHeader from '@/components/BaseHeader';
   import {Message} from "element-ui";
+  import table_pays from "../Tables/RegularTables/table_pays";
+  import table_villes from "../Tables/RegularTables/table_villes";
+  import table_villages from "../Tables/RegularTables/table_villages";
   import Resource from "../../api/resource";
 
   Vue.use(VueClipboard);
@@ -230,7 +256,10 @@
   export default {
     name: 'icons',
     components: {
-      BaseHeader
+      BaseHeader,
+      table_pays,
+      table_villes,
+      table_villages
     },
     data() {
       return {

@@ -240,10 +240,11 @@ export default {
       // this.offres = data;
       offreResource.list(this.query)
         .then((response) => {
+          console.log('DATA offres', response.data);
           this.offres = response.data.filter((offre)=> {
             return offre.is_active === true;
           });
-          console.log('DATA offreS', response.data);
+
           this.loaded = false;
         });
     },

@@ -467,7 +467,7 @@ export default {
       const fd = new FormData();
       fd.append('fichier', this.$refs.myVueDropzone.dropzone.files[0], this.$refs.myVueDropzone.dropzone.files[0].upload.filename)
       fd.append('type', 'offre');
-      fd.append('id',1);
+      // fd.append('id',1);
       // const resource = {
       //   'fichier': this.$refs.myVueDropzone.dropzone.files[0],
       //   'type': 'offre',
@@ -486,6 +486,7 @@ export default {
     handleOk(bvModalEvent) {
       if (this.action === 'ajout') {
         this.donnees.user_id = this.$store.getters.userId;
+        this.donnees.quantite = parseInt(this.donnees.quantite);
         console.log('Ajouter ', this.donnees);
         bvModalEvent.preventDefault();
         this.show = true;

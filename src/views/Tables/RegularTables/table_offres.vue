@@ -324,10 +324,11 @@
         offreResource.list(querry)
         .then((respone) => {
           const items = respone.data;
+          console.log('OFRES', respone.data);
           this.offres = items.map(v => {
             this.$set(v, 'edit', false) // https://vuejs.org/v2/guide/reactivity.html
             return v
-          })
+          });
         })
         .finally(() => {
           this.show = false;

@@ -503,6 +503,7 @@ export default {
               });
             })
             .catch((error) => {
+              console.log('OUI IL YA ERREUR', error);
               Message({
                 message: error,
                 type: 'error',
@@ -669,7 +670,8 @@ export default {
       fd.append('fichier', this.$refs.myVueDropzone.dropzone.files[0], this.$refs.myVueDropzone.dropzone.files[0].upload.filename)
       fd.append('type', type);
       fd.append('id',id);
-      if (this.donnees.image !== null){
+      console.log("FORM DATA OTAINED ", fd, this.donnees.image);
+      if (this.donnees.image){
         imageResource.destroy(this.donnees.image[0].id)
           .then((response) =>{
             console.log(response);

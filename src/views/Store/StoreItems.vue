@@ -230,7 +230,7 @@ export default {
       request({
         url: '/offres',
         method: 'get',
-        params: {limit: 4},
+        params: {limit: 4, brouillon: false},
       }).then((response) => {
         this.offres = response.data;
         console.log('DATA OFFRES', this.offres);

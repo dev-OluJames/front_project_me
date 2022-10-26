@@ -51,7 +51,7 @@
 
                 <!-- Single Product Area -->
                 <div class="col-12 col-sm-3 col-lg-3" v-for="(offre, index) in offres" :key="index">
-                  <div v-if="offre.is_active" class="single-product-area mb-50">
+                  <div class="single-product-area mb-50">
                     <!-- Product Image -->
                     <div class="product-img">
                       <a href="#">

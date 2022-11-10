@@ -101,6 +101,12 @@
                       </router-link>
                     </li>
                     <li>
+                    <li>
+                      <router-link to="/store/promotions">
+                        Promotions
+                      </router-link>
+                    </li>
+                    <li>
                       <router-link to="/store/forum">
                         Forum
                       </router-link>

@@ -77,6 +77,18 @@ const constantRoutes = [
         meta: { title: 'PackStore', icon: 'el-icon-key' },
       },
       {
+        path: '/store/promotions',
+        component: () => import(/* webpackChunkName: "roles" */ '@/views/Store/Promotions'),
+        name: 'promo-store',
+        meta: { title: 'PromoStore', icon: 'el-icon-key' },
+      },
+      {
+        path: '/store/offre/promotions',
+        component: () => import(/* webpackChunkName: "roles" */ '@/views/Store/OffrePromotion'),
+        name: 'offre-promotion',
+        meta: { title: 'OffrePromo', icon: 'el-icon-key' },
+      },
+      {
         path: '/store/forum/:id(\\d+)',
         component: () => import(/* webpackChunkName: "roles" */ '@/views/Store/ForumDetail'),
         name: 'forum_detail',

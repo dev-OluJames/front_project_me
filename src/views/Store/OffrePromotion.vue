@@ -5,7 +5,7 @@
     <div class="breadcrumb-area">
       <!-- Top Breadcrumb Area -->
       <div class="top-breadcrumb-area bg-img bg-overlay d-flex align-items-center justify-content-center" style="background-image: url(store/img/bg-img/24.jpg);">
-        <h2>Offres</h2>
+        <h2>Offres en Promotion</h2>
       </div>
 
       <div class="container">
@@ -14,7 +14,8 @@
             <nav aria-label="breadcrumb">
               <ol class="breadcrumb">
                 <li class="breadcrumb-item"><router-link to="/"><i class="fa fa-home"></i>Home</router-link></li>
-                <li class="breadcrumb-item active" aria-current="page">Shop</li>
+                <li class="breadcrumb-item active" aria-current="page">promotion</li>
+                <li class="breadcrumb-item active" aria-current="page">offres</li>
               </ol>
             </nav>
           </div>
@@ -31,7 +32,7 @@
             <div class="shop-sorting-data d-flex flex-wrap align-items-center justify-content-between" style="padding-bottom: 0px">
               <!-- Shop Page Count -->
               <div class="shop-page-count">
-                <h1 class="display-4">Offres</h1>
+                <h1 class="display-4">Promotion {{ promotion_libelle }}</h1>
               </div>
               <div v-if="$store.getters.roles[0] !== 'admin'" class="search_by_terms">
                 <base-button type="success" data-toggle="tooltip" data-original-title="Edit product" @click="ajoutoffre($event.target)">
@@ -182,9 +183,9 @@ import Load from "../../components/Loading/Load";
 import Resource from "../../api/resource";
 import {Message} from "element-ui";
 
-const offreResource = new Resource('offres');
+const offreResource = new Resource('offres_en_promotion');
 export default {
-  name: 'store-offres',
+  name: 'offres-promotions',
   components: {
     Load,
     AddModal: () => import('../../components/Modals/addModal')
@@ -193,6 +194,7 @@ export default {
     return {
       offres: [],
       offreFavoris: {},
+      promotion_libelle: null,
       userFavoris: [],
       villages: [],
       varietes: [],
@@ -205,6 +207,8 @@ export default {
     }
   },
   created() {
+    console.log('PARAMS', this.$route.params);
+    this.promotion_libelle = this.$route.params.promotion_libelle;
     this.offresList(this.query);
     if (this.authenticated){
       this.getUserOffresFavoris(this.$store.getters.userId);

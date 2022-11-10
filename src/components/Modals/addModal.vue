@@ -702,7 +702,7 @@ export default {
       this.variete_list = data;
     },
     async getProduitVarietes(){
-      const {data} = await produitResource.get(this.produit_id+'/varietes');
+      const {data} = await produitResource.get(this.produit_id + '/varietes');
       this.variete_list = data;
     },
     async getTypeDemandes(){

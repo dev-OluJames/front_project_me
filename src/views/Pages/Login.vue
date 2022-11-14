@@ -190,13 +190,6 @@ import { csrf } from '../../api/auth';
 .pb-lg-8, .py-lg-8 {
   padding-bottom: 5rem !important;
 }
-h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-  margin-bottom: 0.5rem;
-  font-family: inherit;
-  font-weight: 600;
-  line-height: 1.5;
-  color: #ffffff;
-}
 .close {
   float: right;
   font-size: 1.5rem;

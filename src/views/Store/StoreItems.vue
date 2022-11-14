@@ -140,7 +140,7 @@
                     <!-- Product Info -->
                     <div class="product-info mt-15 text-center">
                       <router-link :to="'/store/demandes/detail/'+demande.id">
-                        <p>{{ demande.libelle }}</p>
+                        <h6>{{ demande.libelle }}</h6>
                       </router-link>
 <!--                      <h6>{{ demande.prix_plateforme }} FCFA</h6>-->
                     </div>

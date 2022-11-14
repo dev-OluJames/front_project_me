@@ -151,10 +151,10 @@
                   <router-link :to="'/store/offres/detail/'+row.id" data-bs-toggle="tooltip" data-bs-original-title="Preview product">
                     <i class="fas fa-eye text-secondary" aria-hidden="true"></i>
                   </router-link>
-                  <a href="javascript:;" @click="modifierOffre($event.target, row.id)" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Edit product">
+                  <a href="javascript:;" v-if="checkPermission(['modifier offre'])" @click="modifierOffre($event.target, row.id)" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Edit product">
                     <i class="fas fa-edit text-secondary" aria-hidden="true"></i>
                   </a>
-                  <a href="javascript:;" data-bs-toggle="tooltip" data-bs-original-title="Delete product">
+                  <a href="javascript:;" v-if="checkPermission(['supprimer offre'])" data-bs-toggle="tooltip" data-bs-original-title="Delete product">
                     <i class="fas fa-trash text-secondary" aria-hidden="true"></i>
                   </a>
                 </span>
@@ -181,6 +181,7 @@
   import {Message, Table, TableColumn} from 'element-ui';
   import VueElementLoading from "vue-element-loading";
   import Resource from "../../../api/resource";
+  import checkPermission from "../../../utils/permission";
 
   const typeOffreResource = new Resource('typeOffres');
   const offreResource = new Resource('offres');
@@ -212,6 +213,7 @@
       this.getTypeOffres();
     },
     methods: {
+      checkPermission,
       editRow(offre){
         if(this.prix_plateforme){
 

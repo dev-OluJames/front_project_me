@@ -242,17 +242,26 @@ const dasshBoardResource = new Resource('dashboard');
         let demande_clot = [];
         this.redBarChart.chartData.datasets = [];
         this.months.forEach((month)=> {
+          console.log('NOMBRE OFFRE CLOTUREE ', this.dashboard.agiots[month].offre_cloturee);
           offre_clot.push(this.dashboard.agiots[month].offre_cloturee);
           demande_clot.push(this.dashboard.agiots[month].demande_cloturee);
         });
         if (offre){
           this.redBarChart.chartData.datasets.push({
             label: 'Offre',
+            barPercentage: 0.5,
+            barThickness: 6,
+            maxBarThickness: 8,
+            minBarLength: 2,
             data: offre_clot
           });
         } else {
           this.redBarChart.chartData.datasets.push({
             label: 'Demande',
+            barPercentage: 0.5,
+            barThickness: 6,
+            maxBarThickness: 8,
+            minBarLength: 2,
             data: demande_clot
           });
         }

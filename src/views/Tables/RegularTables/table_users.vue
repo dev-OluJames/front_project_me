@@ -59,21 +59,21 @@
               </template>
             </el-table-column>
 
-            <el-table-column label="Permissions"
-                             prop="permissions"
-                             min-width="150px">
-              <template v-slot="{row}">
-                <span class="status" v-for="(permission,index) in row.permissions" :key="permission.id">
-                  <el-tag size="small" v-if="index < 3">{{ permission }}</el-tag>
-                </span>
-                      <span>
-                  <el-tag
-                    v-if="row.permissions.length > 0">
-                   + {{ row.permissions.length-3}} Autres
-                  </el-tag>
-                </span>
-              </template>
-            </el-table-column>
+<!--            <el-table-column label="Permissions"-->
+<!--                             prop="permissions"-->
+<!--                             min-width="150px">-->
+<!--              <template v-slot="{row}">-->
+<!--                <span class="status" v-for="(permission,index) in row.permissions" :key="permission.id">-->
+<!--                  <el-tag size="small" v-if="index < 3">{{ permission }}</el-tag>-->
+<!--                </span>-->
+<!--                      <span>-->
+<!--                  <el-tag-->
+<!--                    v-if="row.permissions.length > 0">-->
+<!--                   + {{ row.permissions.length-3}} Autres-->
+<!--                  </el-tag>-->
+<!--                </span>-->
+<!--              </template>-->
+<!--            </el-table-column>-->
 
             <el-table-column label="Action"
                              prop="completion"

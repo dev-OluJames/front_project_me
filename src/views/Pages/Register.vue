@@ -239,11 +239,17 @@ const typeUserResource = new Resource('typeUsers');
     methods: {
       getTypeUser(){
         this.type_user = localStorage.getItem('type_user');
+        console.log('TYPE SENT BEFORE', this.type_user);
         if (!this.type_user){
-          localStorage.setItem('type_user', this.$route.params.type);
-          this.type_user = localStorage.getItem('type_user');
+          if (this.$store.getters.roles[0] === 'admin'){
+            this.type_user = 'utilisateur';
+            console.log('TYPE SENT', this.type_user);
+          } else {
+            localStorage.setItem('type_user', this.$route.params.type);
+            this.type_user = localStorage.getItem('type_user');
+          }
         }
-        console.log('TYPE SENT', this.type_user);
+        console.log('ROLE SENT', this.$store.getters.roles[0]);
       },
       async getRoles(){
         const roleResource = new Resource('roles');
@@ -276,6 +282,7 @@ const typeUserResource = new Resource('typeUsers');
           console.log(error);
         })
         .finally(()=>{
+          console.log("ADMIN ?", this.$store.getters.roles[0] !== 'utilisateur');
           if (this.$store.getters.roles[0] !== 'utilisateur'){
             this.$router.push({path: '/administration/users'});
           }

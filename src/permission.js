@@ -28,15 +28,15 @@ router.beforeEach(async(to, from, next) => {
   if (isUserLogged) {
     const { roles, permissions } = await store.dispatch('user/getInfo');
     if (to.path.includes('dashboard') || to.path.includes('administration') || to.path.includes('menu')){
-      if (roles[0] !== 'admin'){
+      if (roles[0] === 'utilisateur'){
         next({path: '/forbiden'});
       }
     }
-    if (to.path === '/register' && roles[0] !== 'admin'){
+    if (to.path === '/register' && roles[0] === 'utilisateur'){
       next({path: from.path});
       NProgress.done();
     }
-    if (to.path === '/store/compte' && roles[0] === 'admin'){
+    if (to.path === '/store/compte' && roles[0] !== 'utilisateur'){
       next({path: '/dashboard'});
       NProgress.done();
     }

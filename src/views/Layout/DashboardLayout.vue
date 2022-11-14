@@ -22,6 +22,7 @@
         </sidebar-item -->
 
         <sidebar-item
+              v-if="checkPermission(['gerer localite', 'modifier localite', 'supprimer localite', 'creer localite'])"
               :link="{
                 name: 'Localites',
                 path: '/dashboard/localites',
@@ -29,6 +30,7 @@
               }">
         </sidebar-item>
         <sidebar-item
+                v-if="checkPermission(['gerer demande', 'modifier demande', 'supprimer demande', 'creer demande'])"
                 :link="{
                   name: 'Demandes',
                   path: '/dashboard/demandes',
@@ -36,6 +38,7 @@
                 }">
         </sidebar-item>
         <sidebar-item
+                v-if="checkPermission(['gerer offre', 'modifier offre', 'supprimer offre', 'creer offre'])"
                 :link="{
                   name: 'Offres',
                   path: '/dashboard/offres',
@@ -43,6 +46,7 @@
                 }">
         </sidebar-item>
         <sidebar-item
+          v-if="checkPermission(['gerer pack', 'modifier pack', 'supprimer pack', 'creer pack'])"
                   :link="{
                     name: 'Packs',
                     path: '/dashboard/packs',
@@ -50,6 +54,7 @@
                   }">
         </sidebar-item>
         <sidebar-item
+                  v-if="checkPermission(['gerer promotion', 'modifier promotion', 'supprimer promotion', 'creer promotion'])"
                   :link="{
                     name: 'Promotions',
                     path: '/dashboard/promotions',
@@ -57,6 +62,7 @@
                   }">
         </sidebar-item>
         <sidebar-item
+          v-if="checkPermission(['gerer produit', 'modifier produit', 'supprimer produit', 'creer produit'])"
           :link="{
                 name: 'Menu',
                 path: '/menu',
@@ -143,6 +149,7 @@
   /* eslint-disable no-new */
   import PerfectScrollbar from 'perfect-scrollbar';
   import 'perfect-scrollbar/css/perfect-scrollbar.css';
+  import checkPermission from "../../utils/permission";
 
   function hasElement(className) {
     return document.getElementsByClassName(className).length > 0;
@@ -174,6 +181,7 @@
       FadeTransition
     },
     methods: {
+      checkPermission,
       initScrollbar() {
         let isWindows = navigator.platform.startsWith('Win');
         if (isWindows) {

@@ -166,6 +166,9 @@ export default {
           duration: 5 * 1000
         });
         this.getUser();
+      })
+      .finally(() => {
+        window.location.reload();
       });
     }
   }

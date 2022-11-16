@@ -6,7 +6,7 @@
               <h3 class="mb-0">Packs</h3>
             </b-col>
             <b-col class="col-6 text-right">
-              <base-button icon @click="handleAdd" variant="primary" size="sm" type="primary">
+              <base-button v-if="checkPermission(['creer pack'])"  icon @click="handleAdd" variant="primary" size="sm" type="primary">
                 <span class="btn-inner--icon"><i class="ni ni-box-2"></i></span>
                 <span class="btn-inner--text">ajouter</span>
               </base-button>
@@ -40,13 +40,13 @@
                              min-width="100px">
               <template v-slot="{row}">
                 <span class="text-sm">
-                  <a href="#" class="mx-1"  data-bs-toggle="tooltip" data-bs-original-title="Preview product" @click="toPackDetail(row.id)">
+                  <a  href="#" class="mx-1"  data-bs-toggle="tooltip" data-bs-original-title="Preview product" @click="toPackDetail(row.id)">
                     <i class="fas fa-eye text-secondary" aria-hidden="true"></i>
                   </a>
-                  <a href="#" class="mx-1" data-bs-toggle="tooltip" data-bs-original-title="Edit product" @click="handleEdit(row.id)">
+                  <a v-if="checkPermission(['modifier pack'])" href="#" class="mx-1" data-bs-toggle="tooltip" data-bs-original-title="Edit product" @click="handleEdit(row.id)">
                     <i class="fas fa-user-edit text-secondary" aria-hidden="true"></i>
                   </a>
-                  <a href="javascript:;" class="mx-1"  data-bs-toggle="tooltip" data-bs-original-title="Delete product">
+                  <a href="javascript:;" v-if="checkPermission(['supprimer pack'])" class="mx-1"  data-bs-toggle="tooltip" data-bs-original-title="Delete product">
                     <i class="fas fa-trash text-secondary" aria-hidden="true"></i>
                   </a>
                 </span>
@@ -86,6 +86,7 @@
   import {Message, Table, TableColumn} from 'element-ui';
   const packResource = new Resource('packs');
   import VueElementLoading from "vue-element-loading";
+  import checkPermission from "../../../utils/permission";
 
   export default {
     name: 'pack-list',
@@ -110,89 +111,90 @@
       this.getPacks();
     },
     methods: {
-    getPacks(){
-      this.show = true
-      packResource.list()
-      .then((response) => {
-        this.pack_list = response.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-      .finally(()=>{
-        this.show = false;
-      });
-      console.log('PACK LIST', this.pack_list);
-    },
-    addPack(bvModalEvent){
-      bvModalEvent.preventDefault();
-      const valid = this.$refs['pack_form'].checkValidity();
-      console.log('VALID VALUE ', valid);
-      if (valid){
-        this.modal_show = true;
-        console.log(this.pack);
-        packResource.store(this.pack)
-          .then((response) => {
-            Message({
-              message: 'Pack ajouté avec succes',
-              type: 'success',
-              duration: 5 * 1000,
-            })
-          })
-          .catch((error) => {
-            console.log(error);
-          })
-          .finally(() => {
-            this.modal_show = false;
-            this.modal = false;
-            this.getPacks();
-            this.$nextTick(() => {
-              this.$bvModal.hide('modal-1')
-            })
-            console.log('DONE');
-          });
-      } else {
-        Message({
-          message: 'Veuillez svp renseigner les champs',
-          type: 'error',
-          duration: 5 * 1000
+      checkPermission,
+      getPacks(){
+        this.show = true
+        packResource.list()
+        .then((response) => {
+          this.pack_list = response.data;
         })
-        return false;
-      }
-    },
-    handleAdd(){
-      this.modal = true;
-      this.add = true;
-    },
-    async handleEdit(id){
-      const { data } = await packResource.get(id);
-      this.pack = data;
-      this.modal = true;
-      this.add = false;
-    },
-    toPackDetail(id){
-      this.$router.push({ path: '/packs/' + id });
-    },
-    editPack(id){
-      console.log('ID PACK', id);
-      this.modal_show = true;
-      packResource.update(id, this.pack)
-      .then((response) => {
-        Message({
-          message: response.message || 'Modification effectué avec succès',
-          type: 'success',
-          duration: 5 * 1000,
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(()=>{
+          this.show = false;
         });
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-      .finally(() => {
-        this.getPacks();
-        this.modal = false;
-        this.modal_show = false;
-      })
-    },
+        console.log('PACK LIST', this.pack_list);
+      },
+      addPack(bvModalEvent){
+        bvModalEvent.preventDefault();
+        const valid = this.$refs['pack_form'].checkValidity();
+        console.log('VALID VALUE ', valid);
+        if (valid){
+          this.modal_show = true;
+          console.log(this.pack);
+          packResource.store(this.pack)
+            .then((response) => {
+              Message({
+                message: 'Pack ajouté avec succes',
+                type: 'success',
+                duration: 5 * 1000,
+              })
+            })
+            .catch((error) => {
+              console.log(error);
+            })
+            .finally(() => {
+              this.modal_show = false;
+              this.modal = false;
+              this.getPacks();
+              this.$nextTick(() => {
+                this.$bvModal.hide('modal-1')
+              })
+              console.log('DONE');
+            });
+        } else {
+          Message({
+            message: 'Veuillez svp renseigner les champs',
+            type: 'error',
+            duration: 5 * 1000
+          })
+          return false;
+        }
+      },
+      handleAdd(){
+        this.modal = true;
+        this.add = true;
+      },
+      async handleEdit(id){
+        const { data } = await packResource.get(id);
+        this.pack = data;
+        this.modal = true;
+        this.add = false;
+      },
+      toPackDetail(id){
+        this.$router.push({ path: '/packs/' + id });
+      },
+      editPack(id){
+        console.log('ID PACK', id);
+        this.modal_show = true;
+        packResource.update(id, this.pack)
+        .then((response) => {
+          Message({
+            message: response.message || 'Modification effectué avec succès',
+            type: 'success',
+            duration: 5 * 1000,
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          this.getPacks();
+          this.modal = false;
+          this.modal_show = false;
+        })
+      },
     }
   }
 </script>

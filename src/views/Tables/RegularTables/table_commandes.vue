@@ -6,7 +6,7 @@
               <h3 class="mb-0">Demandes</h3>
             </b-col>
             <b-col class="col-3 text-right">
-              <base-button type="primary" size="sm" data-toggle="tooltip" data-original-title="Edit product" @click="ajoutDemande($event.target)" >
+              <base-button v-if="checkPermission(['creer demande'])"  type="primary" size="sm" data-toggle="tooltip" data-original-title="Edit product" @click="ajoutDemande($event.target)" >
                 <span class="btn-inner--icon"><i class="ni ni-bag-17"></i></span>
                 <span class="btn-inner--text">Ajouter</span>
               </base-button>
@@ -116,10 +116,10 @@
                   <router-link :to="'/store/demandes/detail/'+row.id" data-bs-toggle="tooltip" data-bs-original-title="Preview product">
                     <i class="fas fa-eye text-secondary" aria-hidden="true"></i>
                   </router-link>
-                  <a href="javascript:;" @click="modifierDemande($event.target, row.id)" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Edit product">
+                  <a href="javascript:;" v-if="checkPermission(['modifier demande'])" @click="modifierDemande($event.target, row.id)" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Edit product">
                     <i class="fas fa-edit text-secondary" aria-hidden="true"></i>
                   </a>
-                  <a href="javascript:;" data-bs-toggle="tooltip" data-bs-original-title="Delete product">
+                  <a href="javascript:;" v-if="checkPermission(['supprimer demande'])" data-bs-toggle="tooltip" data-bs-original-title="Delete product">
                     <i class="fas fa-trash text-secondary" aria-hidden="true"></i>
                   </a>
                 </span>
@@ -147,6 +147,7 @@
 import {Message, Table, TableColumn} from 'element-ui';
   import VueElementLoading from "vue-element-loading";
   import Resource from "../../../api/resource";
+  import checkPermission from "../../../utils/permission";
 
   const typeDemandeResource = new Resource('typeDemandes');
   const demandeResource = new Resource('demandes');
@@ -174,6 +175,7 @@ import {Message, Table, TableColumn} from 'element-ui';
       this.getTypeDemandes();
     },
     methods: {
+      checkPermission,
       async setActive(id, active, type){
         let response;
         response = await demandeResource.get('toogle_active/' + id);

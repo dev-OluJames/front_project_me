@@ -6,7 +6,7 @@
               <h3 class="mb-0">Pays</h3>
             </b-col>
             <b-col class="col-6 text-right">
-              <base-button icon @click="handleAdd" variant="primary" size="sm" type="primary">
+              <base-button v-if="checkPermission(['creer pays'])" icon @click="handleAdd" variant="primary" size="sm" type="primary">
                 <span class="btn-inner--icon"><i class="ni ni-shop"></i></span>
                 <span class="btn-inner--text">ajouter</span>
               </base-button>
@@ -43,10 +43,10 @@
                   <a href="#" class="mx-1"  data-bs-toggle="tooltip" data-bs-original-title="Preview product" @click="topayDetail(row.id)">
                     <i class="fas fa-eye text-secondary" aria-hidden="true"></i>
                   </a>
-                  <a href="#" class="mx-1" data-bs-toggle="tooltip" data-bs-original-title="Edit product" @click="handleEdit(row.id)">
+                  <a v-if="checkPermission(['modifier pays'])" href="#" class="mx-1" data-bs-toggle="tooltip" data-bs-original-title="Edit product" @click="handleEdit(row.id)">
                     <i class="fas fa-user-edit text-secondary" aria-hidden="true"></i>
                   </a>
-                  <a href="javascript:;" class="mx-1"  data-bs-toggle="tooltip" data-bs-original-title="Delete product">
+                  <a v-if="checkPermission(['supprimer pays'])" href="javascript:;" class="mx-1"  data-bs-toggle="tooltip" data-bs-original-title="Delete product">
                     <i class="fas fa-trash text-secondary" aria-hidden="true"></i>
                   </a>
                 </span>
@@ -86,6 +86,7 @@
   import {Message, Table, TableColumn} from 'element-ui';
   const paysResource = new Resource('pays');
   import VueElementLoading from "vue-element-loading";
+  import checkPermission from "../../../utils/permission";
 
   export default {
     name: 'pays-list',
@@ -110,89 +111,90 @@
       this.getpays();
     },
     methods: {
-    getpays(){
-      this.show = true
-      paysResource.list()
-      .then((response) => {
-        this.pays_list = response.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-      .finally(()=>{
-        this.show = false;
-      });
-      console.log('pays LIST', this.pays_list);
-    },
-    addpay(bvModalEvent){
-      bvModalEvent.preventDefault();
-      const valid = this.$refs['pay_form'].checkValidity();
-      console.log('VALID VALUE ', valid);
-      if (valid){
-        this.modal_show = true;
-        console.log(this.pays);
-        paysResource.store(this.pays)
-          .then((response) => {
-            Message({
-              message: 'pays ajouté avec succes',
-              type: 'success',
-              duration: 5 * 1000,
-            })
-          })
-          .catch((error) => {
-            console.log(error);
-          })
-          .finally(() => {
-            this.modal_show = false;
-            this.modal = false;
-            this.getpays();
-            this.$nextTick(() => {
-              this.$bvModal.hide('modal-1')
-            })
-            console.log('DONE');
-          });
-      } else {
-        Message({
-          message: 'Veuillez svp renseigner les champs',
-          type: 'error',
-          duration: 5 * 1000
+      checkPermission,
+      getpays(){
+        this.show = true
+        paysResource.list()
+        .then((response) => {
+          this.pays_list = response.data;
         })
-        return false;
-      }
-    },
-    handleAdd(){
-      this.modal = true;
-      this.add = true;
-    },
-    async handleEdit(id){
-      const { data } = await paysResource.get(id);
-      this.pays = data;
-      this.modal = true;
-      this.add = false;
-    },
-    topayDetail(id){
-      this.$router.push({ path: '/pays/' + id });
-    },
-    editpay(id){
-      console.log('ID pays', id);
-      this.modal_show = true;
-      paysResource.update(id, this.pays)
-      .then((response) => {
-        Message({
-          message: response.message || 'Modification effectué avec succès',
-          type: 'success',
-          duration: 5 * 1000,
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(()=>{
+          this.show = false;
         });
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-      .finally(() => {
-        this.getpays();
-        this.modal = false;
-        this.modal_show = false;
-      })
-    },
+        console.log('pays LIST', this.pays_list);
+      },
+      addpay(bvModalEvent){
+        bvModalEvent.preventDefault();
+        const valid = this.$refs['pay_form'].checkValidity();
+        console.log('VALID VALUE ', valid);
+        if (valid){
+          this.modal_show = true;
+          console.log(this.pays);
+          paysResource.store(this.pays)
+            .then((response) => {
+              Message({
+                message: 'pays ajouté avec succes',
+                type: 'success',
+                duration: 5 * 1000,
+              })
+            })
+            .catch((error) => {
+              console.log(error);
+            })
+            .finally(() => {
+              this.modal_show = false;
+              this.modal = false;
+              this.getpays();
+              this.$nextTick(() => {
+                this.$bvModal.hide('modal-1')
+              })
+              console.log('DONE');
+            });
+        } else {
+          Message({
+            message: 'Veuillez svp renseigner les champs',
+            type: 'error',
+            duration: 5 * 1000
+          })
+          return false;
+        }
+      },
+      handleAdd(){
+        this.modal = true;
+        this.add = true;
+      },
+      async handleEdit(id){
+        const { data } = await paysResource.get(id);
+        this.pays = data;
+        this.modal = true;
+        this.add = false;
+      },
+      topayDetail(id){
+        this.$router.push({ path: '/pays/' + id });
+      },
+      editpay(id){
+        console.log('ID pays', id);
+        this.modal_show = true;
+        paysResource.update(id, this.pays)
+        .then((response) => {
+          Message({
+            message: response.message || 'Modification effectué avec succès',
+            type: 'success',
+            duration: 5 * 1000,
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          this.getpays();
+          this.modal = false;
+          this.modal_show = false;
+        })
+      },
     }
   }
 </script>

@@ -74,11 +74,11 @@ service.interceptors.response.use(
       message = error.response.data.message;
     }
 
-    Message({
-      message: message,
-      type: 'error',
-      duration: 5 * 1000,
-    });
+//    Message({
+//      message: message,
+//      type: 'error',
+//      duration: 5 * 1000,
+//    });
     return Promise.reject(error);
   }
 );

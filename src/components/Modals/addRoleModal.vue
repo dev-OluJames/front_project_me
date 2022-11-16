@@ -89,6 +89,7 @@ export default {
       modal: false,
       role: this.set_role,
       permissions: [],
+      permissions_stored: [],
       tables: [],
       selectedTables: [],
       table_list: [],
@@ -236,15 +237,18 @@ export default {
           })
         });
       } else {
+        console.log('ROLE', this.role.name, ' permissions', this.role.permissions);
+        this.permissions_stored = this.role.permissions;
         roleResource
           .store(newRole)
-          .then(async(response) => {
+          .then((response) => {
+            console.log('ROLE', response.data.name, ' permissions', this.permissions_stored);
             this.$message({
-              message: 'Role '+ this.role.name+' AJouté avec succès',
+              message: 'Role '+ response.data.name +' AJouté avec succès',
               type: 'success',
               duration: 5 * 1000,
             });
-            await roleResource.update(response.data.id, { name: this.role.name, permissions: this.role.permissions });
+            roleResource.update(response.data.id, { name: response.data.name, permissions: this.permissions_stored });
             this.$emit('added');
           })
           .catch(error => {
@@ -254,7 +258,7 @@ export default {
             this.$nextTick(() => {
               this.$bvModal.hide(this.id);
             })
-          })
+          });
       }
     },
     capitalizeFirstLetter(string) {

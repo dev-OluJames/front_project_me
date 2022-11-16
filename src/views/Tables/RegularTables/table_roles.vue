@@ -6,7 +6,7 @@
           <h3 class="mb-0">Roles</h3>
         </b-col>
         <b-col class="col-6 text-right">
-          <base-button class="btn btn-sm btn-primary btn-round btn-icon" data-toggle="tooltip" data-original-title="Edit product" @click="triggerModal($event.target)">
+          <base-button v-if="checkPermission(['creer role'])" class="btn btn-sm btn-primary btn-round btn-icon" data-toggle="tooltip" data-original-title="Edit product" @click="triggerModal($event.target)">
             <span class="btn-inner--icon"><i class="fas fa-key"></i></span>
             <span class="btn-inner--text">Ajouter</span>
           </base-button>
@@ -35,7 +35,7 @@
           </span>
           <span>
             <el-tag
-              v-if="row.permissions.length > 0">
+              v-if="row.permissions.length > 3">
              + {{ row.permissions.length-3}} Autres
             </el-tag>
           </span>
@@ -57,10 +57,10 @@
                   <a href="javascript:;" data-bs-toggle="tooltip" data-bs-original-title="Preview product">
                     <i class="fas fa-eye text-secondary" aria-hidden="true"></i>
                   </a>
-                  <a href="javascript:;" @click="editRole($event.target, row)" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Edit product">
+                  <a v-if="checkPermission(['modifier role'])" href="javascript:;" @click="editRole($event.target, row)" class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Edit product">
                     <i class="fas fa-user-edit text-secondary" aria-hidden="true"></i>
                   </a>
-                  <a href="javascript:;" data-bs-toggle="tooltip" data-bs-original-title="Delete product">
+                  <a v-if="checkPermission(['supprimer role'])" href="javascript:;" data-bs-toggle="tooltip" data-bs-original-title="Delete product">
                     <i class="fas fa-trash text-secondary" aria-hidden="true"></i>
                   </a>
                 </span>
@@ -79,6 +79,7 @@
 import Resource from "../../../api/resource";
 import VueElementLoading from "vue-element-loading";
 import addRoleModal from "../../../components/Modals/addRoleModal";
+import checkPermission from "../../../utils/permission";
 
 const roleResource = new Resource('roles');
 export default {
@@ -100,6 +101,7 @@ export default {
     this.getRoles();
   },
   methods: {
+    checkPermission,
     setLoad(){
       this.getRoles();
       this.activate = false;

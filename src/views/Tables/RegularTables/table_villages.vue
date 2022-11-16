@@ -6,7 +6,7 @@
               <h3 class="mb-0">Villages</h3>
             </b-col>
             <b-col class="col-6 text-right">
-              <base-button icon @click="handleAdd" variant="primary" size="sm" type="primary">
+              <base-button v-if="checkPermission(['creer village'])" icon @click="handleAdd" variant="primary" size="sm" type="primary">
                 <span class="btn-inner--icon"><i class="ni ni-shop"></i></span>
                 <span class="btn-inner--text">ajouter</span>
               </base-button>
@@ -40,13 +40,13 @@
                              min-width="100px">
               <template v-slot="{row}">
                 <span class="text-sm">
-                  <a href="#" class="mx-1"  data-bs-toggle="tooltip" data-bs-original-title="Preview product" @click="toVillageDetail(row.id)">
+                  <a  href="#" class="mx-1"  data-bs-toggle="tooltip" data-bs-original-title="Preview product" @click="toVillageDetail(row.id)">
                     <i class="fas fa-eye text-secondary" aria-hidden="true"></i>
                   </a>
-                  <a href="#" class="mx-1" data-bs-toggle="tooltip" data-bs-original-title="Edit product" @click="handleEdit(row.id)">
+                  <a v-if="checkPermission(['modifier village'])" href="#" class="mx-1" data-bs-toggle="tooltip" data-bs-original-title="Edit product" @click="handleEdit(row.id)">
                     <i class="fas fa-user-edit text-secondary" aria-hidden="true"></i>
                   </a>
-                  <a href="javascript:;" class="mx-1"  data-bs-toggle="tooltip" data-bs-original-title="Delete product">
+                  <a v-if="checkPermission(['supprimer village'])" href="javascript:;" class="mx-1"  data-bs-toggle="tooltip" data-bs-original-title="Delete product">
                     <i class="fas fa-trash text-secondary" aria-hidden="true"></i>
                   </a>
                 </span>
@@ -86,6 +86,7 @@
   import {Message, Table, TableColumn} from 'element-ui';
   const villagesResource = new Resource('villages');
   import VueElementLoading from "vue-element-loading";
+  import checkPermission from "../../../utils/permission";
 
   export default {
     name: 'villages-list',
@@ -110,6 +111,7 @@
       this.getVillages();
     },
     methods: {
+      checkPermission,
     getVillages(){
       this.show = true
       villagesResource.list()

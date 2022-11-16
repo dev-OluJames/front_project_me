@@ -6,7 +6,7 @@
               <h3 class="mb-0">Utilisateurs</h3>
             </b-col>
             <b-col class="col-6 text-right">
-              <button @click="registerUser" class="btn btn-sm btn-primary btn-round btn-icon" data-toggle="tooltip" data-original-title="Edit product">
+              <button v-if="checkPermission(['creer utilisateur'])" @click="registerUser" class="btn btn-sm btn-primary btn-round btn-icon" data-toggle="tooltip" data-original-title="Edit product">
                 <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
                 <span class="btn-inner--text">Ajouter</span>
               </button>
@@ -80,10 +80,10 @@
                              min-width="130px">
               <template v-slot="{row}">
                 <span class="text-sm">
-                  <a href="javascript:;" @click="previewProfile(row.id)"  class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Edit product">
+                  <a v-if="checkPermission(['modifier utilisateur']) && row.roles[0] !== 'admin'" href="javascript:;" @click="previewProfile(row.id)"  class="mx-3" data-bs-toggle="tooltip" data-bs-original-title="Edit product">
                     <i class="fas fa-user-edit text-secondary" aria-hidden="true"></i>
                   </a>
-                  <a href="javascript:;" data-bs-toggle="tooltip" data-bs-original-title="Delete product">
+                  <a v-if="checkPermission(['supprimer utilisateur']) && row.roles[0] !== 'admin'" href="javascript:;" data-bs-toggle="tooltip" data-bs-original-title="Delete product">
                     <i class="fas fa-trash text-secondary" aria-hidden="true"></i>
                   </a>
                 </span>
@@ -101,6 +101,7 @@
   import { Table, TableColumn} from 'element-ui';
   const userResource = new Resource('users');
   import VueElementLoading from "vue-element-loading";
+  import checkPermission from "../../../utils/permission";
 
   export default {
     name: 'users-list',
@@ -120,6 +121,7 @@
       this.getUtilisateurs();
     },
     methods: {
+      checkPermission,
       getUtilisateurs(){
         this.show = true;
         userResource.list()

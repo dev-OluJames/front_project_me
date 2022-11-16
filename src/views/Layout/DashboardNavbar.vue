@@ -45,7 +45,7 @@
                     <img alt="Image placeholder" src="img/theme/team-4.jpg">
                   </span>
             <b-media-body class="ml-2 d-none d-lg-block">
-              <span class="mb-0 text-sm  font-weight-bold">John Snow</span>
+              <span class="mb-0 text-sm  font-weight-bold">{{ this.$store.getters.user.nom_utilisateur }}</span>
             </b-media-body>
           </b-media>
         </a>

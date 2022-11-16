@@ -3,10 +3,10 @@
         <b-card-header class="border-0">
           <b-row>
             <b-col class="col-6">
-              <h3 class="mb-0">Produits</h3>
+              <h3 class="mb-0">Type Utilisateurs</h3>
             </b-col>
             <b-col class="col-6 text-right">
-              <base-button v-if="checkPermission(['creer produit'])" icon @click="handleAdd" variant="primary" size="sm" type="primary">
+              <base-button v-if="checkPermission(['creer typeUser'])" icon @click="handleAdd" variant="primary" size="sm" type="primary">
                 <span class="btn-inner--icon"><i class="ni ni-shop"></i></span>
                 <span class="btn-inner--text">ajouter</span>
               </base-button>
@@ -16,14 +16,14 @@
       <vue-element-loading :active="show" spinner="bar-fade-scale" color="#2dce94" />
         <el-table class="table-responsive table"
                   header-row-class-name="thead-light"
-                  :data="produit_list">
+                  :data="typeUser_list">
           <vue-element-loading :active="show" spinner="bar-fade-scale" color="#2dce94" />
 
             <el-table-column label="Nom"
                              prop="nom"
                              min-width="130px">
               <template v-slot="{row}">
-                  <span class="status">{{row.nom}}</span>
+                  <span class="status">{{row.libelle}}</span>
               </template>
             </el-table-column>
 
@@ -40,13 +40,13 @@
                              min-width="100px">
               <template v-slot="{row}">
                 <span class="text-sm">
-                  <a href="#" class="mx-1"  data-bs-toggle="tooltip" data-bs-original-title="Preview product" @click="toproduitDetail(row.id)">
+                  <a href="#" class="mx-1"  data-bs-toggle="tooltip" data-bs-original-title="Preview product" @click="totypeUserDetail(row.id)">
                     <i class="fas fa-eye text-secondary" aria-hidden="true"></i>
                   </a>
-                  <a v-if="checkPermission(['modifier produit'])" href="#" class="mx-1" data-bs-toggle="tooltip" data-bs-original-title="Edit product" @click="handleEdit(row.id)">
+                  <a v-if="checkPermission(['modifier typeUser'])" href="#" class="mx-1" data-bs-toggle="tooltip" data-bs-original-title="Edit product" @click="handleEdit(row.id)">
                     <i class="fas fa-user-edit text-secondary" aria-hidden="true"></i>
                   </a>
-                  <a v-if="checkPermission(['supprimer produit'])" href="javascript:;" class="mx-1"  data-bs-toggle="tooltip" data-bs-original-title="Delete product">
+                  <a v-if="checkPermission(['supprimer typeUser'])" href="javascript:;" class="mx-1"  data-bs-toggle="tooltip" data-bs-original-title="Delete product">
                     <i class="fas fa-trash text-secondary" aria-hidden="true"></i>
                   </a>
                 </span>
@@ -57,25 +57,25 @@
         <b-card-footer class="py-4 d-flex justify-content-end">
             <base-pagination v-model="currentPage" :per-page="10" :total="50"></base-pagination>
         </b-card-footer>
-      <!--  ================== ADD produit MODAL =================== -->
-      <modal :show.sync="modal" title="Ajouter un produit">
+      <!--  ================== ADD typeUser MODAL =================== -->
+      <modal :show.sync="modal" title="Ajouter un typeUser">
         <vue-element-loading :active="modal_show" spinner="bar-fade-scale" color="#2dce94" />
-        <form ref="produit_form">
+        <form ref="typeUser_form">
           <b-form-group label="nom">
             <b-input-group prepend="@">
-              <b-form-input v-model="produit.nom" placeholder="nom" required></b-form-input>
+              <b-form-input v-model="typeUser.libelle" placeholder="nom" required></b-form-input>
             </b-input-group>
           </b-form-group>
 
           <b-form-group label="Description">
             <b-input-group>
-              <b-form-textarea v-model="produit.description" required></b-form-textarea>
+              <b-form-textarea v-model="typeUser.description" required></b-form-textarea>
             </b-input-group>
           </b-form-group>
         </form>
         <template slot="footer">
-          <base-button v-if="add" type="primary" @click="addproduit">Ajouter</base-button>
-          <base-button v-else type="primary" @click="editproduit(produit.id)">Modifier</base-button>
+          <base-button v-if="add" type="primary" @click="addtypeUser">Ajouter</base-button>
+          <base-button v-else type="primary" @click="editTypeUser(typeUser.id)">Modifier</base-button>
           <base-button type="link" class="ml-auto" @click="modal = false">Close</base-button>
         </template>
       </modal>
@@ -84,12 +84,12 @@
 <script>
   import Resource from "../../../api/resource";
   import {Message, Table, TableColumn} from 'element-ui';
-  const produitResource = new Resource('produits');
+  const typeUserResource = new Resource('typeUsers');
   import VueElementLoading from "vue-element-loading";
   import checkPermission from "../../../utils/permission";
 
   export default {
-    name: 'produit-list',
+    name: 'type-user-list',
     components: {
       [Table.name]: Table,
       [TableColumn.name]: TableColumn,
@@ -99,24 +99,24 @@
       return {
         list: [],
         currentPage: 1,
-        produit: {},
+        typeUser: {},
         show: false,
-        produit_list: [],
+        typeUser_list: [],
         add: true,
         modal: false,
         modal_show: false,
       };
     },
     created() {
-      this.getproduits();
+      this.getTypeUsers();
     },
     methods: {
       checkPermission,
-      getproduits(){
+      getTypeUsers(){
         this.show = true
-        produitResource.list()
+        typeUserResource.list()
         .then((response) => {
-          this.produit_list = response.data;
+          this.typeUser_list = response.data;
         })
         .catch((error) => {
           console.log(error);
@@ -124,19 +124,19 @@
         .finally(()=>{
           this.show = false;
         });
-        console.log('produit LIST', this.produit_list);
+        console.log('typeUser LIST', this.typeUser_list);
       },
-      addproduit(bvModalEvent){
+      addtypeUser(bvModalEvent){
         bvModalEvent.preventDefault();
-        const valid = this.$refs['produit_form'].checkValidity();
+        const valid = this.$refs['typeUser_form'].checkValidity();
         console.log('VALID VALUE ', valid);
         if (valid){
           this.modal_show = true;
-          console.log(this.produit);
-          produitResource.store(this.produit)
+          console.log(this.typeUser);
+          typeUserResource.store(this.typeUser)
             .then((response) => {
               Message({
-                message: 'produit ajouté avec succes',
+                message: 'typeUser ajouté avec succes',
                 type: 'success',
                 duration: 5 * 1000,
               })
@@ -147,7 +147,7 @@
             .finally(() => {
               this.modal_show = false;
               this.modal = false;
-              this.getproduits();
+              this.getTypeUsers();
               this.$nextTick(() => {
                 this.$bvModal.hide('modal-1')
               })
@@ -167,18 +167,18 @@
         this.add = true;
       },
       async handleEdit(id){
-        const { data } = await produitResource.get(id);
-        this.produit = data;
+        const { data } = await typeUserResource.get(id);
+        this.typeUser = data;
         this.modal = true;
         this.add = false;
       },
-      toproduitDetail(id){
-        this.$router.push({ path: '/produits/' + id });
+      totypeUserDetail(id){
+        this.$router.push({ path: '/typeUsers/' + id });
       },
-      editproduit(id){
-        console.log('ID produit', id);
+      editTypeUser(id){
+        console.log('ID typeUser', id);
         this.modal_show = true;
-        produitResource.update(id, this.produit)
+        typeUserResource.update(id, this.typeUser)
         .then((response) => {
           Message({
             message: response.message || 'Modification effectué avec succès',
@@ -190,7 +190,7 @@
           console.log(error);
         })
         .finally(() => {
-          this.getproduits();
+          this.getTypeUsers();
           this.modal = false;
           this.modal_show = false;
         })

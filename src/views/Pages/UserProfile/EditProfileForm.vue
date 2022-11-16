@@ -94,6 +94,19 @@
               </el-option>
             </el-select>
           </b-col>
+          <b-col lg="6">
+            <label class="form-control-label">
+              Type Utilisateur
+            </label> <br/>
+            <el-select v-model="type_user_id" filterable placeholder="Select">
+              <el-option
+                v-for="(item, index) in type_users"
+                :key="index"
+                :label="item.libelle"
+                :value="item.id">
+              </el-option>
+            </el-select>
+          </b-col>
         </b-row>
           <button @click="updateProfile" class="text-right mt-3 btn btn-sm btn-primary">Modifier</button>
       </div>
@@ -117,6 +130,7 @@ import {Message} from "element-ui";
 
 const roleResource = new Resource('roles');
 const userResource = new Resource('users');
+const typeUserResource = new Resource('typeUsers');
 
 export default {
   props: {
@@ -128,12 +142,15 @@ export default {
     return {
       user:{},
       roles: [],
+      type_users: [],
       role_id: '',
+      type_user_id: null,
     };
   },
   created() {
     this.getUser();
     this.getRoles();
+    this.getTypeUsers();
   },
   methods: {
     async getUser(){
@@ -145,6 +162,10 @@ export default {
       const {data} = await roleResource.list();
       this.roles = data;
     },
+    async getTypeUsers(){
+      const {data} = await typeUserResource.list();
+      this.type_users = data;
+    },
     updateProfile() {
       const user = this.user;
       const resource = {
@@ -155,7 +176,7 @@ export default {
           telephone: user.telephone,
           nom_entreprise: user.nom_entreprise,
           nom_utilisateur: user.nom_utilisateur,
-          type_user_id: 1,
+          type_user_id: this.type_user_id,
           role: this.role_id,
       };
       userResource.update(this.user.id, resource)
@@ -168,7 +189,7 @@ export default {
         this.getUser();
       })
       .finally(() => {
-        window.location.reload();
+        this.$router.push({path: '/dashboard'})
       });
     }
   }

@@ -6,7 +6,7 @@
               <h3 class="mb-0">Promotions</h3>
             </b-col>
             <b-col class="col-6 text-right">
-              <base-button icon @click="handleAdd" variant="primary" size="sm" type="primary">
+              <base-button v-if="checkPermission(['creer promotion'])" icon @click="handleAdd" variant="primary" size="sm" type="primary">
                 <span class="btn-inner--icon"><i class="ni ni-notification-70"></i></span>
                 <span class="btn-inner--text">ajouter</span>
               </base-button>
@@ -59,10 +59,10 @@
                   <a href="#" class="mx-1"  data-bs-toggle="tooltip" data-bs-original-title="Preview product" @click="topromotionDetail(row.id)">
                     <i class="fas fa-eye text-secondary" aria-hidden="true"></i>
                   </a>
-                  <a href="#" class="mx-1" data-bs-toggle="tooltip" data-bs-original-title="Edit product" @click="handleEdit(row.id)">
+                  <a v-if="checkPermission(['modifier promotion'])" href="#" class="mx-1" data-bs-toggle="tooltip" data-bs-original-title="Edit product" @click="handleEdit(row.id)">
                     <i class="fas fa-user-edit text-secondary" aria-hidden="true"></i>
                   </a>
-                  <a href="javascript:;" class="mx-1"  data-bs-toggle="tooltip" data-bs-original-title="Delete product">
+                  <a v-if="checkPermission(['supprimer promotion'])" href="javascript:;" class="mx-1"  data-bs-toggle="tooltip" data-bs-original-title="Delete product">
                     <i class="fas fa-trash text-secondary" aria-hidden="true"></i>
                   </a>
                 </span>
@@ -119,6 +119,7 @@
   import {Message, Table, TableColumn} from 'element-ui';
   const promotionResource = new Resource('promotions');
   import VueElementLoading from "vue-element-loading";
+  import checkPermission from "../../../utils/permission";
 
   export default {
     name: 'promotion-list',
@@ -143,89 +144,90 @@
       this.getpromotions();
     },
     methods: {
-    getpromotions(){
-      this.show = true
-      promotionResource.list()
-      .then((response) => {
-        this.promotion_list = response.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-      .finally(()=>{
-        this.show = false;
-      });
-      console.log('promotion LIST', this.promotion_list);
-    },
-    addpromotion(bvModalEvent){
-      bvModalEvent.preventDefault();
-      const valid = this.$refs['promotion_form'].checkValidity();
-      console.log('VALID VALUE ', valid);
-      if (valid){
-        this.modal_show = true;
-        console.log(this.promotion);
-        promotionResource.store(this.promotion)
-          .then((response) => {
-            Message({
-              message: 'promotion ajouté avec succes',
-              type: 'success',
-              duration: 5 * 1000,
-            })
-          })
-          .catch((error) => {
-            console.log(error);
-          })
-          .finally(() => {
-            this.modal_show = false;
-            this.modal = false;
-            this.getpromotions();
-            this.$nextTick(() => {
-              this.$bvModal.hide('modal-1')
-            })
-            console.log('DONE');
-          });
-      } else {
-        Message({
-          message: 'Veuillez svp renseigner les champs',
-          type: 'error',
-          duration: 5 * 1000
+      checkPermission,
+      getpromotions(){
+        this.show = true
+        promotionResource.list()
+        .then((response) => {
+          this.promotion_list = response.data;
         })
-        return false;
-      }
-    },
-    handleAdd(){
-      this.modal = true;
-      this.add = true;
-    },
-    async handleEdit(id){
-      const { data } = await promotionResource.get(id);
-      this.promotion = data;
-      this.modal = true;
-      this.add = false;
-    },
-    topromotionDetail(id){
-      this.$router.push({ path: '/promotions/' + id });
-    },
-    editpromotion(id){
-      console.log('ID promotion', id);
-      this.modal_show = true;
-      promotionResource.update(id, this.promotion)
-      .then((response) => {
-        Message({
-          message: response.message || 'Modification effectué avec succès',
-          type: 'success',
-          duration: 5 * 1000,
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(()=>{
+          this.show = false;
         });
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-      .finally(() => {
-        this.getpromotions();
-        this.modal = false;
-        this.modal_show = false;
-      })
-    },
+        console.log('promotion LIST', this.promotion_list);
+      },
+      addpromotion(bvModalEvent){
+        bvModalEvent.preventDefault();
+        const valid = this.$refs['promotion_form'].checkValidity();
+        console.log('VALID VALUE ', valid);
+        if (valid){
+          this.modal_show = true;
+          console.log(this.promotion);
+          promotionResource.store(this.promotion)
+            .then((response) => {
+              Message({
+                message: 'promotion ajouté avec succes',
+                type: 'success',
+                duration: 5 * 1000,
+              })
+            })
+            .catch((error) => {
+              console.log(error);
+            })
+            .finally(() => {
+              this.modal_show = false;
+              this.modal = false;
+              this.getpromotions();
+              this.$nextTick(() => {
+                this.$bvModal.hide('modal-1')
+              })
+              console.log('DONE');
+            });
+        } else {
+          Message({
+            message: 'Veuillez svp renseigner les champs',
+            type: 'error',
+            duration: 5 * 1000
+          })
+          return false;
+        }
+      },
+      handleAdd(){
+        this.modal = true;
+        this.add = true;
+      },
+      async handleEdit(id){
+        const { data } = await promotionResource.get(id);
+        this.promotion = data;
+        this.modal = true;
+        this.add = false;
+      },
+      topromotionDetail(id){
+        this.$router.push({ path: '/promotions/' + id });
+      },
+      editpromotion(id){
+        console.log('ID promotion', id);
+        this.modal_show = true;
+        promotionResource.update(id, this.promotion)
+        .then((response) => {
+          Message({
+            message: response.message || 'Modification effectué avec succès',
+            type: 'success',
+            duration: 5 * 1000,
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          this.getpromotions();
+          this.modal = false;
+          this.modal_show = false;
+        })
+      },
     }
   }
 </script>

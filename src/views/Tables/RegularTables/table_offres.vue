@@ -7,7 +7,7 @@
             </b-col>
             <b-col class="col-3 text-right">
               <!-- b-form-input size="sm" placeholder="recherche ..."></b-form-input-->
-              <base-button icon size="sm" type="primary" @click="ajoutOffre($event.target)" ref="btnShow">
+              <base-button v-if="checkPermission(['creer offre'])"  icon size="sm" type="primary" @click="ajoutOffre($event.target)" ref="btnShow">
                 <span class="btn-inner--icon"><i class="ni ni-basket"></i></span>
                 <span class="btn-inner--text" style="font-size: 12px">Ajouter</span>
               </base-button>

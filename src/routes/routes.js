@@ -260,6 +260,13 @@ const constantRoutes = [
         name: 'Roles',
         meta: { title: 'rolePermission', icon: 'el-icon-key' },
       },
+      /** Roles et permissions */
+      {
+        path: 'type_users',
+        component: () => import(/* webpackChunkName: "roles" */ '@/views/Admin/TypeUtilisateur'),
+        name: 'type utilisateur',
+        meta: { title: 'typeUsers', icon: 'el-icon-key' },
+      },
     ],
   },
   {

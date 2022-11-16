@@ -83,6 +83,7 @@
                     <hr class="my-3" style="margin-left: 2rem; margin-right: 2rem;">
                   </li>
                   <sidebar-item
+                    v-if="checkRole(['admin'])"
                     :link="{
                       name: 'Administration',
                       path: '/administration',
@@ -98,6 +99,13 @@
                           link : {
                           name: 'Roles',
                           path: '/administration/roles',
+                          icon: 'ni ni-key-25 text-warning',
+                          },
+                        },
+                        {
+                          link : {
+                          name: 'Type Utilisateur',
+                          path: '/administration/type_users',
                           icon: 'ni ni-key-25 text-warning',
                           },
                         },
@@ -140,6 +148,7 @@
   import NavbarToggleButton from '@/components/NavbarToggleButton';
   import Cookies from 'js-cookie';
   import {removeToken} from "../../utils/auth";
+  import checkRole from "../../utils/role";
   export default {
     name: 'sidebar',
     components: {
@@ -163,6 +172,7 @@
       };
     },
     methods: {
+      checkRole,
       closeSidebar() {
         this.$sidebar.displaySidebar(false);
       },

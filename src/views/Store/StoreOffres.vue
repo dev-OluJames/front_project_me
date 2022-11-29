@@ -52,7 +52,7 @@
               <div class="shop-widget catagory mb-50 contact-form-area">
                 <h4 class="widget-title">Varietes</h4>
                 <div class="widget-desc">
-                  <el-select v-model="query.variete_produit_id"  filterable placeholder="Choisir" style="margin-bottom: 10px">
+                  <el-select v-model="querry.variete_produit_id"  filterable placeholder="Choisir" style="margin-bottom: 10px">
                     <el-option
                       v-for="variete in varietes"
                       :key="variete.id"
@@ -78,7 +78,7 @@
               <div class="shop-widget sort-by mb-50 contact-form-area">
                 <h4 class="widget-title">Village</h4>
                 <div class="widget-desc">
-                  <el-select v-model="query.village_id"  filterable placeholder="Choisir"  style="margin-bottom: 10px">
+                  <el-select v-model="querry.village_id"  filterable placeholder="Choisir"  style="margin-bottom: 10px">
                     <el-option
                       v-for="village in villages"
                       :key="village.id"
@@ -154,11 +154,7 @@
 
               <!-- Pagination -->
               <nav aria-label="Page navigation">
-                <ul class="pagination">
-                  <li class="page-item"><a class="page-link" href="#">1</a></li>
-                  <li class="page-item"><a class="page-link" href="#">2</a></li>
-                  <li class="page-item"><a class="page-link" href="#"><i class="fa fa-angle-right"></i></a></li>
-                </ul>
+                  <b-pagination v-if="total_offres > querry.limit" v-model="querry.page" :per-page="querry.limit" :total-rows="total_offres" @input="offresList"></b-pagination>
               </nav>
             </div>
           </div>
@@ -193,10 +189,14 @@ export default {
     return {
       offres: [],
       offreFavoris: {},
+      total_offres: null,
       userFavoris: [],
       villages: [],
       varietes: [],
-      query: {
+      querry: {
+        limit: 6,
+        page: 1,
+        keyword: '',
         village_id: null,
         variete_produit_id: null,
       },
@@ -205,7 +205,7 @@ export default {
     }
   },
   created() {
-    this.offresList(this.query);
+    this.offresList(this.querry);
     if (this.authenticated){
       this.getUserOffresFavoris(this.$store.getters.userId);
       this.getvillages();
@@ -238,9 +238,10 @@ export default {
     offresList(){
       // const { data } = await offreResource.list();
       // this.offres = data;
-      offreResource.list(this.query)
+      offreResource.list(this.querry)
         .then((response) => {
           console.log('DATA offres', response.data);
+          this.total_offres = response.meta.total;
           this.offres = response.data;
           // this.offres = response.data.filter((offre)=> {
           //   return offre.is_active === true;

@@ -12,6 +12,40 @@
               </base-button>
             </b-col>
           </b-row>
+          <b-row>
+            <b-col cols="6">
+              <b-row>
+                <b-col cols="5">
+                  <b-form-input size="sm" v-model="querry.keyword" @input="getVillages" placeholder="recherche ..." style="margin-top: 10px"></b-form-input>
+                </b-col>
+                <b-col cols="5">
+                  <el-select
+                    v-model="querry.ville_id"
+                    filterable
+                    size="small"
+                    @change="getVillages"
+                    allow-create
+                    default-first-option
+                    style="margin-top: 10px; width: 100%"
+                    placeholder="Type">
+                    <el-option
+                      v-for="item in villes"
+                      :key="item.id"
+                      :label="item.libelle"
+                      :value="item.id">
+                    </el-option>
+                  </el-select>
+                </b-col>
+                <b-col cols="2">
+                  <div>
+                    <base-button style="margin-top: 10px;" @click="resetVilles" size="sm" icon type="primary">
+                      <span class="btn-inner--icon"><i class="ni ni-fat-remove"></i></span>
+                    </base-button>
+                  </div>
+                </b-col>
+              </b-row>
+            </b-col>
+          </b-row>
         </b-card-header>
       <vue-element-loading :active="show" spinner="bar-fade-scale" color="#2dce94" />
         <el-table class="table-responsive table"
@@ -54,9 +88,9 @@
             </el-table-column>
         </el-table>
 
-        <b-card-footer class="py-4 d-flex justify-content-end">
-            <base-pagination v-model="currentPage" :per-page="10" :total="50"></base-pagination>
-        </b-card-footer>
+      <b-card-footer class="py-4 d-flex justify-content-end">
+        <b-pagination v-if="total_villages > querry.limit" v-model="querry.page" :per-page="querry.limit" :total-rows="total_villages" @input="getVillages"></b-pagination>
+      </b-card-footer>
       <!--  ================== ADD villages MODAL =================== -->
       <modal :show.sync="modal" title="Ajouter un villages">
         <vue-element-loading :active="modal_show" spinner="bar-fade-scale" color="#2dce94" />
@@ -85,6 +119,7 @@
   import Resource from "../../../api/resource";
   import {Message, Table, TableColumn} from 'element-ui';
   const villagesResource = new Resource('villages');
+  const villesResource = new Resource('villes');
   import VueElementLoading from "vue-element-loading";
   import checkPermission from "../../../utils/permission";
 
@@ -99,23 +134,38 @@
       return {
         list: [],
         currentPage: 1,
+        total_villages: null,
         villages: {},
+        villes: [],
         show: false,
         villages_list: [],
         add: true,
         modal: false,
         modal_show: false,
+        querry: {
+          limit: 5,
+          page: 1,
+          ville_id: null,
+          keyword: '',
+        }
       };
     },
     created() {
       this.getVillages();
+      this.getVilles();
     },
     methods: {
       checkPermission,
-    getVillages(){
+      async getVilles(){
+        const {data} = await villesResource.list();
+        this.villes = data;
+        console.log('DATA VILLES', this.villes);
+      },
+      getVillages(){
       this.show = true
-      villagesResource.list()
+      villagesResource.list(this.querry)
       .then((response) => {
+        this.total_villages = response.meta.total;
         this.villages_list = response.data;
       })
       .catch((error) => {
@@ -126,7 +176,7 @@
       });
       console.log('villages LIST', this.villages_list);
     },
-    addville(bvModalEvent){
+      addville(bvModalEvent){
       bvModalEvent.preventDefault();
       const valid = this.$refs['ville_form'].checkValidity();
       console.log('VALID VALUE ', valid);
@@ -162,20 +212,24 @@
         return false;
       }
     },
-    handleAdd(){
+      resetVilles(){
+        this.querry.ville_id = null;
+        this.getVillages();
+      },
+      handleAdd(){
       this.modal = true;
       this.add = true;
     },
-    async handleEdit(id){
+      async handleEdit(id){
       const { data } = await villagesResource.get(id);
       this.villages = data;
       this.modal = true;
       this.add = false;
     },
-    toVillageDetail(id){
+      toVillageDetail(id){
       this.$router.push({ path: '/villages/' + id });
     },
-    editVillage(id){
+      editVillage(id){
       console.log('ID villages', id);
       this.modal_show = true;
       villagesResource.update(id, this.villages)

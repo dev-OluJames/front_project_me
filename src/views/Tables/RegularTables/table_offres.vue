@@ -74,7 +74,7 @@
               </template>
             </el-table-column>
 
-            <el-table-column label="Qtte" min-width="90px">
+            <el-table-column label="Qtte" min-width="100px">
               <template v-slot="{row}">
                 <span class="status">{{row.quantite}}</span>
               </template>
@@ -82,15 +82,16 @@
 
             <el-table-column label="Prix Agriculteur"
                              prop="completion"
-                             min-width="180px">
+                             min-width="150px">
               <template v-slot="{row}">
                 <span class="status">{{row.prix_agriculteur}}</span>
               </template>
             </el-table-column>
 
-            <el-table-column label="Prix plateforme"
+            <el-table-column :label="'Prix \n plateforme'"
                              prop="completion"
-                             min-width="230px">
+                             min-width="150px"
+                             class="pre-formatted">
               <template v-slot="{row}">
                 <span v-if="row.prix_plateforme !== null && row.prix_plateforme !== 0" class="status">{{row.prix_plateforme}}</span>
                 <span v-else class="status">
@@ -164,7 +165,7 @@
         </el-table>
 
         <b-card-footer class="py-4 d-flex justify-content-end">
-            <base-pagination v-model="currentPage" :per-page="10" :total="50"></base-pagination>
+            <b-pagination v-if="total_offre > querry.limit" v-model="querry.page" :per-page="querry.limit" :total-rows="total_offre" @input="getOffresList"></b-pagination>
         </b-card-footer>
       <AddModal
         id="modal-3"
@@ -198,6 +199,7 @@
         projects,
         currentPage: 1,
         show: false,
+        total_offre: null,
         offres: [],
         offre: {},
         offre_id: {},
@@ -205,7 +207,11 @@
         type_offre_id: '',
         add_prix_plateforme: false,
         prix_plateforme: null,
-        action: 'ajout'
+        action: 'ajout',
+        querry: {
+          page: 1,
+          limit: 5,
+        },
       };
     },
     created() {
@@ -241,6 +247,7 @@
               duration: 5 * 1000
             });
             this.add_prix_plateforme = false;
+            this.prix_plateforme = null;
           })
           .catch((error)=>{
             console.log(error);
@@ -319,14 +326,13 @@
       },
       getOffresList(){
         this.show = true;
-        const querry = {
-          type_offre: this.type_offre_id,
-          brouillon: true,
-        }
-        offreResource.list(querry)
-        .then((respone) => {
-          const items = respone.data;
-          console.log('OFRES', respone.data);
+        console.log('PAGE AFTER PAGINATE ', this.querry);
+        this.querry.type_offre = this.type_offre_id;
+        offreResource.list(this.querry)
+        .then((response) => {
+          this.total_offre = response.meta.total;
+          const items = response.data;
+          console.log('OFRES', response.data);
           this.offres = items.map(v => {
             this.$set(v, 'edit', false) // https://vuejs.org/v2/guide/reactivity.html
             return v
@@ -360,5 +366,8 @@ a {
 .fa, .fas {
   font-weight: 900;
   font-size: 14px;
+}
+.pre-formatted {
+  white-space: pre;
 }
 </style>

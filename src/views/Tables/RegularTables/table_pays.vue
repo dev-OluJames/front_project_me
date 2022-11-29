@@ -12,6 +12,15 @@
               </base-button>
             </b-col>
           </b-row>
+          <b-row>
+            <b-col cols="6">
+              <b-row>
+                <b-col cols="5">
+                  <b-form-input size="sm" v-model="querry.keyword" @input="getpays" placeholder="recherche ..." style="margin-top: 10px"></b-form-input>
+                </b-col>
+              </b-row>
+            </b-col>
+          </b-row>
         </b-card-header>
       <vue-element-loading :active="show" spinner="bar-fade-scale" color="#2dce94" />
         <el-table class="table-responsive table"
@@ -54,9 +63,9 @@
             </el-table-column>
         </el-table>
 
-        <b-card-footer class="py-4 d-flex justify-content-end">
-            <base-pagination v-model="currentPage" :per-page="10" :total="50"></base-pagination>
-        </b-card-footer>
+      <b-card-footer class="py-4 d-flex justify-content-end">
+        <b-pagination v-if="total_pays > querry.limit" v-model="querry.page" :per-page="querry.limit" :total-rows="total_pays" @input="getpays"></b-pagination>
+      </b-card-footer>
       <!--  ================== ADD pays MODAL =================== -->
       <modal :show.sync="modal" title="Ajouter un pays">
         <vue-element-loading :active="modal_show" spinner="bar-fade-scale" color="#2dce94" />
@@ -99,6 +108,12 @@
       return {
         list: [],
         currentPage: 1,
+        total_pays: null,
+        querry: {
+          page: 1,
+          limit: 5,
+          keyword: '',
+        },
         pays: {},
         show: false,
         pays_list: [],
@@ -114,8 +129,10 @@
       checkPermission,
       getpays(){
         this.show = true
-        paysResource.list()
+        console.log('PAGE AFTER PAGINATE ', this.querry);
+        paysResource.list(this.querry)
         .then((response) => {
+          this.total_pays = response.meta.total;
           this.pays_list = response.data;
         })
         .catch((error) => {

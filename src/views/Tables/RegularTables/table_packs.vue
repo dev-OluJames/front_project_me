@@ -54,9 +54,9 @@
             </el-table-column>
         </el-table>
 
-        <b-card-footer class="py-4 d-flex justify-content-end">
-            <base-pagination v-model="currentPage" :per-page="10" :total="50"></base-pagination>
-        </b-card-footer>
+      <b-card-footer class="py-4 d-flex justify-content-end">
+        <b-pagination v-if="total_packs > querry.limit" v-model="querry.page" :per-page="querry.limit" :total-rows="total_packs" @input="getPacks"></b-pagination>
+      </b-card-footer>
       <!--  ================== ADD PACK MODAL =================== -->
       <modal :show.sync="modal" title="Ajouter un Pack">
         <vue-element-loading :active="modal_show" spinner="bar-fade-scale" color="#2dce94" />
@@ -99,12 +99,17 @@
       return {
         list: [],
         currentPage: 1,
+        total_packs: null,
         pack: {},
         show: false,
         pack_list: [],
         add: true,
         modal: false,
         modal_show: false,
+        querry: {
+          limit: 5,
+          page: 1,
+        }
       };
     },
     created() {
@@ -114,8 +119,9 @@
       checkPermission,
       getPacks(){
         this.show = true
-        packResource.list()
+        packResource.list(this.querry)
         .then((response) => {
+          this.total_packs = response.meta.total;
           this.pack_list = response.data;
         })
         .catch((error) => {

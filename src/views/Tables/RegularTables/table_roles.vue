@@ -12,6 +12,15 @@
           </base-button>
         </b-col>
       </b-row>
+      <b-row>
+        <b-col cols="6">
+          <b-row>
+            <b-col cols="5">
+              <b-form-input size="sm" v-model="querry.keyword" @input="getRoles" placeholder="recherche ..." style="margin-top: 10px"></b-form-input>
+            </b-col>
+          </b-row>
+        </b-col>
+      </b-row>
     </b-card-header>
     <vue-element-loading :active="show" spinner="bar-fade-scale" color="#2dce94" />
     <el-table class="table-responsive table"
@@ -69,7 +78,7 @@
     </el-table>
 
     <b-card-footer class="py-4 d-flex justify-content-end">
-      <base-pagination v-model="currentPage" :per-page="10" :total="50"></base-pagination>
+      <b-pagination v-if="total_roles > querry.limit" v-model="querry.page" :per-page="querry.limit" :total-rows="total_roles" @input="getRoles"></b-pagination>
     </b-card-footer>
     <add-role-modal id="modal-4" @added="setLoad" :trigger="activate" :set_role="role" @opened="deactivate"/>
 
@@ -95,6 +104,12 @@ export default {
       role: {},
       currentPage: 1,
       show: false,
+      total_roles: null,
+      querry: {
+        page: 1,
+        limit: 5,
+        keyword: '',
+      }
     };
   },
   created() {
@@ -116,8 +131,9 @@ export default {
     },
     getRoles(){
       this.show = true;
-      roleResource.list()
+      roleResource.list(this.querry)
       .then((response) => {
+        this.total_roles = response.meta.total;
         this.list = response.data;
       })
       .catch((error)=> {

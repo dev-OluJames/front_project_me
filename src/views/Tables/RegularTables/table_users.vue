@@ -12,6 +12,15 @@
               </button>
             </b-col>
           </b-row>
+          <b-row>
+            <b-col cols="6">
+              <b-row>
+                <b-col cols="5">
+                  <b-form-input size="sm" v-model="querry.keyword" @input="getUtilisateurs" placeholder="recherche ..." style="margin-top: 10px"></b-form-input>
+                </b-col>
+              </b-row>
+            </b-col>
+          </b-row>
         </b-card-header>
       <vue-element-loading :active="show" spinner="bar-fade-scale" color="#2dce94" />
         <el-table class="table-responsive table"
@@ -91,9 +100,9 @@
             </el-table-column>
         </el-table>
 
-        <b-card-footer class="py-4 d-flex justify-content-end">
-            <base-pagination v-model="currentPage" :per-page="10" :total="50"></base-pagination>
-        </b-card-footer>
+      <b-card-footer class="py-4 d-flex justify-content-end">
+        <b-pagination v-if="total_users > querry.limit" v-model="querry.page" :per-page="querry.limit" :total-rows="total_users" @input="getUtilisateurs"></b-pagination>
+      </b-card-footer>
     </b-card>
 </template>
 <script>
@@ -113,7 +122,12 @@
     data() {
       return {
         list: [],
-        currentPage: 1,
+        total_users: null,
+        querry: {
+          page: 1,
+          limit: 10,
+          keyword: '',
+        },
         show: false,
       };
     },
@@ -124,8 +138,9 @@
       checkPermission,
       getUtilisateurs(){
         this.show = true;
-        userResource.list()
+        userResource.list(this.querry)
         .then((response) => {
+          this.total_users = response.meta.total;
           this.list = response.data;
         })
         .catch((error) => {

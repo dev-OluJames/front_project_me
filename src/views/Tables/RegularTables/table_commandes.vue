@@ -63,7 +63,7 @@
 
             <el-table-column label="Libelle"
                              prop="budget"
-                             min-width="150px">
+                             min-width="250px">
               <template v-slot="{row}">
                   <span class="status">{{row.libelle}}</span>
               </template>
@@ -128,9 +128,9 @@
 
         </el-table>
 
-        <b-card-footer class="py-4 d-flex justify-content-end">
-            <base-pagination v-model="currentPage" :per-page="10" :total="50"></base-pagination>
-        </b-card-footer>
+      <b-card-footer class="py-4 d-flex justify-content-end">
+        <b-pagination v-model="querry.page" :per-page="querry.limit" :total-rows="total_demande" @input="getDemandes"></b-pagination>
+      </b-card-footer>
 
       <AddModal
         id="modal-4"
@@ -162,11 +162,16 @@ import {Message, Table, TableColumn} from 'element-ui';
     data() {
       return {
         demandes: [],
+        total_demande: null,
         demande_id: null,
         type_demandes: [],
         type_demande_id: '',
         action: 'ajout',
         currentPage: 1,
+        querry: {
+          page: 1,
+          limit: 5,
+        },
         show: false,
       };
     },
@@ -217,11 +222,10 @@ import {Message, Table, TableColumn} from 'element-ui';
       },
       getDemandes(){
         this.show = true;
-        const querry = {
-          type_demande: this.type_demande_id,
-        };
-        demandeResource.list(querry)
+        this.querry.type_demande = this.type_demande_id;
+        demandeResource.list(this.querry)
         .then((response) => {
+          this.total_demande = response.meta.total;
           this.demandes = response.data;
         })
         .finally(() => {

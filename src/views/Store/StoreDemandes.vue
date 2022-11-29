@@ -49,23 +49,10 @@
             <div class="shop-sidebar-area">
 
               <!-- Shop Widget -->
-              <div class="shop-widget price mb-50">
-                <h4 class="widget-title">Prices</h4>
-                <div class="widget-desc">
-                  <div class="slider-range">
-                    <div data-min="8" data-max="30" data-unit="$" class="slider-range-price ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" data-value-min="8" data-value-max="30" data-label-result="Price:">
-                      <div class="ui-slider-range ui-widget-header ui-corner-all"></div>
-                      <span class="ui-slider-handle ui-state-default ui-corner-all first-handle" tabindex="0"></span>
-                      <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"></span>
-                    </div>
-                    <div class="range-price">Price: $8 - $30</div>
-                  </div>
-                </div>
-              </div>
 
               <!-- Shop Widget -->
               <div class="shop-widget catagory mb-50">
-                <h4 class="widget-title">Categories</h4>
+                <h4 class="widget-title">Varietes</h4>
                 <div class="widget-desc">
                   <!-- Single Checkbox -->
                   <div class="custom-control custom-checkbox d-flex align-items-center mb-2">
@@ -102,7 +89,7 @@
 
               <!-- Shop Widget -->
               <div class="shop-widget sort-by mb-50">
-                <h4 class="widget-title">Sort by</h4>
+                <h4 class="widget-title">Villages</h4>
                 <div class="widget-desc">
                   <!-- Single Checkbox -->
                   <div class="custom-control custom-checkbox d-flex align-items-center mb-2">
@@ -169,11 +156,7 @@
 
               <!-- Pagination -->
               <nav aria-label="Page navigation">
-                <ul class="pagination">
-                  <li class="page-item"><a class="page-link" href="#">1</a></li>
-                  <li class="page-item"><a class="page-link" href="#">2</a></li>
-                  <li class="page-item"><a class="page-link" href="#"><i class="fa fa-angle-right"></i></a></li>
-                </ul>
+                  <b-pagination v-if="total_demandes > querry.limit" v-model="querry.page" :per-page="querry.limit" :total-rows="total_demandes" @input="demandesList"></b-pagination>
               </nav>
             </div>
           </div>
@@ -208,13 +191,19 @@ export default {
     return {
       demandes: [],
       demandeFavoris: {},
+      total_demandes: null,
+      querry: {
+        limit: 6,
+        page: 1,
+        keyword: ''
+      },
       userFavoris: [],
       loaded: true,
       authenticated : isLogged(),
     }
   },
   created() {
-    this.demandesList();
+    this.demandesList(this.querry);
     if (this.authenticated){
       this.getUserOffresFavoris(this.$store.getters.userId);
     }
@@ -237,13 +226,14 @@ export default {
     demandesList(){
       // const { data } = await offreResource.list();
       // this.offres = data;
-      demandeResource.list()
+      demandeResource.list(this.querry)
         .then((response) => {
-        this.demandes = response.data.filter((demande)=> {
-            return demande.is_active === true;
-          });
-        console.log('DATA DEMANDES', response.data);
-        this.loaded = false;
+          this.total_demandes = response.meta.total;
+          this.demandes = response.data.filter((demande)=> {
+              return demande.is_active === true;
+            });
+          console.log('DATA DEMANDES', response.data);
+          this.loaded = false;
       });
     },
     demandeDetail(id){

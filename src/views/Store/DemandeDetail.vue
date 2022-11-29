@@ -35,18 +35,21 @@
                 <div id="product_details_slider" class="carousel slide" data-ride="carousel">
                   <div class="carousel-inner">
                     <div class="carousel-item active">
-                      <a class="product-img" href="img/bg-img/49.jpg" title="Product Image">
-                        <img class="d-block w-100" src="store/img/bg-img/49.jpg" alt="1">
+                      <a class="product-img" :href="demande.image[0].lien" title="Product Image">
+                        <img v-if="demande.image" style="width:210px; height:302px" :src="demande.image[0].lien" alt="">
+                        <img v-else src="store/img/bg-img/40.png" alt="">
                       </a>
                     </div>
                     <div class="carousel-item">
-                      <a class="product-img" href="img/bg-img/49.jpg" title="Product Image">
-                        <img class="d-block w-100" src="store/img/bg-img/49.jpg" alt="1">
+                      <a class="product-img" :href="demande.image[0].lien" title="Product Image">
+                        <img v-if="demande.image" style="width:210px; height:302px" :src="demande.image[0].lien" alt="">
+                        <img v-else src="store/img/bg-img/40.png" alt="">
                       </a>
                     </div>
                     <div class="carousel-item">
-                      <a class="product-img" href="img/bg-img/49.jpg" title="Product Image">
-                        <img class="d-block w-100" src="store/img/bg-img/49.jpg" alt="1">
+                      <a class="product-img" :href="demande.image[0].lien" title="Product Image">
+                        <img v-if="demande.image" style="width:210px; height:302px" :src="demande.image[0].lien" alt="">
+                        <img v-else src="store/img/bg-img/40.png" alt="">
                       </a>
                     </div>
                   </div>

@@ -12,6 +12,15 @@
               </base-button>
             </b-col>
           </b-row>
+          <b-row>
+            <b-col cols="6">
+              <b-row>
+                <b-col cols="5">
+                  <b-form-input size="sm" v-model="querry.keyword" @input="getproduits" placeholder="recherche ..." style="margin-top: 10px"></b-form-input>
+                </b-col>
+              </b-row>
+            </b-col>
+          </b-row>
         </b-card-header>
       <vue-element-loading :active="show" spinner="bar-fade-scale" color="#2dce94" />
         <el-table class="table-responsive table"
@@ -55,7 +64,7 @@
         </el-table>
 
         <b-card-footer class="py-4 d-flex justify-content-end">
-            <base-pagination v-model="currentPage" :per-page="10" :total="50"></base-pagination>
+            <b-pagination v-model="querry.page" :per-page="querry.limit" :total-rows="total_produits" @input="getproduits"></b-pagination>
         </b-card-footer>
       <!--  ================== ADD produit MODAL =================== -->
       <modal :show.sync="modal" title="Ajouter un produit">
@@ -99,11 +108,17 @@
       return {
         list: [],
         currentPage: 1,
+        total_produits: null,
         produit: {},
         show: false,
         produit_list: [],
         add: true,
         modal: false,
+        querry: {
+          page: 1,
+          limit: 5,
+          keyword: '',
+        },
         modal_show: false,
       };
     },
@@ -114,8 +129,9 @@
       checkPermission,
       getproduits(){
         this.show = true
-        produitResource.list()
+        produitResource.list(this.querry)
         .then((response) => {
+          this.total_produits = response.meta.total;
           this.produit_list = response.data;
         })
         .catch((error) => {

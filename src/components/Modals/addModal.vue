@@ -354,7 +354,7 @@ export default {
     vueDropzone,
     VueElementLoading
   },
-  props: {'id':{type: String}, 'title': {type: String}, 'type':{type: String}, 'item': {type: Number}, 'action': {type: String, default: 'ajout'}},
+  props: {'id':{type: String}, 'title': {type: String}, 'type':{type: String}, 'item': {type: Object}, 'action': {type: String, default: 'ajout'}},
   data() {
     return {
       dropzoneOptions: {

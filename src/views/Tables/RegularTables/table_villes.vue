@@ -12,6 +12,40 @@
               </base-button>
             </b-col>
           </b-row>
+          <b-row>
+            <b-col cols="6">
+              <b-row>
+                <b-col cols="5">
+                  <b-form-input size="sm" v-model="querry.keyword" @input="getvilles" placeholder="recherche ..." style="margin-top: 10px"></b-form-input>
+                </b-col>
+                <b-col cols="5">
+                  <el-select
+                    v-model="querry.pays_id"
+                    filterable
+                    size="small"
+                    @change="getvilles"
+                    allow-create
+                    default-first-option
+                    style="margin-top: 10px; width: 100%"
+                    placeholder="Type">
+                    <el-option
+                      v-for="item in pays"
+                      :key="item.id"
+                      :label="item.libelle"
+                      :value="item.id">
+                    </el-option>
+                  </el-select>
+                </b-col>
+                <b-col cols="2">
+                  <div>
+                    <base-button style="margin-top: 10px;" @click="resetPays" size="sm" icon type="primary">
+                      <span class="btn-inner--icon"><i class="ni ni-fat-remove"></i></span>
+                    </base-button>
+                  </div>
+                </b-col>
+              </b-row>
+            </b-col>
+          </b-row>
         </b-card-header>
       <vue-element-loading :active="show" spinner="bar-fade-scale" color="#2dce94" />
         <el-table class="table-responsive table"
@@ -54,9 +88,9 @@
             </el-table-column>
         </el-table>
 
-        <b-card-footer class="py-4 d-flex justify-content-end">
-            <base-pagination v-model="currentPage" :per-page="10" :total="50"></base-pagination>
-        </b-card-footer>
+      <b-card-footer class="py-4 d-flex justify-content-end">
+        <b-pagination v-if="total_villes > querry.limit" v-model="querry.page" :per-page="querry.limit" :total-rows="total_villes" @input="getvilles"></b-pagination>
+      </b-card-footer>
       <!--  ================== ADD villes MODAL =================== -->
       <modal :show.sync="modal" title="Ajouter un villes">
         <vue-element-loading :active="modal_show" spinner="bar-fade-scale" color="#2dce94" />
@@ -84,10 +118,10 @@
 <script>
   import Resource from "../../../api/resource";
   import {Message, Table, TableColumn} from 'element-ui';
-  const villesResource = new Resource('villes');
   import VueElementLoading from "vue-element-loading";
   import checkPermission from "../../../utils/permission";
-
+  const villesResource = new Resource('villes');
+  const paysResource = new Resource('pays');
   export default {
     name: 'villes-list',
     components: {
@@ -99,6 +133,14 @@
       return {
         list: [],
         currentPage: 1,
+        total_villes: null,
+        querry: {
+          limit: 5,
+          page: 1,
+          pays_id: null,
+          keyword: '',
+        },
+        pays: [],
         villes: {},
         show: false,
         villes_list: [],
@@ -109,92 +151,103 @@
     },
     created() {
       this.getvilles();
+      this.getPays();
     },
     methods: {
       checkPermission,
-    getvilles(){
-      this.show = true
-      villesResource.list()
-      .then((response) => {
-        this.villes_list = response.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-      .finally(()=>{
-        this.show = false;
-      });
-      console.log('villes LIST', this.villes_list);
-    },
-    addville(bvModalEvent){
-      bvModalEvent.preventDefault();
-      const valid = this.$refs['ville_form'].checkValidity();
-      console.log('VALID VALUE ', valid);
-      if (valid){
-        this.modal_show = true;
-        console.log(this.villes);
-        villesResource.store(this.villes)
-          .then((response) => {
-            Message({
-              message: 'villes ajouté avec succes',
-              type: 'success',
-              duration: 5 * 1000,
-            })
-          })
-          .catch((error) => {
-            console.log(error);
-          })
-          .finally(() => {
-            this.modal_show = false;
-            this.modal = false;
-            this.getvilles();
-            this.$nextTick(() => {
-              this.$bvModal.hide('modal-1')
-            })
-            console.log('DONE');
-          });
-      } else {
-        Message({
-          message: 'Veuillez svp renseigner les champs',
-          type: 'error',
-          duration: 5 * 1000
+      async getPays(){
+        const {data} = await paysResource.list();
+        this.pays = data;
+        console.log('DATA PAYS', this.pays);
+      },
+      getvilles(){
+        this.show = true
+        villesResource.list(this.querry)
+        .then((response) => {
+          this.total_villes = response.meta.total;
+          this.villes_list = response.data;
         })
-        return false;
-      }
-    },
-    handleAdd(){
-      this.modal = true;
-      this.add = true;
-    },
-    async handleEdit(id){
-      const { data } = await villesResource.get(id);
-      this.villes = data;
-      this.modal = true;
-      this.add = false;
-    },
-    toVilleDetail(id){
-      this.$router.push({ path: '/villes/' + id });
-    },
-    editVille(id){
-      console.log('ID villes', id);
-      this.modal_show = true;
-      villesResource.update(id, this.villes)
-      .then((response) => {
-        Message({
-          message: response.message || 'Modification effectué avec succès',
-          type: 'success',
-          duration: 5 * 1000,
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(()=>{
+          this.show = false;
         });
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-      .finally(() => {
+        console.log('villes LIST', this.villes_list);
+      },
+      resetPays(){
+        this.querry.pays_id = null;
         this.getvilles();
-        this.modal = false;
-        this.modal_show = false;
-      })
-    },
+      },
+      addville(bvModalEvent){
+        bvModalEvent.preventDefault();
+        const valid = this.$refs['ville_form'].checkValidity();
+        console.log('VALID VALUE ', valid);
+        if (valid){
+          this.modal_show = true;
+          console.log(this.villes);
+          villesResource.store(this.villes)
+            .then((response) => {
+              Message({
+                message: 'villes ajouté avec succes',
+                type: 'success',
+                duration: 5 * 1000,
+              })
+            })
+            .catch((error) => {
+              console.log(error);
+            })
+            .finally(() => {
+              this.modal_show = false;
+              this.modal = false;
+              this.getvilles();
+              this.$nextTick(() => {
+                this.$bvModal.hide('modal-1')
+              })
+              console.log('DONE');
+            });
+        } else {
+          Message({
+            message: 'Veuillez svp renseigner les champs',
+            type: 'error',
+            duration: 5 * 1000
+          })
+          return false;
+        }
+      },
+      handleAdd(){
+        this.modal = true;
+        this.add = true;
+      },
+      async handleEdit(id){
+        const { data } = await villesResource.get(id);
+        this.villes = data;
+        this.modal = true;
+        this.add = false;
+      },
+      toVilleDetail(id){
+        this.$router.push({ path: '/villes/' + id });
+      },
+      editVille(id){
+        console.log('ID villes', id);
+        this.modal_show = true;
+        villesResource.update(id, this.villes)
+        .then((response) => {
+          Message({
+            message: response.message || 'Modification effectué avec succès',
+            type: 'success',
+            duration: 5 * 1000,
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          this.getvilles();
+          this.modal = false;
+          this.modal_show = false;
+        })
+      },
     }
   }
 </script>

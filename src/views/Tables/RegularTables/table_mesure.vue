@@ -62,9 +62,9 @@
             </el-table-column>
         </el-table>
 
-        <b-card-footer class="py-4 d-flex justify-content-end">
-            <base-pagination v-model="currentPage" :per-page="10" :total="50"></base-pagination>
-        </b-card-footer>
+      <b-card-footer class="py-4 d-flex justify-content-end">
+        <b-pagination v-if="total_mesures > querry.limit" v-model="querry.page" :per-page="querry.limit" :total-rows="total_mesures" @input="getMesures"></b-pagination>
+      </b-card-footer>
       <!--  ================== ADD MESURE MODAL =================== -->
       <modal :show.sync="modal" title="Ajouter un Mesure">
         <vue-element-loading :active="modal_show" spinner="bar-fade-scale" color="#2dce94" />
@@ -94,6 +94,7 @@
         </template>
       </modal>
     </b-card>
+
 </template>
 <script>
   import Resource from "../../../api/resource";
@@ -112,6 +113,7 @@
     data() {
       return {
         list: [],
+        total_mesures: null,
         currentPage: 1,
         mesure: {},
         show: false,
@@ -119,6 +121,10 @@
         add: true,
         modal: false,
         modal_show: false,
+        querry: {
+          limit: 10,
+          page: 1,
+        }
       };
     },
     created() {
@@ -128,8 +134,9 @@
       checkPermission,
     getMesures(){
       this.show = true
-      mesureResource.list()
+      mesureResource.list(this.querry)
       .then((response) => {
+        this.total_mesures = response.meta.total;
         this.mesure_list = response.data;
       })
       .catch((error) => {

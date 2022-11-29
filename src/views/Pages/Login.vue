@@ -73,10 +73,10 @@
                     <b-img src="img/theme/profile2.png" rounded="circle" alt="Circle image"></b-img>
                     <router-link :to="{ name: 'register', params: { type: 'utilisateur' }}" class="text-light"><small>Utilisateur</small></router-link>
                   </b-col>
-                  <b-col class="text-center">
+<!--                  <b-col class="text-center">
                     <b-img src="img/theme/img.png" rounded="circle" alt="Circle image"></b-img>
                     <router-link :to="{ name: 'register', params: { type: 'aggregateur' }}" class="text-light"><small>Aggregateur</small></router-link>
-                  </b-col>
+                  </b-col>-->
                   <b-col class="text-center">
                     <b-img src="img/theme/agriculteur.png" rounded="circle" alt="Circle image"></b-img>
                     <router-link :to="{ name: 'register', params: { type: 'agriculteur' }}" class="text-light"><small>Agriculteur</small></router-link>

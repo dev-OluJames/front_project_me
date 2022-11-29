@@ -34,9 +34,25 @@
              <i class="ni ni-planet"></i>
              <span class="nav-link-inner--text">Dashboard</span>
            </b-nav-item>
-           <b-nav-item to="/register">
+           <b-nav-item>
                <i class="ni ni-circle-08"></i>
-               <span class="nav-link-inner--text">Register</span>
+               <span class="nav-link-inner--text" v-b-modal.modal-center-two>Register</span>
+             <b-modal id="modal-center-two" style="color: #fbfbfb;" body-bg-variant="dark" footer-bg-variant="dark" footer-border-variant="primary" header-bg-variant="dark" hide-footer centered title="Quel Profile vous correspond ?">
+               <b-row>
+                 <b-col class="text-center">
+                   <b-img src="img/theme/profile2.png" rounded="circle" alt="Circle image"></b-img>
+                   <router-link :to="{ name: 'register', params: { type: 'utilisateur' }}" class="text-light"><small>Utilisateur</small></router-link>
+                 </b-col>
+                 <!--                  <b-col class="text-center">
+                                     <b-img src="img/theme/img.png" rounded="circle" alt="Circle image"></b-img>
+                                     <router-link :to="{ name: 'register', params: { type: 'aggregateur' }}" class="text-light"><small>Aggregateur</small></router-link>
+                                   </b-col>-->
+                 <b-col class="text-center">
+                   <b-img src="img/theme/agriculteur.png" rounded="circle" alt="Circle image"></b-img>
+                   <router-link :to="{ name: 'register', params: { type: 'agriculteur' }}" class="text-light"><small>Agriculteur</small></router-link>
+                 </b-col>
+               </b-row>
+             </b-modal>
            </b-nav-item>
            <b-nav-item to="/login">
                <i class="ni ni-key-25"></i>

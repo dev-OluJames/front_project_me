@@ -93,7 +93,7 @@
                              min-width="150px"
                              class="pre-formatted">
               <template v-slot="{row}">
-                <span v-if="row.prix_plateforme !== null && row.prix_plateforme !== 0" class="status">{{row.prix_plateforme}}</span>
+                <span v-if="row.prix_plateforme !== null && row.prix_plateforme !== 0 && row.edit !== true" @click="setEditRow(row)" class="status">{{row.prix_plateforme}}</span>
                 <span v-else class="status">
                   <span  v-if="!row.edit">
                   <el-tag type="danger" @click="row.edit = true">Ajouter</el-tag>
@@ -202,7 +202,7 @@
         total_offre: null,
         offres: [],
         offre: {},
-        offre_id: {},
+        offre_id: null,
         type_offres: [],
         type_offre_id: '',
         add_prix_plateforme: false,
@@ -220,6 +220,10 @@
     },
     methods: {
       checkPermission,
+      setEditRow(offre){
+        this.prix_plateforme = offre.prix_plateforme;
+        offre.edit = true;
+      },
       editRow(offre){
         if(this.prix_plateforme){
 
@@ -233,10 +237,9 @@
           querry.prix_agriculteur = offre.prix_agriculteur;
           querry.prix_plateforme = offre.prix_plateforme;
           querry.date_disponibilite = offre.date_disponibilite;
-          querry.user_id = offre.user_id;
+          querry.user_id = offre.user.id;
           querry.village_id = offre.village.id;
           querry.variete_produit_id = offre.variete_produit.id;
-          querry.user_id = this.$store.getters.userId;
           querry.type_offre_id = offre.type_offre.id;
           offreResource.update(offre.id, querry)
           .then((response) =>{
@@ -247,10 +250,15 @@
               duration: 5 * 1000
             });
             this.add_prix_plateforme = false;
-            this.prix_plateforme = null;
+            this.getOffresList();
           })
           .catch((error)=>{
             console.log(error);
+            Message({
+              message: 'erreur lors de la modification',
+              type: 'error',
+              duration: 5 * 1000
+            });
             this.prix_plateforme = null;
             offre.prix_plateforme = null;
           });

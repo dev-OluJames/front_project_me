@@ -354,7 +354,7 @@ export default {
     vueDropzone,
     VueElementLoading
   },
-  props: {'id':{type: String}, 'title': {type: String}, 'type':{type: String}, 'item': {type: Object}, 'action': {type: String, default: 'ajout'}},
+  props: {'id':{type: String}, 'title': {type: String}, 'type':{type: String}, 'item': {type: Number}, 'action': {type: String, default: 'ajout'}},
   data() {
     return {
       dropzoneOptions: {
@@ -560,7 +560,7 @@ export default {
           querry.quantite = this.donnees.quantite;
           querry.mesure = this.donnees.mesure;
           querry.prix_agriculteur = this.donnees.prix_agriculteur;
-          querry.prix_plateforme = null;
+          querry.prix_plateforme = this.donnees.prix_plateforme;
           querry.date_disponibilite = this.donnees.date_disponibilite;
           querry.user_id = this.donnees.user_id;
           querry.village_id = this.donnees.village_id;

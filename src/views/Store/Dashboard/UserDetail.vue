@@ -385,15 +385,15 @@
                                 <tr>
                                   <th>Produits</th>
                                   <th>Quantité</th>
+                                  <th>Mesure</th>
                                   <th>Prix</th>
-                                  <th>TOTAL</th>
                                   <th></th>
                                 </tr>
                                 </thead>
                                 <tbody v-for="offre in userOffres" :key="offre.id" style="border-bottom: none">
                                 <tr  style="border-top: none; border-bottom: none">
                                   <td class="cart_product_img">
-                                    <a href="#"><img src="store/img/bg-img/34.jpg" alt="Product"></a>
+                                    <a href="#"><img :src=" offre.image ? offre.image[0].lien : 'store/img/bg-img/34.jpg'" alt="Product"></a>
                                     <h5>{{ offre.libelle }}</h5>
                                   </td>
                                   <td class="qty">
@@ -426,6 +426,16 @@
                                       </div>
                                     </div>
                                   </td>
+                                  <el-dropdown>
+                                    <el-button type="success">
+                                     ...
+                                    </el-button>
+                                    <el-dropdown-menu slot="dropdown">
+                                      <el-dropdown-item>Modifier</el-dropdown-item>
+                                      <el-dropdown-item>Promouvoir</el-dropdown-item>
+                                    </el-dropdown-menu>
+                                  </el-dropdown>
+
                                 </tr>
                                 <tr style="border-top: none; border-bottom: none">
                                   <td colspan="4" style="border-top: none; margin-top: 0px; margin-bottom: 0px">

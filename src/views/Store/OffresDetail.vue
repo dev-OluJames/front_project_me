@@ -35,30 +35,33 @@
                 <div id="product_details_slider" class="carousel slide" data-ride="carousel">
                   <div class="carousel-inner">
                     <div class="carousel-item active">
-                      <a class="product-img" :href="offre.image[0].lien" title="Product Image">
-                        <img v-if="offre.image" style="width:210px; height:302px" :src="offre.image[0].lien" alt="">
-                        <img v-else src="store/img/bg-img/40.png" alt="">
+                      <a class="product-img" :href="offre.image ? offre.image[0].lien : 'store/img/bg-img/40.png'" title="Product Image">
+                        <img style="width:210px; height:302px" :src="offre.image ? offre.image[0].lien : 'store/img/bg-img/40.png'" alt="">
                       </a>
                     </div>
                     <div class="carousel-item">
-                      <a class="product-img" :href="offre.image[0].lien" title="Product Image">
-                        <img v-if="offre.image" style="width:210px; height:302px" :src="offre.image[0].lien" alt="">
-                        <img v-else src="store/img/bg-img/40.png" alt="">
+                      <a class="product-img" :href="offre.image ? offre.image[0].lien : 'store/img/bg-img/40.png'" title="Product Image">
+                        <img style="width:210px; height:302px" :src="offre.image ? offre.image[0].lien : 'store/img/bg-img/40.png'" alt="">
                       </a>
                     </div>
                     <div class="carousel-item">
-                      <a class="product-img" :href="offre.image[0].lien" title="Product Image">
-                        <img v-if="offre.image" style="width:210px; height:302px" :src="offre.image[0].lien" alt="">
-                        <img v-else src="store/img/bg-img/40.png" alt="">
+                      <a class="product-img" :href="offre.image ? offre.image[0].lien : 'store/img/bg-img/40.png'" title="Product Image">
+                        <img style="width:210px; height:302px" :src="offre.image ? offre.image[0].lien : 'store/img/bg-img/40.png'" alt="">
                       </a>
                     </div>
                   </div>
                   <ol class="carousel-indicators">
-                    <li class="active" data-target="#product_details_slider" data-slide-to="0" style="background-image: url(offre.image[0].lien);">
+                    <li v-if="offre.image" class="active" data-target="#product_details_slider" data-slide-to="0" :style="{ backgroundImage: 'url(' + offre.image[0].lien + ')' }">
                     </li>
-                    <li data-target="#product_details_slider" data-slide-to="1" style="background-image: url(offre.image[0].lien);">
+                    <li v-else class="active" data-target="#product_details_slider" data-slide-to="0" style="background-image: url(store/img/bg-img/49.jpg);">
                     </li>
-                    <li data-target="#product_details_slider" data-slide-to="2" style="background-image: url(offre.image[0].lien);">
+                    <li v-if="offre.image" data-target="#product_details_slider" data-slide-to="1" :style="{ backgroundImage: 'url(' + offre.image[0].lien + ')' }">
+                    </li>
+                    <li v-else data-target="#product_details_slider" data-slide-to="1" style="background-image: url(store/img/bg-img/49.jpg);">
+                    </li>
+                    <li v-if="offre.image" data-target="#product_details_slider" data-slide-to="2" :style="{ backgroundImage: 'url(' + offre.image[0].lien + ')' }">
+                    </li>
+                    <li v-else data-target="#product_details_slider" data-slide-to="2" style="background-image: url(store/img/bg-img/49.jpg);">
                     </li>
                   </ol>
                 </div>
